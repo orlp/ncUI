@@ -1,0 +1,1 @@
+if not ncUIdb["spellalerter"] then return end

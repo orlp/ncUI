@@ -1,0 +1,47 @@
+## Interface: 30300
+## Author: Nightcracker
+## Version: 2.0 ALPHA
+## Title: ncUI
+## Notes: ncUI - A complete UI replacement
+## SavedVariablesPerCharacter: ncBindings, ncUIinstalled
+## X-oUF: oUF
+
+scripts\init.lua
+
+libs\libstub.lua
+libs\ouf\ouf.xml
+
+config.lua
+
+scripts\font.lua
+scripts\core.lua
+scripts\panels.lua
+scripts\datatext.lua
+scripts\bindings.lua
+scripts\actionbar.lua
+scripts\chat.lua
+scripts\buttonstyler.lua
+scripts\minimap.lua
+scripts\nameplates.lua
+scripts\cooldown.lua
+scripts\core.lua
+scripts\error.lua
+scripts\extrabuttons.lua
+scripts\merchant.lua
+scripts\quest.lua
+scripts\resurrect.lua
+scripts\tooltip.lua
+scripts\worldmap.lua
+scripts\buffs.lua
+scripts\spellalerter.lua
+scripts\bags.lua
+scripts\coolline.lua
+scripts\marking.lua
+
+unitframes\plugins\dropdown.lua
+
+unitframes\template.xml
+unitframes\tags.lua
+unitframes\unitframe.lua
+
+unitframes\plugins\smooth.lua
