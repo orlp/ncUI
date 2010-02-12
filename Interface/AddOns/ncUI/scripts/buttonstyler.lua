@@ -53,27 +53,39 @@ local function style(self)
 	normal:SetPoint("BOTTOMRIGHT")
 end
 
-local function stylesmallbutton(normal, button, icon)
-	normal:ClearAllPoints()
-	normal:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1)
-	normal:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1)
-
-	normal:SetVertexColor(unpack(ncUIdb["general"].colorscheme_border))
-
+local function stylesmallbutton(normal, button, icon, name, pet)
 	button:SetCheckedTexture(media.button)
-	button:SetHighlightTexture(media.button_hover)
+	button:SetHighlightTexture(media.highlight)
 	button:SetPushedTexture(media.button)
-	button:SetNormalTexture(media.button)
+	button:SetNormalTexture("")
+	
+	if not _G[name.."Panel"] then
+		button:SetWidth(ncUIdb:Scale(pet and 36 or 34))
+		button:SetHeight(ncUIdb:Scale(pet and 36 or 34))
+		
+		local panel = CreateFrame("Frame", name.."Panel", button)
+		ncUIdb:CreatePanel(panel, (pet and 36 or 34), (pet and 36 or 34), "CENTER", button, "CENTER", 0,0)
+		panel:SetBackdropColor(unpack(ncUIdb["general"].colorscheme_backdrop))
 
-	if not InCombatLockdown() and not button.sizeset then
-		button:SetWidth(ncUIdb:Scale(39))
-		button:SetHeight(ncUIdb:Scale(39))
-		button.sizeset = 1
+		icon:SetTexCoord(.08, .92, .08, .92)
+		
+		if pet then
+			_G[name.."AutoCastable"]:SetWidth(ncUIdb:Scale(60))
+			_G[name.."AutoCastable"]:SetHeight(ncUIdb:Scale(62))
+			_G[name.."AutoCastable"]:ClearAllPoints()
+			_G[name.."AutoCastable"]:SetPoint("CENTER", button, 0, 0)
+			icon:SetPoint("TOPLEFT", button, 2, -2)
+			icon:SetPoint("BOTTOMRIGHT", button, -3, 3)
+		else
+			icon:SetPoint("TOPLEFT", button, 3, -3)
+			icon:SetPoint("BOTTOMRIGHT", button, -3, 3)
+		end
 	end
 	
-	icon:SetTexCoord(.08, .92, .08, .92)
-	icon:SetPoint("TOPLEFT", button, 3, -3)
-	icon:SetPoint("BOTTOMRIGHT", button, -3, 3)
+	normal:SetVertexColor(unpack(ncUIdb["general"].colorscheme_border))
+	normal:ClearAllPoints()
+	normal:SetPoint("TOPLEFT")
+	normal:SetPoint("BOTTOMRIGHT")
 end
 
 local function styleshift(pet)
@@ -82,7 +94,7 @@ local function styleshift(pet)
 		local button  = _G[name]
 		local icon  = _G[name.."Icon"]
 		local normal  = _G[name.."NormalTexture"]
-		stylesmallbutton(normal, button, icon)
+		stylesmallbutton(normal, button, icon, name)
 	end
 end
 
@@ -92,7 +104,7 @@ local function stylepet()
 		local button  = _G[name]
 		local icon  = _G[name.."Icon"]
 		local normal  = _G[name.."NormalTexture2"]
-		stylesmallbutton(normal, button, icon)
+		stylesmallbutton(normal, button, icon, name, true)
 	end
 end
 

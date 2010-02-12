@@ -1,25 +1,5 @@
 local mainhand, _, _, offhand = GetWeaponEnchantInfo()
 
-local function CreatePanel(height, width, x, y, anchorPoint, anchorPointRel, anchor, level, parent, strata)
-	local p = CreateFrame("Frame", _, parent)
-	p:SetFrameLevel(level)
-	p:SetFrameStrata(strata)
-	p:SetHeight(height)
-	p:SetWidth(width)
-	p:SetPoint(anchorPoint, anchor, anchorPointRel, x, y)
-	p:SetBackdrop( { 
-	  bgFile = ncUIdb["media"].solid, 
-	  edgeFile = ncUIdb["media"].solid, 
-	  tile = false, tileSize = 0, edgeSize = 1, 
-	  insets = { left = -1, right = -1, top = -1, bottom = -1 }
-	})
-	p:SetBackdropColor(unpack(ncUIdb["general"].colorscheme_backdrop))
-	p:SetBackdropBorderColor(unpack(ncUIdb["general"].colorscheme_border))
-	p:EnableMouse(true)
-	p:Show()
-	return p
-end 
-
 TemporaryEnchantFrame:ClearAllPoints()
 TemporaryEnchantFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, -20)
 TempEnchant1:ClearAllPoints()

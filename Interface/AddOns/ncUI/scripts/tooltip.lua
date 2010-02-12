@@ -29,7 +29,7 @@ local function update(self, ...)
 	-- Align World Units/Objects to mouse
 	if owner == UIParent and not unitExists then
 		self:ClearAllPoints()
-		self:SetPoint("TOPRIGHT", MinimapStatsRight, "BOTTOMRIGHT", 0, -5)
+		self:SetPoint("BOTTOMRIGHT", InfoRight, "TOPRIGHT", 0, 5)
 	end
 
 	if not UnitExists("mouseover") and unitExists then

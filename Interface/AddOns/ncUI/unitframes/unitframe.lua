@@ -63,10 +63,10 @@ local function updatepower(self, event, unit, bar, minVal, maxVal)
 	if(unit ~= "target") then return end
 
 	if(maxVal ~= 0) then
-		self.Health:SetHeight(ncUIdb:Scale(40))
+		self.Health:SetHeight(ncUIdb:Scale(48))
 		bar:Show()
 	else
-		self.Health:SetHeight(ncUIdb:Scale(48))
+		self.Health:SetHeight(ncUIdb:Scale(56))
 		bar:Hide()
 	end
 end
@@ -93,11 +93,11 @@ local function updatedebuff(self, icons, unit, icon, index)
 
 	if(icon.debuff) then
 		if(not debufffilter[name] and not UnitIsFriend("player", unit) and icon.owner ~= "player" and icon.owner ~= "vehicle") then
-			icon:SetBackdropColor(0, 0, 0)
+			icon:SetBackdropBorderColor(0, 0, 0)
 			icon.icon:SetDesaturated(true)
 		else
 			local color = DebuffTypeColor[dtype] or DebuffTypeColor.none
-			icon:SetBackdropColor(color.r * 0.6, color.g * 0.6, color.b * 0.6)
+			icon:SetBackdropBorderColor(color.r * 0.6, color.g * 0.6, color.b * 0.6)
 			icon.icon:SetDesaturated(false)
 		end
 	end
@@ -105,10 +105,11 @@ end
 
 local function createAura(self, button, icons)
 	icons.showDebuffType = true
-
+	
 	button.cd:SetReverse()
-	button:SetBackdrop(backdrop)
-	button:SetBackdropColor(0, 0, 0)
+	ncUIdb:SetTemplate(button)
+	button.icon:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
+	button.icon:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
 	button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	button.icon:SetDrawLayer("ARTWORK")
 	button.overlay:SetTexture()
@@ -120,6 +121,7 @@ local function customFilter(icons, unit, icon, name, rank, texture, count, dtype
 	end
 end
 
+local playercast
 local function style(self, unit)
 	self.colors = colors
 	self.menu = menu
@@ -137,7 +139,7 @@ local function style(self, unit)
 	self.Health:SetPoint("TOPRIGHT")
 	self.Health:SetPoint("TOPLEFT")
 	self.Health:SetStatusBarTexture(ncUIdb["media"].unitframe)
-	self.Health:SetHeight(unit == "targettarget" and ncUIdb:Scale(34) or unit == "pet" and ncUIdb:Scale(18) or ncUIdb:Scale(40))
+	self.Health:SetHeight(unit == "targettarget" and ncUIdb:Scale(42) or unit == "pet" and ncUIdb:Scale(20) or ncUIdb:Scale(48))
 	self.Health.frequentUpdates = true
 	
 	self.Health.colorClass = true
@@ -170,16 +172,8 @@ local function style(self, unit)
 		self.Health:ClearAllPoints()
 		self.Health:SetAllPoints(self)
 	elseif unit == "targettarget" then
-		self:SetAttribute("initial-height", ncUIdb:Scale(42))
+		self:SetAttribute("initial-height", ncUIdb:Scale(50))
 		self:SetAttribute("initial-width", ncUIdb:Scale(182))
-
-		self.Debuffs = CreateFrame("Frame", nil, self)
-		self.Debuffs:SetHeight(20)
-		self.Debuffs:SetWidth(44)
-		self.Debuffs.num = 2
-		self.Debuffs.size = 20
-		self.Debuffs.spacing = 4
-		self.PostCreateAuraIcon = createAura
 		
 		self.Power = CreateFrame("StatusBar", nil, self)
 		self.Power:SetPoint("BOTTOMRIGHT")
@@ -188,7 +182,7 @@ local function style(self, unit)
 		self.Power:SetStatusBarTexture(ncUIdb["media"].unitframe)
 		self.Power.frequentUpdates = true
 
-		self.Power.colorTapping = true
+		--self.Power.colorTapping = true
 		self.Power.colorDisconnected = true
 		self.Power.colorHappiness = false
 		self.Power.colorPower = true
@@ -200,10 +194,6 @@ local function style(self, unit)
 		self.Power.bg:SetTexture([=[Interface\ChatFrame\ChatFrameBackground]=])
 		self.Power.bg.multiplier = 0.3
 		self.Power.bg:SetVertexColor(0, 0, 0)
-
-		self.Debuffs:SetPoint("TOPRIGHT", self, "TOPLEFT", -4, 0)
-		self.Debuffs.initialAnchor = "TOPRIGHT"
-		self.Debuffs["growth-x"] = "LEFT"
 	else
 		self.Power = CreateFrame("StatusBar", nil, self)
 		self.Power:SetPoint("BOTTOMRIGHT")
@@ -231,7 +221,7 @@ local function style(self, unit)
 			self.Castbar:SetWidth(ncUIdb:Scale(301))
 			self.Castbar:SetHeight(ncUIdb:Scale(40))
 			self.Castbar:SetStatusBarTexture(ncUIdb["media"].unitframe)
-			self.Castbar:SetStatusBarColor(.41, .80, .94)
+			self.Castbar:SetStatusBarColor(unpack(ncUIdb["general"].colorscheme_border))
 
 			self.Castbar.bg = CreateFrame("Frame", nil, self.Castbar)
 			ncUIdb:SetTemplate(self.Castbar.bg)
@@ -240,7 +230,7 @@ local function style(self, unit)
 			self.Castbar.bg:SetPoint("BOTTOMRIGHT", 3, -2)
 
 			self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY", "pfontleft")
-			self.Castbar.Text:SetPoint("LEFT", 2, 0)
+			self.Castbar.Text:SetPoint("LEFT", 5, 0)
 			self.Castbar.Text:SetPoint("RIGHT", self.Castbar.Time)
 
 			self.Castbar.Time = self.Castbar:CreateFontString(nil, "OVERLAY", "pfontright")
@@ -255,19 +245,20 @@ local function style(self, unit)
 			self.Castbar.Icon = self.Castbar.Button:CreateTexture(nil, "ARTWORK")
 			self.Castbar.Icon:SetPoint("TOPLEFT", self.Castbar.Button, 3, -3)
 			self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar.Button, -3, 3)
-			self.Castbar.Icon:SetTexCoord(0.08, 0.92, 0.08, 1)
+			self.Castbar.Icon:SetTexCoord(0.08, 0.92, 0.08, .92)
 		end
 
-		if(unit == "target") then
-			self.PostCastStart = casticon
-			self.PostChannelStart = casticon
-			self.Castbar:SetPoint("TOP", UIParent, "CENTER", -25, 300)
-			self.Castbar.Button:SetPoint("BOTTOMLEFT", self.Castbar, "BOTTOMRIGHT", 7, -2)
-		elseif unit=="player" then
+		if unit=="player" then
 			self.Castbar.SafeZone = self.Castbar:CreateTexture(nil, "OVERLAY")
 			self.Castbar.SafeZone:SetTexture(ncUIdb["media"].unitframe)
 			self.Castbar.SafeZone:SetVertexColor(1, 0, 0, .25)
 			self.Castbar:SetPoint("BOTTOM", UIParent, "CENTER", -25, -300)
+			self.Castbar.Button:SetPoint("BOTTOMLEFT", self.Castbar, "BOTTOMRIGHT", 7, -2)
+			playercast = self.Castbar
+		elseif(unit == "target") then
+			self.PostCastStart = casticon
+			self.PostChannelStart = casticon
+			self.Castbar:SetPoint("TOP", playercast, "BOTTOM", 0, ncUIdb:Scale(-10))
 			self.Castbar.Button:SetPoint("BOTTOMLEFT", self.Castbar, "BOTTOMRIGHT", 7, -2)
 		end
 	end
@@ -328,7 +319,7 @@ local function style(self, unit)
 		self:SetAttribute("initial-height", ncUIdb:Scale(26))
 		self:SetAttribute("initial-width", ncUIdb:Scale(130))
 
-		self.Auras = CreateFrame("Frame", nil, self)
+		--[[self.Auras = CreateFrame("Frame", nil, self)
 		self.Auras:SetPoint("TOPRIGHT", self, "TOPLEFT", -4, 0)
 		self.Auras:SetHeight(4)
 		self.Auras:SetWidth(256)
@@ -336,34 +327,33 @@ local function style(self, unit)
 		self.Auras.spacing = 4
 		self.Auras.initialAnchor = "TOPRIGHT"
 		self.Auras["growth-x"] = "LEFT"
-		self.PostCreateAuraIcon = createAura
+		self.PostCreateAuraIcon = createAura--]]
 	end
 	
 	if(unit == "player" or unit == "target") then
-		self:SetAttribute("initial-height", ncUIdb:Scale(48))
+		self:SetAttribute("initial-height", ncUIdb:Scale(56))
 		self:SetAttribute("initial-width", ncUIdb:Scale(230))
-
-		self.Buffs = CreateFrame("Frame", nil, self)
-		self.Buffs:SetPoint("TOPLEFT", self, "TOPRIGHT", 4, 0)
-		self.Buffs:SetHeight(44)
-		self.Buffs:SetWidth(236)
-		self.Buffs.num = 20
-		self.Buffs.size = 20
-		self.Buffs.spacing = 4
-		self.Buffs.initialAnchor = "TOPLEFT"
-		self.Buffs["growth-y"] = "DOWN"
-		self.PostCreateAuraIcon = createAura
 
 		self.PostUpdatePower = updatepower
 	end
 
 	if(unit == "target") then
+		self.Buffs = CreateFrame("Frame", nil, self)
+		self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPLEFT", -3, 8)
+		self.Buffs:SetHeight(ncUIdb:Scale(30))
+		self.Buffs:SetWidth(ncUIdb:Scale(230))
+		self.Buffs.num = 7
+		self.Buffs.size = 30
+		self.Buffs.spacing = 4
+		self.Buffs.initialAnchor = "TOPLEFT"
+		self.Buffs["growth-y"] = "DOWN"
+	
 		self.Debuffs = CreateFrame("Frame", nil, self)
-		self.Debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -4)
-		self.Debuffs:SetHeight(20 * 0.97)
-		self.Debuffs:SetWidth(230)
-		self.Debuffs.num = 20
-		self.Debuffs.size = 20 * 0.97
+		self.Debuffs:SetPoint("BOTTOMLEFT", self.Buffs, "TOPLEFT", 0, 5)
+		self.Debuffs:SetHeight(ncUIdb:Scale(30))
+		self.Debuffs:SetWidth(ncUIdb:Scale(230))
+		self.Debuffs.num = 7
+		self.Debuffs.size = 30
 		self.Debuffs.spacing = 4
 		self.Debuffs.initialAnchor = "TOPLEFT"
 		self.Debuffs["growth-y"] = "DOWN"
@@ -380,8 +370,8 @@ local function style(self, unit)
 
 	if(unit == "player") then
 		if(select(2, UnitClass("player")) == "DEATHKNIGHT") then
-			self.Runes = CreateFrame("Frame", nil, self)
-			self.Runes:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -1)
+			self.Runes = CreateFrame("Frame", nil, self.Power)
+			self.Runes:SetPoint("TOPLEFT")
 			self.Runes:SetHeight(4)
 			self.Runes:SetWidth(230)
 			self.Runes:SetBackdrop(backdrop)
@@ -389,17 +379,35 @@ local function style(self, unit)
 			self.Runes.anchor = "TOPLEFT"
 			self.Runes.growth = "RIGHT"
 			self.Runes.height = 4
-			self.Runes.spacing = 1
-			self.Runes.width = 230 / 6 - 0.85
-
+			self.Runes.spacing = ncUIdb.mult
+			self.Runes.width = 230 / 6 - ncUIdb.mult
+			
+			self.Health:SetHeight(ncUIdb:Scale(40))
+			self.Power:SetHeight(ncUIdb:Scale(2))
+			
 			for index = 1, 6 do
 				self.Runes[index] = CreateFrame("StatusBar", nil, self.Runes)
 				self.Runes[index]:SetStatusBarTexture(ncUIdb["media"].unitframe)
 
 				self.Runes[index].bg = self.Runes[index]:CreateTexture(nil, "BACKGROUND")
 				self.Runes[index].bg:SetAllPoints(self.Runes[index])
-				self.Runes[index].bg:SetTexture(0.3, 0.3, 0.3)
+				self.Runes[index].bg:SetTexture(.3, .3, .3)
 			end
+			
+			local panel = CreateFrame("Frame", nil, self.Power)
+			ncUIdb:CreatePanel(panel, 1, 1, "TOPLEFT", self.Power, "TOPLEFT", -3, 3)
+			panel:SetPoint("BOTTOMRIGHT", self.Runes, 2, -2)
+			panel:SetFrameLevel(3)
+			panel:SetFrameStrata("MEDIUM")
+			panel:SetBackdrop{
+				edgeFile = ncUIdb["media"].solid,
+				tile = false, tileSize = 0, edgeSize = ncUIdb.mult,
+			}
+			panel:SetBackdropBorderColor(unpack(ncUIdb["general"].colorscheme_border))
+			panel.bg = panel:CreateTexture(nil, "BACKGROUND")
+			panel.bg:SetTexture(unpack(ncUIdb["general"].colorscheme_backdrop))
+			panel.bg:SetPoint("TOPLEFT", panel)
+			panel.bg:SetPoint("BOTTOMRIGHT", panel, -2, -1)
 		end
 
 		self.Leader = self.Health:CreateTexture(nil, "OVERLAY")

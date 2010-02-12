@@ -35,11 +35,11 @@ local function update(self, elapsed)
 end
 local function createtext(self)
 	local text = self:CreateFontString(nil, "OVERLAY")
-	text:SetPoint("CENTER")
+	text:SetPoint("CENTER", (self.height < 34 and 1 or -1), 0)
 	text:SetParent(self:GetParent())	
 	local texture = self:CreateTexture()
-	texture:SetPoint("TOPLEFT", self, 3, -3)
-	texture:SetPoint("BOTTOMRIGHT", self, -3, 3)
+	texture:SetPoint("TOPLEFT", self, 2, -2)
+	texture:SetPoint("BOTTOMRIGHT", self, -2, 2)
 	texture:SetTexture(0, 0, 0, .5)
 	texture:SetParent(self:GetParent())
 	self:SetScript("OnUpdate", update)
@@ -56,12 +56,14 @@ local function startcd(self, start, duration)
 		self.duration = duration
 		self.nextupdate = 0
 		
-		local text = self.text or createtext(self)
 		local height = self:GetHeight()
+		self.height = height
+		
+		local text = self.text or createtext(self)
 		if height==0 then
 			height = 20
 		end
-		text:SetFont("Fonts\\FRIZQT__.ttf", 0.5*height, "THINOUTLINE")
+		text:SetFont((height < 34 and ncUIdb["media"].pixelfont or ncUIdb["media"].font), (height < 34 and 11 or 19), (height < 34 and "MONOCHROME" or "").."THINOUTLINE")
 		text:Show()
 	end
 end

@@ -7,7 +7,7 @@ local db = ncUIdb["actionbar"]
 PetActionBarFrame:SetParent(petbarholder)
 PetActionBarFrame:SetWidth(.01)
 PetActionButton1:ClearAllPoints()
-PetActionButton1:SetPoint("BOTTOMLEFT", petbarholder,"BOTTOMLEFT")
+PetActionButton1:SetPoint("TOP", PetActionBarBackground, "TOP", 0, ncUIdb:Scale(-6))
 PetActionButton1:SetFrameLevel(3)
 
 BonusActionBarFrame:SetParent(bonusactionbarholder)
@@ -15,6 +15,11 @@ BonusActionBarFrame:SetWidth(0.01)
 BonusActionBarTexture0:Hide()
 BonusActionBarTexture1:Hide()
 BonusActionButton1:ClearAllPoints()
+
+ShapeshiftBarFrame:SetParent(bonusactionbarholder)
+ShapeshiftBarFrame:SetWidth(0.01)
+ShapeshiftButton1:ClearAllPoints()
+ShapeshiftButton1:SetPoint("TOPLEFT", UIParent, 10, -10)
   
 for i=1, 8 do
 	_G["ActionButton"..i]:SetParent(UIParent)
@@ -96,6 +101,20 @@ for i=2, 8 do
     local b2 = _G["ActionButton"..i-1]
     b:ClearAllPoints()
     b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(5), 0)
+end
+
+for i=2, 10 do
+    local b = _G["ShapeshiftButton"..i]
+    local b2 = _G["ShapeshiftButton"..i-1]
+    b:ClearAllPoints()
+    b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(5), 0)
+end
+
+for i=2, 10 do
+    local b = _G["PetActionButton"..i]
+    local b2 = _G["PetActionButton"..i-1]
+    b:ClearAllPoints()
+    b:SetPoint("TOP",b2,"BOTTOM", 0, ncUIdb:Scale(-5))
 end
 
 for i=2, 8 do
