@@ -1,7 +1,7 @@
 local barholder = CreateFrame("Frame","ncBarholder",UIParent)
 local petbarholder = CreateFrame("Frame","ncPetBarholder", ActionBarBackground)
 local bonusactionbarholder = CreateFrame("Frame","ncPetBarholder", ActionBarBackground)
-local shapeshiftbarholder = CreateFrame("Frame","ncShapeShiftholder", ActionBarBackground)
+local shapeshiftbarholder = CreateFrame("Frame","ncShapeShiftholder", UIParent)
 local db = ncUIdb["actionbar"]
 
 PetActionBarFrame:SetParent(petbarholder)
@@ -16,11 +16,16 @@ BonusActionBarTexture0:Hide()
 BonusActionBarTexture1:Hide()
 BonusActionButton1:ClearAllPoints()
 
+shapeshiftbarholder:SetSize(ncUIdb:Scale(34), ncUIdb:Scale(34))
+shapeshiftbarholder:SetPoint("TOPLEFT")
 ShapeshiftBarFrame:SetParent(bonusactionbarholder)
 ShapeshiftBarFrame:SetWidth(0.01)
 ShapeshiftButton1:ClearAllPoints()
-ShapeshiftButton1:SetPoint("TOPLEFT", UIParent, 10, -10)
-  
+ShapeshiftButton1:SetPoint("BOTTOMLEFT", shapeshiftbarholder, 10, -10)
+hooksecurefunc("ShapeshiftBar_Update", function()
+	ShapeshiftButton1:SetPoint("BOTTOMLEFT", shapeshiftbarholder, 10, -10)
+end) 
+
 for i=1, 8 do
 	_G["ActionButton"..i]:SetParent(UIParent)
 end

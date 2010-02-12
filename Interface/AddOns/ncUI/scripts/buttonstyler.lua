@@ -68,12 +68,13 @@ local function stylesmallbutton(normal, button, icon, name, pet)
 		panel:SetBackdropColor(unpack(ncUIdb["general"].colorscheme_backdrop))
 
 		icon:SetTexCoord(.08, .92, .08, .92)
-		
+		icon:ClearAllPoints()
 		if pet then
-			_G[name.."AutoCastable"]:SetWidth(ncUIdb:Scale(60))
-			_G[name.."AutoCastable"]:SetHeight(ncUIdb:Scale(62))
-			_G[name.."AutoCastable"]:ClearAllPoints()
-			_G[name.."AutoCastable"]:SetPoint("CENTER", button, 0, 0)
+			local autocast = _G[name.."AutoCastable"]
+			autocast:SetWidth(ncUIdb:Scale(60))
+			autocast:SetHeight(ncUIdb:Scale(62))
+			autocast:ClearAllPoints()
+			autocast:SetPoint("CENTER", button, 0, 0)
 			icon:SetPoint("TOPLEFT", button, 2, -2)
 			icon:SetPoint("BOTTOMRIGHT", button, -3, 3)
 		else
