@@ -1,40 +1,8 @@
-local feeds, bars = {}, {}
-local cdebuffs, bardebuffs = {}, {}
+local feeds, bars, debuff, exists = {}, {}, {}, {}
 local freeslot, freebar = 1, 1
 local function hex(r, g, b) if type(r) == "table" then if r.r then r, g, b = r.r, r.g, r.b else r, g, b = unpack(r) end	end	return string.format("|cff%02x%02x%02x", r*255, g*255, b*255) end
-
-local function sortbars(num)
-	local remain = {}
-	for i = 1, num do
-		local id = bars[i]:GetID()
-		remain[i] = id
-	end
-	table.sort(remain, function(a, b) return (feeds[a].expire - GetTime()) < (feeds[b].expire - GetTime()) end)
-	for a, b in pairs(remain) do
-		bardebuffs[feeds[b].target][feeds[b].spell..feeds[b].expire] = a
-		bars[a]:SetID(b)
-	end
-end
-
-local function start(target, spell, expire, duration)
-	feeds[freeslot] = {}
-	feeds[freeslot].target = target
-	feeds[freeslot].spell = spell
-	feeds[freeslot].expire = expire
-	feeds[freeslot].duration = duration
-	
-	bardebuffs[target][spell..expire] = freebar
-	bars[freebar]:SetID(freeslot)
-	
-	sortbars(freebar)
-	
-	freebar = freebar + 1
-	freeslot = freeslot + 1
-end
-
 local function stop(id)
-	local fdid = bars[id]:GetID()
-	cdebuffs[feeds[fdid].target][feeds[fdid].spell..feeds[fdid].expire] = nil
+	freebar = freebar - 1
 	for i = id, 9 do
 		local nextid = bars[i+1]:GetID()
 		if nextid then
@@ -43,7 +11,49 @@ local function stop(id)
 			bars[i]:SetID(nil)
 		end
 	end
-	freebar = freebar - 1
+end
+local function sortbars(unit)
+	local remain = {}
+	for i = 1, 10 do
+		local id = bars[i]:GetID()
+		remain[i] = id
+	end
+	table.sort(remain, function(a, b) return (feeds[a].expire - GetTime()) < (feeds[b].expire - GetTime()) end)
+	for a, b in pairs(remain) do
+		if b and feeds[b].spell and feeds[b].target==unit and not exists[feeds[b].spell] then
+			stop(a)
+			sortbars(unit)
+			return
+		end
+		bars[a]:SetID(b)
+	end
+end
+local function isbizzy(unit, spell)
+	for i = 1, 10 do
+		local id = bars[i]:GetID()
+		if id and feeds[id].target == unit and feeds[id].spell == spell then
+			return i
+		end
+	end
+	return nil
+end
+local function start(target, spell, expire, duration, spellname, icon, count, name)
+	feeds[freeslot] = {}
+
+	feeds[freeslot].target = target
+	feeds[freeslot].name = name
+	feeds[freeslot].spellname = spellname
+	feeds[freeslot].icon = icon
+	feeds[freeslot].count = count
+	feeds[freeslot].expire = expire
+	feeds[freeslot].duration = duration
+	feeds[freeslot].spell = spell
+	feeds[freeslot].bar = freeslot
+	
+	bars[freebar]:SetID(freeslot)
+	
+	freeslot = freeslot + 1
+	freebar = freebar + 1
 end
 
 for i = 1, 10 do
@@ -87,12 +97,25 @@ for i = 1, 10 do
 	f.iconbg:SetPoint("BOTTOMRIGHT", f.icon, ncUIdb:Scale(3), ncUIdb:Scale(-3))
 	f.iconbg:SetFrameStrata("LOW")
 	
+	f.count = f:CreateFontString(nil, "OVERLAY")
+	f.count:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
+	f.count:SetPoint("CENTER", f.icon)
+	
 	function f:SetTime(s, b) self.time:SetText(format("%.1f", s)) self.bar:SetValue(b) end
-	--function f:SetTarget(unit) self.target:SetText(hex(RAID_CLASS_COLORS[select(2,UnitClass(unit))])..(UnitName(unit)).."|r") end
-	function f:SetTarget(unit) self.target:SetText(UnitName(unit)) end
-	function f:SetSpell(id) local name, _, icon = GetSpellInfo(id) self.spell:SetText(name) self.icon:SetTexture(icon) end
-	function f:SetID(id) self.id = id if not id then self:Hide() return end self:SetTarget(feeds[id].target) self:SetSpell(feeds[id].spell) self:Show() end
+	function f:SetSpell(name, icon, count) self.spell:SetText(name) self.icon:SetTexture(icon) self.count:SetText(count) end
+	function f:SetID(id)
+		if not id then
+			self:Hide()
+			self.id = nil
+			return
+		end
+		self.id = id
+		self.target:SetText(feeds[id].name)
+		self:SetSpell(feeds[id].spellname, feeds[id].icon, feeds[id].count)
+		self:Show()
+	end
 	function f:GetID() return self.id end
+	function f:Stop() stop(i) end
 
 	f:SetScript("OnUpdate", function(self, elapsed)
 		local id = self:GetID()
@@ -113,35 +136,33 @@ for i = 1, 10 do
 end
 
 local f = CreateFrame("Frame")
-f:SetScript("OnEvent", function(self, event, target, spell, _, _, _, name)
+f:SetScript("OnEvent", function(self, event, target, spell, _, _, _, guid)
 	if event=="COMBAT_LOG_EVENT_UNFILTERED" then
 		if spell=="UNIT_DIED" then
-			cdebuffs[name] = {}
+			exists = {}
+			sortbars(guid)
 		end
 	else
 		if target=="player" then return end
 		local unit = UnitGUID(target)
 		
-		if not cdebuffs[unit] then cdebuffs[unit] = {} end
-		if not bardebuffs[unit] then bardebuffs[unit] = {} end
-		local donedebuffs = {[unit]={}}
+		exists = {}
 		
 		for i = 1, 40 do
-			local name, rank, icon, count, debufftype, duration, expires, caster, stealable, consolidate, id = UnitDebuff(target, i)
+			local name, _, icon, count, debufftype, duration, expires, caster, _, _, id = UnitDebuff(target, i)
 			if caster=="player" then
-				donedebuffs[unit][id..expires] = true
-				if not cdebuffs[unit][id..expires] then
-					cdebuffs[unit][id..expires] = true
-					start(unit, id, expires, duration)
+				exists[id] = true
+				local bar = isbizzy(unit, id)
+				if bar then
+					local id = bars[bar]:GetID()
+					feeds[id].expire = expires
+					feeds[id].duration = duration
+				else
+					start(unit, id, expires, duration, name, icon, count, UnitName(target))
 				end
 			end
 		end
-		for key, val in pairs(cdebuffs[unit]) do
-			if not donedebuffs[unit][key] then
-				cdebuffs[unit][key] = nil
-				stop(bardebuffs[unit][key])
-			end
-		end
+		sortbars(unit)
 	end
 end)
 f:RegisterEvent("UNIT_AURA")
