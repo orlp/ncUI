@@ -1,41 +1,3 @@
---[[local backdrop = {
-	bgFile = ncUIdb["media"].solid,
-	insets = {top = -1, left = -1, bottom = -1, right = -1},
-}
- 
-function BarPanel(height, leftinset, rightinset, y, anchorPoint, anchorPointRel, anchor, level, name, parent, strata)
-	local Panel = CreateFrame("Frame", name, parent)
-	Panel:SetFrameLevel(level)
-	Panel:SetFrameStrata(strata)
-	Panel:SetHeight(height)
-	Panel:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", leftinset, y)
-	Panel:SetPoint(anchorPoint, anchor, anchorPointRel, rightinset, y)
-	Panel:SetBackdrop( {
-		bgFile = ncUIdb["media"].solid,
-		insets = { left = 0, right = 0, top = 0, bottom = 0 }
-	})
-	Panel:SetBackdropColor(0.1, 0.1, 0.1, 1)
-	Panel:Show()
-	return Panel
-end
-
-local function UpdateBar(self)
-	local duration = self.Duration
-	local icon = self.Icon
-	self.Bar.IconHolder.Icon:SetTexture(icon)
-	local timeLeft = self.EndTime-GetTime()
-	local roundedt = math.floor(timeLeft*10+.5)/10
-	self.Bar:SetValue(timeLeft/duration)
-	if roundedt % 1 == 0 then
-		self.Time:SetText(roundedt .. ".0")
-	else self.Time:SetText(roundedt) end
-
-	if timeLeft < 0 then
-		self.Panel:Hide()
-		self:SetScript("OnUpdate", nil)
-	end
-end--]]
-
 local feeds, bars = {}, {}
 local cdebuffs, bardebuffs = {}, {}
 local freeslot, freebar = 1, 1
@@ -49,7 +11,7 @@ local function sortbars(num)
 	end
 	table.sort(remain, function(a, b) return (feeds[a].expire - GetTime()) < (feeds[b].expire - GetTime()) end)
 	for a, b in pairs(remain) do
-		bardebuffs[feeds[b].target..feeds[b].spell..feeds[b].expire] = a
+		bardebuffs[feeds[b].target][feeds[b].spell..feeds[b].expire] = a
 		bars[a]:SetID(b)
 	end
 end
@@ -61,7 +23,7 @@ local function start(target, spell, expire, duration)
 	feeds[freeslot].expire = expire
 	feeds[freeslot].duration = duration
 	
-	bardebuffs[target..spell..expire] = freebar
+	bardebuffs[target][spell..expire] = freebar
 	bars[freebar]:SetID(freeslot)
 	
 	sortbars(freebar)
@@ -71,6 +33,8 @@ local function start(target, spell, expire, duration)
 end
 
 local function stop(id)
+	local fdid = bars[id]:GetID()
+	cdebuffs[feeds[fdid].target][feeds[fdid].spell..feeds[fdid].expire] = nil
 	for i = id, 9 do
 		local nextid = bars[i+1]:GetID()
 		if nextid then
@@ -149,79 +113,36 @@ for i = 1, 10 do
 end
 
 local f = CreateFrame("Frame")
-f:SetScript("OnEvent", function(self, event, unit, spell)
-	local donedebuffs = {}
-	if unit=="player" then return end
-	unit = UnitGUID(unit)
-	for i = 1, 40 do
-		local name, rank, icon, count, debufftype, duration, expires, caster, stealable, consolidate, id = UnitDebuff(unit, i)
-		if caster=="player" then
-			donedebuffs[unit..id..expires] = true
-			if not cdebuffs[unit..id..expires] then
-				cdebuffs[unit..id..expires] = true
-				start(unit, id, expires, duration)
+f:SetScript("OnEvent", function(self, event, target, spell, _, _, _, name)
+	if event=="COMBAT_LOG_EVENT_UNFILTERED" then
+		if spell=="UNIT_DIED" then
+			cdebuffs[name] = {}
+		end
+	else
+		if target=="player" then return end
+		local unit = UnitGUID(target)
+		
+		if not cdebuffs[unit] then cdebuffs[unit] = {} end
+		if not bardebuffs[unit] then bardebuffs[unit] = {} end
+		local donedebuffs = {[unit]={}}
+		
+		for i = 1, 40 do
+			local name, rank, icon, count, debufftype, duration, expires, caster, stealable, consolidate, id = UnitDebuff(target, i)
+			if caster=="player" then
+				donedebuffs[unit][id..expires] = true
+				if not cdebuffs[unit][id..expires] then
+					cdebuffs[unit][id..expires] = true
+					start(unit, id, expires, duration)
+				end
 			end
 		end
-	end
-	for key, val in pairs(cdebuffs) do
-		if not donedebuffs[key] then
-			cdebuffs[key] = nil
-			stop(bardebuffs[key])
+		for key, val in pairs(cdebuffs[unit]) do
+			if not donedebuffs[unit][key] then
+				cdebuffs[unit][key] = nil
+				stop(bardebuffs[unit][key])
+			end
 		end
 	end
 end)
 f:RegisterEvent("UNIT_AURA")
---            /run Start("player", 5, GetTime(), 15)
---[[local f = createbar(1)
-f:SetPoint("CENTER", UIParent)
-f:SetTarget(UnitName("player"))
-f:SetSpell(48672)
-f.e = 0
-f.mult = 1
-f:SetScript("OnUpdate", function(self, elapsed)
-	self.e = self.e + elapsed*self.mult
-	self.bar:SetValue(self.e)
-	self:SetTime(self.e)
-	if self.e > 1 and self.mult > 0 or self.e < 0 and self.mult < 0 then self.mult = self.mult*-1 end
-end)
-for i = 2, 9 do
-	local f = createbar(i)
-	f:SetPoint("TOP", _G["DebuffTimerBar"..(i-1)], "BOTTOM", 0, -5)
-	f:SetTarget(UnitName("player"))
-	f:SetSpell(48672)
-	f.e = 0
-	f.mult = 2/i
-	f:SetScript("OnUpdate", function(self, elapsed)
-		self.e = self.e + elapsed*self.mult
-		self.bar:SetValue(self.e)
-		self:SetTime(self.e)
-		if self.e > 1 and self.mult > 0 or self.e < 0 and self.mult < 0 then self.mult = self.mult*-1 end
-	end)
-end--]]
-	
-
---[[for i=1, #debuffIDs do
-	local DebuffFrame = CreateFrame("Frame", "DebuffFrame"..i, UIParent)
-		if select(2, UnitClass("Player")) == "SHAMAN" or select(2, UnitClass("Player")) == "DEATHKNIGHT" then
-			DebuffFrame.Panel = BarPanel(15, 20, -2, ((#buffIDs*18+22)+((i-1)*18)), "BOTTOMRIGHT", "TOPRIGHT", oUF_Tukz_player, 1, "DebuffPanel"..i, DebuffFrame, "HIGH")
-		else
-			DebuffFrame.Panel = BarPanel(15, 20, -2, ((#buffIDs*18+14)+((i-1)*18)), "BOTTOMRIGHT", "TOPRIGHT", oUF_Tukz_player, 1, "DebuffPanel"..i, DebuffFrame, "HIGH")
-		end
-	ConfigureBar(DebuffFrame, ((i+1) % 2), ((i+2) % 2), 0)
-	local function DebuffCheck(self, event, unit, spell)
-		local spid = debuffIDs[i]
-		if unit == "target" and UnitDebuff("target", (GetSpellInfo(spid))) then
-			local name, _, icon, _, _, duration, expirationTime, unitCaster = UnitDebuff("target", (GetSpellInfo(spid)))
-			if name and unitCaster=="player" then
-				self.unitCaster = unitCaster
-				self.EndTime = expirationTime
-				self.Duration = duration
-				self.Icon = icon
-				self.Panel:Show()
-				self:SetScript("OnUpdate", UpdateBar)
-			end
-		end
-	end
-	DebuffFrame:SetScript("OnEvent", DebuffCheck)
-	DebuffFrame:RegisterEvent("UNIT_AURA")
-end--]]
+f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
