@@ -37,7 +37,7 @@ local function isbizzy(unit, spell)
 	end
 	return nil
 end
-local function start(target, spell, expire, duration, spellname, icon, count, name)
+local function start(target, spell, expire, duration, spellname, icon, count, name, debufftype)
 	feeds[freeslot] = {}
 
 	feeds[freeslot].target = target
@@ -49,6 +49,7 @@ local function start(target, spell, expire, duration, spellname, icon, count, na
 	feeds[freeslot].duration = duration
 	feeds[freeslot].spell = spell
 	feeds[freeslot].bar = freeslot
+	feeds[freeslot].debufftype = debufftype
 	
 	bars[freebar]:SetID(freeslot)
 	
@@ -61,7 +62,6 @@ for i = 1, 10 do
 	f:Hide()
 
 	f:SetHeight(ncUIdb:Scale(21))
-	f:SetWidth(ncUIdb:Scale(350))
 	ncUIdb:SetTemplate(f)
 	
 	f.bar = CreateFrame("StatusBar", nil, f)
@@ -99,10 +99,10 @@ for i = 1, 10 do
 	
 	f.count = f:CreateFontString(nil, "OVERLAY")
 	f.count:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
-	f.count:SetPoint("CENTER", f.icon)
+	f.count:SetPoint("CENTER", f.icon, 0, -1)
 	
 	function f:SetTime(s, b) self.time:SetText(format("%.1f", s)) self.bar:SetValue(b) end
-	function f:SetSpell(name, icon, count) self.spell:SetText(name) self.icon:SetTexture(icon) self.count:SetText(count) end
+	function f:SetSpell(name, icon, count) self.spell:SetText(name) self.icon:SetTexture(icon) if count > 1 then self.count:SetText(count) end end
 	function f:SetID(id)
 		if not id then
 			self:Hide()
@@ -111,6 +111,8 @@ for i = 1, 10 do
 		end
 		self.id = id
 		self.target:SetText(feeds[id].name)
+		local color = DebuffTypeColor[feeds[id].debufftype]
+		self.bar:SetStatusBarColor(color.r, color.g, color.b)
 		self:SetSpell(feeds[id].spellname, feeds[id].icon, feeds[id].count)
 		self:Show()
 	end
@@ -127,9 +129,11 @@ for i = 1, 10 do
 	end)
 	
 	if i==1 then
-		f:SetPoint("CENTER", UIParent) -- anchor
+		f:SetPoint("BOTTOMLEFT", InfoRight, "TOPLEFT", 25, 5) -- anchor
+		f:SetPoint("BOTTOMRIGHT", InfoRight, "TOPRIGHT", 0, 5)
 	else
-		f:SetPoint("BOTTOM", bars[i-1], "TOP", 0, ncUIdb:Scale(4)) -- spacing and growth
+		f:SetPoint("BOTTOMLEFT", bars[i-1], "TOPLEFT", 0, ncUIdb:Scale(4)) -- spacing and growth
+		f:SetPoint("BOTTOMRIGHT", bars[i-1], "TOPRIGHT", 0, ncUIdb:Scale(4)) -- spacing and growth
 	end
 
 	bars[i] = f
@@ -158,7 +162,7 @@ f:SetScript("OnEvent", function(self, event, target, spell, _, _, _, guid)
 					feeds[id].expire = expires
 					feeds[id].duration = duration
 				else
-					start(unit, id, expires, duration, name, icon, count, UnitName(target))
+					start(unit, id, expires, duration, name, icon, count, UnitName(target), debufftype)
 				end
 			end
 		end
