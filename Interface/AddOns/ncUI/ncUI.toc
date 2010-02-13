@@ -36,6 +36,7 @@ scripts\buffs.lua
 scripts\spellalerter.lua
 scripts\bags.lua
 scripts\coolline.lua
+scripts\debufftimer.lua
 scripts\marking.lua
 
 unitframes\plugins\dropdown.lua

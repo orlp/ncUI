@@ -158,14 +158,6 @@ local function onupdate(self, elapsed)
 	end
 end
 
---[[local function onupdate(self, elapsed)
-	if self.rangeTimer == 1 then
-		usable(self)
-	end
-end
-
-hooksecurefunc("ActionButton_OnUpdate", onupdate)--]]
-
 ActionButton_OnUpdate = onupdate
 hooksecurefunc("ActionButton_Update", style)
 hooksecurefunc("ActionButton_UpdateUsable", usable)
