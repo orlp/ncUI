@@ -1,63 +1,21 @@
-local feeds, bars, debuff, exists = {}, {}, {}, {}
-local freeslot, freebar = 1, 1
+--[[local bars, identifiers = {}, {}
 local function hex(r, g, b) if type(r) == "table" then if r.r then r, g, b = r.r, r.g, r.b else r, g, b = unpack(r) end	end	return string.format("|cff%02x%02x%02x", r*255, g*255, b*255) end
-local function stop(id)
-	freebar = freebar - 1
-	for i = id, 9 do
-		local nextid = bars[i+1]:GetID()
-		if nextid then
-			bars[i]:SetID(nextid)
-		else
-			bars[i]:SetID(nil)
-		end
-	end
-end
 local function sortbars(unit)
 	local remain = {}
-	for i = 1, 10 do
-		local id = bars[i]:GetID()
-		remain[i] = id
+	for i = 1, #bars do
+		local feed = bars[i].feed
+		if feed then
+			remain[i] = bars[i].feed
+		end
 	end
-	table.sort(remain, function(a, b) return (feeds[a].expire - GetTime()) < (feeds[b].expire - GetTime()) end)
+	local now = GetTime()
+	table.sort(remain, function(a, b) return (a.expire - now) < (b.expire - now) end)
 	for a, b in pairs(remain) do
-		if b and feeds[b].spell and feeds[b].target==unit and not exists[feeds[b].spell] then
-			stop(a)
-			sortbars(unit)
-			return
-		end
-		bars[a]:SetID(b)
+		bars[a]:SetFeed(b)
 	end
 end
-local function isbizzy(unit, spell)
-	for i = 1, 10 do
-		local id = bars[i]:GetID()
-		if id and feeds[id].target == unit and feeds[id].spell == spell then
-			return i
-		end
-	end
-	return nil
-end
-local function start(target, spell, expire, duration, spellname, icon, count, name, debufftype)
-	feeds[freeslot] = {}
 
-	feeds[freeslot].target = target
-	feeds[freeslot].name = name
-	feeds[freeslot].spellname = spellname
-	feeds[freeslot].icon = icon
-	feeds[freeslot].count = count
-	feeds[freeslot].expire = expire
-	feeds[freeslot].duration = duration
-	feeds[freeslot].spell = spell
-	feeds[freeslot].bar = freeslot
-	feeds[freeslot].debufftype = debufftype
-	
-	bars[freebar]:SetID(freeslot)
-	
-	freeslot = freeslot + 1
-	freebar = freebar + 1
-end
-
-for i = 1, 10 do
+local function createbar(i)
 	local f = CreateFrame("Frame", "DebuffTimerBar"..i, UIParent)
 	f:Hide()
 
@@ -101,31 +59,58 @@ for i = 1, 10 do
 	f.count:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
 	f.count:SetPoint("CENTER", f.icon, 0, -1)
 	
-	function f:SetTime(s, b) self.time:SetText(format("%.1f", s)) self.bar:SetValue(b) end
-	function f:SetSpell(name, icon, count) self.spell:SetText(name) self.icon:SetTexture(icon) if count > 1 then self.count:SetText(count) end end
-	function f:SetID(id)
-		if not id then
-			self:Hide()
-			self.id = nil
-			return
+	function f:SetFeed(feed)
+		self.feed = feed
+		if not identifiers[feed.unit] then
+			identifiers[feed.unit] = {}
 		end
-		self.id = id
-		self.target:SetText(feeds[id].name)
-		local color = DebuffTypeColor[feeds[id].debufftype]
-		self.bar:SetStatusBarColor(color.r, color.g, color.b)
-		self:SetSpell(feeds[id].spellname, feeds[id].icon, feeds[id].count)
+		identifiers[feed.unit][feed.spell] = i
+		
+		local color = DebuffTypeColor[feed.debufftype]
+		
+		self.bar:SetStatusBarColor(color.r, color.g, color.b)		
+		self.target:SetText(feed.name)
+		self.spell:SetText(feed.spellname)
+		self.icon:SetTexture(feed.icon)
+		if feed.count > 1 then
+			self.count:SetText(feed.count)
+		end		
+		
 		self:Show()
 	end
-	function f:GetID() return self.id end
-	function f:Stop() stop(i) end
+	
+	function f:Refresh(duration, expire)
+		self.feed.duration = duration
+		self.feed.expire = expire
+	end
+	
+	function f:Stop()
+		if not self.feed then return end
+		
+		local unit = identifiers[self.feed.unit]
+		if unit and unit[self.feed.spell] == i then
+			identifiers[self.feed.unit][self.feed.spell] = nil
+		end
+		
+		for id = i, #bars do
+			local nextbar = bars[id+1]
+			if nextbar and nextbar.feed then
+				bars[id]:SetFeed(nextbar.feed)
+			else
+				bars[id].feed = nil
+				bars[id]:Hide()
+			end
+		end
+	end
 
 	f:SetScript("OnUpdate", function(self, elapsed)
-		local id = self:GetID()
-		if not feeds[id] then self:Hide() return end
+		if not self.feed then self:Hide() return end
 
-		local remaining = feeds[id].expire - GetTime()
-		if remaining < 0 then stop(i) return end
-		self:SetTime(remaining, remaining/feeds[id].duration)
+		local remaining = self.feed.expire - GetTime()
+		if remaining < 0 then self:Stop() return end
+		
+		self.time:SetText(format("%.1f", remaining))
+		self.bar:SetValue(remaining/self.feed.duration)
 	end)
 	
 	if i==1 then
@@ -136,38 +121,79 @@ for i = 1, 10 do
 		f:SetPoint("BOTTOMRIGHT", bars[i-1], "TOPRIGHT", 0, ncUIdb:Scale(4)) -- spacing and growth
 	end
 
+	f.id = i
 	bars[i] = f
+	return i
+end
+
+local function getnewbar()
+	for i = 1, #bars do
+		if not bars[i].feed then return i end
+	end
+	return createbar(#bars+1)
+end
+
+local function start(unit, spell, expire, duration, spellname, icon, count, name, debufftype)
+	local exists = identifiers[unit]
+	if exists and exists[spell] then
+		bars[exists[spell] ]:Refresh(duration, expire)
+		return
+	end
+	
+	local feed, bar = {}, getnewbar()
+	feed.unit = unit
+	feed.name = name
+	feed.spellname = spellname
+	feed.icon = icon
+	feed.count = count
+	feed.expire = expire
+	feed.duration = duration
+	feed.spell = spell
+	feed.debufftype = debufftype
+	feed.bar = bar
+
+	bars[bar]:SetFeed(feed)
+end
+
+local function stop(unit, spell)
+	local unit = identifiers[unit]
+	if not unit or not unit[spell] then return end
+	bars[unit[spell] ]:Stop()
+	if identifiers[unit]==0 then identifiers[unit] = nil end
 end
 
 local f = CreateFrame("Frame")
 f:SetScript("OnEvent", function(self, event, target, spell, _, _, _, guid)
+	local cache
 	if event=="COMBAT_LOG_EVENT_UNFILTERED" then
 		if spell=="UNIT_DIED" then
-			exists = {}
-			sortbars(guid)
+			cache = {}
 		end
 	else
 		if target=="player" then return end
 		local unit = UnitGUID(target)
 		
-		exists = {}
+		cache = {}
 		
 		for i = 1, 40 do
-			local name, _, icon, count, debufftype, duration, expires, caster, _, _, id = UnitDebuff(target, i)
+			local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(target, i)
 			if caster=="player" then
-				exists[id] = true
-				local bar = isbizzy(unit, id)
-				if bar then
-					local id = bars[bar]:GetID()
-					feeds[id].expire = expires
-					feeds[id].duration = duration
-				else
-					start(unit, id, expires, duration, name, icon, count, UnitName(target), debufftype)
+				cache[spell] = true
+				start(unit, spell, expires, duration, name, icon, count, UnitName(target), debufftype)
+			end
+		end
+	end
+	if cache then
+		local guid = guid or UnitGUID(target)
+		if identifiers[guid] then
+			for spell, bar in pairs(identifiers[guid]) do
+				if not cache[spell] then
+					stop(guid, spell)
 				end
 			end
 		end
-		sortbars(unit)
+		sortbars()
 	end
 end)
 f:RegisterEvent("UNIT_AURA")
-f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")-]]
