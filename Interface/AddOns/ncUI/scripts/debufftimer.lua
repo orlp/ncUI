@@ -51,12 +51,12 @@ local function createbar(i)
 		self.spell = spell
 		self.debufftype = debufftype
 
-		local color = DebuffTypeColor[debufftype]		
+		local color = DebuffTypeColor[debufftype] or DebuffTypeColor.none
 		self.bar:SetStatusBarColor(color.r, color.g, color.b)		
 		self.spellname:SetText(spellname)
 		self.target:SetText(name)
 		self.icon:SetTexture(icon)
-		if count > 1 then self.count:SetText(count) else self.count:SetText(nil) end		
+		if count and count > 1 then self.count:SetText(count) else self.count:SetText(nil) end		
 		
 		if not identifiers[unit] then
 			identifiers[unit] = {}

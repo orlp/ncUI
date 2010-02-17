@@ -5,7 +5,7 @@ local header = CreateFrame("Button", "ncExtrabuttonsHeader", UIParent, "SecureHa
 db.buttons = {}
 
 -- Setup class specific actionbutton id's
-local class = UnitClass("player")
+local _, class = UnitClass("player")
 if class == "DRUID" then
 	db["buttonids"] = {
 		26,
