@@ -140,7 +140,7 @@ for k in pairs(CHAT_FRAME_TEXTURES) do
 end
 local f = CreateFrame("Frame")
 f:SetScript("OnEvent", enter)
-f:RegisterEvent("PLAYER_ENTERING_WORLD")
+f:RegisterEvent("PLAYER_LOGIN")
 
 local function colorborder(r,g,b)
 	ChatFrameEditBoxBackground:SetBackdropBorderColor(r,g,b)

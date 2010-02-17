@@ -170,36 +170,21 @@ local function stop(unit, spell)
 	if identifiers[unit]==0 then identifiers[unit] = nil end
 end
 
+local player = UnitGUID("player")
 local f = CreateFrame("Frame")
-f:SetScript("OnEvent", function(self, event, target, spell, _, _, _, guid)
-	local cache
+f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, _, _, guid, _, _, id)
 	if event=="COMBAT_LOG_EVENT_UNFILTERED" then
-		if spell=="UNIT_DIED" then
-			cache = {}
+		if spell=="SPELL_AURA_REMOVED" and sourceguid==player then
+			stop(guid, id)
 		end
 	else
 		if target=="player" then return end
 		local unit = UnitGUID(target)
-		
-		cache = {}
+		local unitname = UnitName(target)
 		
 		for i = 1, 40 do
 			local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(target, i)
-			if caster=="player" then
-				cache[spell] = true
-				start(unit, spell, expires, duration, name, icon, count, UnitName(target), debufftype)
-			end
-		end
-	end
-	
-	if cache then
-		local guid = guid or UnitGUID(target)
-		if identifiers[guid] then
-			for spell, bar in pairs(identifiers[guid]) do
-				if not cache[spell] then
-					stop(guid, spell)
-				end
-			end
+			if caster=="player" then start(unit, spell, expires, duration, name, icon, count, unitname, debufftype) end
 		end
 	end
 end)
