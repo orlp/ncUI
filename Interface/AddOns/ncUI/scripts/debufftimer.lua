@@ -172,20 +172,28 @@ end
 
 local player = UnitGUID("player")
 local f = CreateFrame("Frame")
-f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, _, _, guid, _, _, id)
+f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, _, _, destguid, destname, destflags, id)
 	if event=="COMBAT_LOG_EVENT_UNFILTERED" then
 		if spell=="SPELL_AURA_REMOVED" and sourceguid==player then
-			stop(guid, id)
+			stop(destguid, id)
+		elseif spell=="SPELL_AURA_APPLIED" then
+			print(destname)
+			for i = 1, 40 do
+				local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(destname, i)
+				if caster=="player" then start(unit, spell, expires, duration, name, icon, count, unitname, debufftype) end
+			end
 		end
 	else
-		if target=="player" then return end
+		--[[if target=="player" then return end
 		local unit = UnitGUID(target)
 		local unitname = UnitName(target)
+		
+		print(target)
 		
 		for i = 1, 40 do
 			local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(target, i)
 			if caster=="player" then start(unit, spell, expires, duration, name, icon, count, unitname, debufftype) end
-		end
+		end--]]
 	end
 end)
 f:RegisterEvent("UNIT_AURA")
