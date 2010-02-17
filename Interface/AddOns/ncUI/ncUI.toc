@@ -44,5 +44,6 @@ unitframes\plugins\dropdown.lua
 unitframes\template.xml
 unitframes\tags.lua
 unitframes\unitframe.lua
+unitframes\raid.lua
 
 unitframes\plugins\smooth.lua
