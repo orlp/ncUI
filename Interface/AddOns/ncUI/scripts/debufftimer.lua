@@ -56,7 +56,7 @@ local function createbar(i)
 		self.spellname:SetText(spellname)
 		self.target:SetText(name)
 		self.icon:SetTexture(icon)
-		if count and count > 1 then self.count:SetText(count) else self.count:SetText(nil) end		
+		if count and count > 1 then self.count:SetText(count) else self.count:SetText(nil) end
 		
 		if not identifiers[unit] then
 			identifiers[unit] = {}
@@ -85,9 +85,10 @@ local function createbar(i)
 		self.spell = nil
 	end
 	
-	function f:Refresh(duration, expire)
+	function f:Refresh(duration, expire, count)
 		self.duration = duration
 		self.expire = expire
+		if count and count > 1 then self.count:SetText(count) else self.count:SetText(nil) end		
 	end
 	
 	function f:Stop()
@@ -146,7 +147,7 @@ end
 local function start(unit, spell, expire, duration, spellname, icon, count, name, debufftype)
 	local exists = identifiers[unit]
 	if exists and exists[spell] then
-		bars[exists[spell]]:Refresh(duration, expire)
+		bars[exists[spell]]:Refresh(duration, expire, count)
 		return
 	end
 	local bar = getbar(expire)
@@ -176,25 +177,116 @@ f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, _, _, de
 	if event=="COMBAT_LOG_EVENT_UNFILTERED" then
 		if spell=="SPELL_AURA_REMOVED" and sourceguid==player then
 			stop(destguid, id)
-		elseif spell=="SPELL_AURA_APPLIED" then
-			print(destname)
-			for i = 1, 40 do
-				local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(destname, i)
-				if caster=="player" then start(unit, spell, expires, duration, name, icon, count, unitname, debufftype) end
-			end
 		end
 	else
-		--[[if target=="player" then return end
+		if target=="player" then return end
 		local unit = UnitGUID(target)
 		local unitname = UnitName(target)
 		
-		print(target)
-		
 		for i = 1, 40 do
 			local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(target, i)
-			if caster=="player" then start(unit, spell, expires, duration, name, icon, count, unitname, debufftype) end
-		end--]]
+			if caster=="player" then start(unit, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) end
+		end
 	end
 end)
 f:RegisterEvent("UNIT_AURA")
 f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+
+
+
+
+
+--[[local colors = {}
+colors.power = {}
+colors.reaction = {}
+colors.class = {}
+for power, color in next, PowerBarColor do
+	if(type(power) == "string") then
+		colors.power[power] = {color.r, color.g, color.b}
+	end
+end
+for reaction, color in next, FACTION_BAR_COLORS do
+	colors.reaction[reaction] = {color.r, color.g, color.b}
+end
+for class, color in next, RAID_CLASS_COLORS do
+	colors.class[class] = {color.r, color.g, color.b}
+end
+colors.power.MANA = {0, 144/255, 1}
+
+local f = CreateFrame("Frame", nil, UIParent)
+ncUIdb:SetTemplate(f)
+f:SetSize(200, 25)
+f:SetFrameStrata("TOOLTIP")
+
+f.health = CreateFrame("StatusBar", nil, f)
+f.health:SetStatusBarTexture(ncUIdb["media"].unitframe)
+f.health:SetStatusBarColor(unpack(ncUIdb["general"].colorscheme_border))
+f.health:SetPoint("TOPLEFT", ncUIdb:Scale(3), ncUIdb:Scale(-3))
+f.health:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-3), ncUIdb:Scale(3))
+f.health:SetMinMaxValues(0, 1)
+
+f.power = CreateFrame("StatusBar", nil, f)
+f.power:SetFrameLevel(3)
+f.power:SetStatusBarTexture(ncUIdb["media"].unitframe)
+f.power:SetStatusBarColor(.6, .6, .6)
+f.power:SetPoint("BOTTOMLEFT", ncUIdb:Scale(3), ncUIdb:Scale(3))
+f.power:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-3), ncUIdb:Scale(3))
+f.power:SetMinMaxValues(0, 1)
+f.power:SetHeight(5)
+
+f.power.bg = CreateFrame("Frame", nil, f.power)
+f.power.bg:SetPoint("LEFT", -2, 0)
+f.power.bg:SetPoint("RIGHT", 1, 0)
+f.power.bg:SetPoint("BOTTOM", f.power, "TOP")
+f.power.bg:SetHeight(ncUIdb:Scale(1))
+f.power.bg:SetBackdrop({
+	bgFile = ncUIdb["media"].solid, 
+	edgeFile = ncUIdb["media"].solid, 
+	tile = false, tileSize = 0, edgeSize = ncUIdb.mult, 
+	insets = { left = -0, right = 0, top = -ncUIdb.mult, bottom = -ncUIdb.mult}
+})
+f.power.bg:SetBackdropColor(unpack(ncUIdb["general"].colorscheme_backdrop))
+f.power.bg:SetBackdropBorderColor(unpack(ncUIdb["general"].colorscheme_border))
+
+f:SetScript("OnUpdate", function(self)
+	if not UnitExists("mouseover") then
+		self:Hide()
+		return
+	end
+
+	local x, y = GetCursorPosition()
+	local scale = UIParent:GetEffectiveScale()
+	x, y = x/scale, y/scale
+	self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x, y+20)
+	
+	local health, maxhealth = UnitHealth("mouseover"), UnitHealthMax("mouseover")
+	self.health:SetValue(health/maxhealth)
+	
+	local power, maxpower = UnitPower("mouseover"), UnitPowerMax("mouseover")
+	self.power:SetValue(power/maxpower)
+end)
+f:SetScript("OnEvent", function(self)
+	if GetMouseFocus():GetName()~="WorldFrame" then return end
+
+	local _, class = UnitClass("mouseover")
+	local reaction =  UnitReaction("player", "mouseover")
+	local _, powertype = UnitPowerType("mouseover")
+	
+	if UnitIsPlayer("mouseover") and class then
+		self.health:SetStatusBarColor(unpack(colors.class[class]))
+	elseif reaction then
+		self.health:SetStatusBarColor(unpack(colors.reaction[reaction]))
+	else
+		self.health:SetStatusBarColor(unpack(ncUIdb["general"].colorscheme_border))
+	end
+	
+	if power==0 then
+		self.power:Hide()
+	else
+		self.power:SetStatusBarColor(unpack(colors.power[powertype]))
+		self.power:Show()
+	end
+	
+	self:Show()
+end)
+f:RegisterEvent("UPDATE_MOUSEOVER_UNIT")--]]

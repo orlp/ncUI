@@ -84,7 +84,7 @@ oUF:RegisterStyle('Raid', CreateStyle)
 oUF:SetActiveStyle('Raid')
  
 local raid = {}
-for i = 1, 5 do
+for i = 1, 8 do
 	local raidgroup = oUF:Spawn('header', 'oUF_Group'..i)
 	raidgroup:SetManyAttributes('groupFilter', tostring(i), 'showRaid', true, 'yOffset', -4)
 	raidgroup:SetFrameStrata('BACKGROUND')	
@@ -100,13 +100,13 @@ for i = 1, 5 do
 	raidToggle:RegisterEvent("PARTY_LEADER_CHANGED")
 	raidToggle:RegisterEvent("PARTY_MEMBERS_CHANGED")
 	raidToggle:SetScript("OnEvent", function(self)
-	if InCombatLockdown() then
-		self:RegisterEvent("PLAYER_REGEN_ENABLED")
-	else
-		self:UnregisterEvent("PLAYER_REGEN_ENABLED")
-    raidgroup:Show()
-	end
-end)
+		if InCombatLockdown() then
+			self:RegisterEvent("PLAYER_REGEN_ENABLED")
+		else
+			self:UnregisterEvent("PLAYER_REGEN_ENABLED")
+		raidgroup:Show()
+		end
+	end)
 end
  
  
