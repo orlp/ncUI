@@ -1,4 +1,6 @@
 local bars, identifiers = {}, {}
+local UnitID, cache = {}, {}
+local GUID = {}
 local function hex(r, g, b) if type(r) == "table" then if r.r then r, g, b = r.r, r.g, r.b else r, g, b = unpack(r) end	end	return string.format("|cff%02x%02x%02x", r*255, g*255, b*255) end
 local function createbar(i)
 	local f = CreateFrame("Frame", "DebuffTimerBar"..i, UIParent)
@@ -173,23 +175,81 @@ end
 
 local player = UnitGUID("player")
 local f = CreateFrame("Frame")
-f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, _, _, destguid, destname, destflags, id)
+f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcename, sourceflags, destguid, destname, destflags, id)
 	if event=="COMBAT_LOG_EVENT_UNFILTERED" then
 		if spell=="SPELL_AURA_REMOVED" and sourceguid==player then
 			stop(destguid, id)
+		elseif spell=="SPELL_AURA_APPLIED" and sourceguid==player and destguid~=player then
+			local unitid = GUID[destguid]
+			if not unitid then
+				if not cache[destguid] then cache[destguid] = {} end
+				cache[destguid][id] = true
+			else
+				local unitname = UnitName(unitid)
+				local spellname, rank = GetSpellInfo(id)
+				if not string.match(rank, "%d") then rank = nil end
+				local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(unitid, spellname, rank)
+				if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) end
+			end
+		elseif spell=="SPELL_AURA_REFRESH" then
+			local unitid = GUID[destguid]
+			if not unitid then
+				if not cache[destguid] then cache[destguid] = {} end
+				cache[destguid][id] = true
+			else
+				local unitname = UnitName(unitid)
+				local spellname, rank = GetSpellInfo(id)
+				if not string.match(rank, "%d") then rank = nil end
+				local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(unitid, spellname, rank)
+				if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) end
+			end
 		end
-	else
-		if target=="player" then return end
-		local unit = UnitGUID(target)
-		local unitname = UnitName(target)
+	elseif event=="UNIT_TARGET" or event=="UPDATE_MOUSEOVER_UNIT" then
+		local target = target
+		if event=="UPDATE_MOUSEOVER_UNIT" then target = "mouseover" end
+		if not target then return end
+		local guid = UnitGUID(target)
+		local guidtarget = UnitGUID(target.."target")
+		local old, oldtarget = UnitID[target], UnitID[target.."target"]
 		
-		for i = 1, 40 do
-			local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(target, i)
-			if caster=="player" then start(unit, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) end
+		if old then	GUID[old] = nil	end
+		if oldtarget then GUID[oldtarget] = nil end
+		
+		if guid then
+			GUID[guid] = target
+			UnitID[target] = guid
+		else
+			UnitID[target] = nil
+		end
+		if guidtarget then
+			GUID[guidtarget] = target.."target"
+			UnitID[target.."target"] = guidtarget
+		else
+			UnitID[target.."target"] = nil
+		end
+		
+		for destguid, tab in pairs(cache) do
+			local unitid
+			if destguid==guid then
+				unitid = target
+			elseif destguid==guidtarget then
+				unitid = target.."target"
+			end
+			if unitid then
+				for id in pairs(tab) do
+					local unitname = UnitName(unitid)
+					local spellname, rank = GetSpellInfo(id)
+					if not string.match("%d+", rank) then rank = nil end
+					local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(unitid, spellname, rank)
+					if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) end
+					cache[destguid][id] = nil
+				end
+			end
 		end
 	end
 end)
-f:RegisterEvent("UNIT_AURA")
+--f:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+f:RegisterEvent("UNIT_TARGET")
 f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
 
