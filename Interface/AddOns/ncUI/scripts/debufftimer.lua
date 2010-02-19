@@ -58,6 +58,7 @@ local function createbar(i)
 		self.spellname:SetText(spellname)
 		self.target:SetText(name)
 		self.icon:SetTexture(icon)
+		local count = tonumber(count)
 		if count and count > 1 then self.count:SetText(count) else self.count:SetText(nil) end
 		
 		if not identifiers[unit] then
@@ -166,6 +167,7 @@ local function start(unit, spell, expire, duration, spellname, icon, count, name
 	bar:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell)
 end
 
+local justdone = 0
 local function stop(unit, spell)
 	local unit = identifiers[unit]
 	if not unit or not unit[spell] then return end
@@ -178,8 +180,6 @@ local f = CreateFrame("Frame")
 f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcename, sourceflags, destguid, destname, destflags, id)
 	if event=="COMBAT_LOG_EVENT_UNFILTERED" then
 		if spell=="SPELL_AURA_REMOVED" and sourceguid==player then
-			stop(destguid, id)
-		elseif spell=="SPELL_AURA_APPLIED" and sourceguid==player and destguid~=player then
 			local unitid = GUID[destguid]
 			if not unitid then
 				if not cache[destguid] then cache[destguid] = {} end
@@ -188,10 +188,11 @@ f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcena
 				local unitname = UnitName(unitid)
 				local spellname, rank = GetSpellInfo(id)
 				if not string.match(rank, "%d") then rank = nil end
-				local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(unitid, spellname, rank)
-				if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) end
+				if not UnitDebuff(unitid, spellname, rank) then
+					stop(destguid, id)
+				end
 			end
-		elseif spell=="SPELL_AURA_REFRESH" then
+		elseif spell=="SPELL_AURA_APPLIED" and sourceguid==player and destguid~=player then
 			local unitid = GUID[destguid]
 			if not unitid then
 				if not cache[destguid] then cache[destguid] = {} end
@@ -241,7 +242,7 @@ f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcena
 					local spellname, rank = GetSpellInfo(id)
 					if not string.match("%d+", rank) then rank = nil end
 					local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(unitid, spellname, rank)
-					if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) end
+					if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) else stop(destguid, id) end
 					cache[destguid][id] = nil
 				end
 			end

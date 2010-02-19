@@ -16,14 +16,14 @@ BonusActionBarTexture0:Hide()
 BonusActionBarTexture1:Hide()
 BonusActionButton1:ClearAllPoints()
 
-shapeshiftbarholder:SetSize(ncUIdb:Scale(34), ncUIdb:Scale(34))
+shapeshiftbarholder:SetSize(ncUIdb:Scale(25), ncUIdb:Scale(25))
 shapeshiftbarholder:SetPoint("TOPLEFT")
 ShapeshiftBarFrame:SetParent(bonusactionbarholder)
 ShapeshiftBarFrame:SetWidth(0.01)
 ShapeshiftButton1:ClearAllPoints()
-ShapeshiftButton1:SetPoint("BOTTOMLEFT", shapeshiftbarholder, 10, -10)
+ShapeshiftButton1:SetPoint("BOTTOMLEFT", shapeshiftbarholder, ncUIdb:Scale(11), ncUIdb:Scale(-11))
 hooksecurefunc("ShapeshiftBar_Update", function()
-	ShapeshiftButton1:SetPoint("BOTTOMLEFT", shapeshiftbarholder, 10, -10)
+	ShapeshiftButton1:SetPoint("BOTTOMLEFT", shapeshiftbarholder, ncUIdb:Scale(11), ncUIdb:Scale(-11))
 end) 
 
 for i=1, 8 do
@@ -99,34 +99,34 @@ end)
 vehicle:SetAlpha(0)
 
 ActionButton1:ClearAllPoints()
-ActionButton1:SetPoint("BOTTOMLEFT", ActionBarBackground,"BOTTOMLEFT", ncUIdb:Scale(5), 6)
+ActionButton1:SetPoint("BOTTOMLEFT", ActionBarBackground,"BOTTOMLEFT", ncUIdb:Scale(5), ncUIdb:Scale(5))
 BonusActionButton1:SetAllPoints(ActionButton1)
 for i=2, 8 do
     local b = _G["ActionButton"..i]
     local b2 = _G["ActionButton"..i-1]
     b:ClearAllPoints()
-    b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(5), 0)
+    b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(4), 0)
 end
 
 for i=2, 10 do
     local b = _G["ShapeshiftButton"..i]
     local b2 = _G["ShapeshiftButton"..i-1]
     b:ClearAllPoints()
-    b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(5), 0)
+    b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(4), 0)
 end
 
 for i=2, 10 do
     local b = _G["PetActionButton"..i]
     local b2 = _G["PetActionButton"..i-1]
     b:ClearAllPoints()
-    b:SetPoint("TOP",b2,"BOTTOM", 0, ncUIdb:Scale(-5))
+    b:SetPoint("TOP",b2,"BOTTOM", 0, ncUIdb:Scale(-4))
 end
 
 for i=2, 8 do
     local b = _G["BonusActionButton"..i]
     local b2 = _G["BonusActionButton"..i-1]
     b:ClearAllPoints()
-    b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(5), 0)
+    b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(4), 0)
 end
 
 MultiBarBottomLeftButton1:ClearAllPoints()
@@ -135,7 +135,7 @@ for i=2, 8 do
     local b = _G["MultiBarBottomLeftButton"..i]
     local b2 = _G["MultiBarBottomLeftButton"..i-1]
     b:ClearAllPoints()
-    b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(5), 0)
+    b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(4), 0)
 end
 
 local securehandler = CreateFrame("Frame", nil, nil, "SecureHandlerBaseTemplate")

@@ -22,19 +22,26 @@ local function StyleBuffs(buttonName, index, debuff)
 	local buff		= _G[buttonName..index]
 	local icon		= _G[buttonName..index.."Icon"]
 	local border	= _G[buttonName..index.."Border"]
-	local Duration	= _G[buttonName..index.."Duration"]
+	local duration	= _G[buttonName..index.."Duration"]
+	local count 	= _G[buttonName..index.."Count"]
 	if icon and not _G[buttonName..index.."Panel"] then
 		icon:SetTexCoord(.08, .92, .08, .92)
+		icon:SetPoint("TOPLEFT", buff, ncUIdb:Scale(2), ncUIdb:Scale(-2))
+		icon:SetPoint("BOTTOMRIGHT", buff, ncUIdb:Scale(-2), ncUIdb:Scale(2))
 		
-		buff:SetHeight(28)
-		buff:SetWidth(28)
+		buff:SetHeight(ncUIdb:Scale(25))
+		buff:SetWidth(ncUIdb:Scale(25))
 		
-		Duration:ClearAllPoints()
-		Duration:SetPoint("BOTTOM", 0, -16)
-		Duration:SetFont(ncUIdb["media"].pixelfont,11)
+		duration:ClearAllPoints()
+		duration:SetPoint("BOTTOM", ncUIdb.mult, ncUIdb:Scale(-10))
+		duration:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
+		
+		count:ClearAllPoints()
+		count:SetPoint("BOTTOM", ncUIdb.mult, ncUIdb:Scale(3))
+		count:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
 		
 		local panel = CreateFrame("Frame", buttonName..index.."Panel", buff)
-		ncUIdb:CreatePanel(panel, 34, 34, "CENTER", buff, "CENTER", 0,0)
+		ncUIdb:CreatePanel(panel, 25, 25, "CENTER", buff, "CENTER", 0,0)
 
 		if debuff then
 			_G[buttonName..index.."Panel"]:SetBackdropBorderColor(134/255, 12/255, 12/255)
@@ -50,17 +57,17 @@ function UpdateBuffAnchors()
 		buff:ClearAllPoints()
 		StyleBuffs(buttonName, index, false)
 		if index == 17 then
-			buff:SetPoint("RIGHT", Minimap, "LEFT", -12, 0)
+			buff:SetPoint("RIGHT", Minimap, "LEFT", ncUIdb:Scale(-8), 0)
 		elseif index == 1 then
 			if (mainhand and not offhand) or (offhand and not mainhand) then
-				buff:SetPoint("RIGHT", TempEnchant1, "LEFT", ncUIdb:Scale(-9), -0)
+				buff:SetPoint("RIGHT", TempEnchant1, "LEFT", ncUIdb:Scale(-6), 0)
 			elseif (mainhand and offhand) then
-				buff:SetPoint("RIGHT", TempEnchant2, "LEFT", ncUIdb:Scale(-9), 0)
+				buff:SetPoint("RIGHT", TempEnchant2, "LEFT", ncUIdb:Scale(-6), 0)
 			else
-				buff:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -12, 1) -- diff 35
+				buff:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", ncUIdb:Scale(-8), ncUIdb:Scale(2)) -- diff 35
 			end
 		else
-			buff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", ncUIdb:Scale(-9), 0)
+			buff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", ncUIdb:Scale(-6), 0)
 		end
 	end
 end
@@ -70,9 +77,9 @@ function UpdateDebuffAnchors(buttonName, index)
 	StyleBuffs(buttonName, index, true)
 	debuff:ClearAllPoints()
 	if index == 1 then
-		debuff:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -12, 0)
+		debuff:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", ncUIdb:Scale(-8), ncUIdb:Scale(-2))
 	else
-		debuff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", ncUIdb:Scale(-9), 0)
+		debuff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", ncUIdb:Scale(-6), 0)
 	end
 end
 

@@ -301,11 +301,11 @@ local function style(self, unit)
 	
 	if unit~="focus" then
 		local panel = CreateFrame("Frame", nil, self)
-		ncUIdb:CreatePanel(panel, 1, 1, "TOPLEFT", self.Health, "TOPLEFT", -3, 3)
-		panel:SetPoint("BOTTOMRIGHT", self.Power, 2, -2)
+		ncUIdb:CreatePanel(panel, 1, 1, "TOPLEFT", self.Health, "TOPLEFT", -2, 2)
+		panel:SetPoint("BOTTOMRIGHT", self.Power, ncUIdb:Scale(2), ncUIdb:Scale(-2))
 		local panel2 = CreateFrame("Frame", nil, self.Power)
-		ncUIdb:CreatePanel(panel2, 1, 1, "TOPLEFT", self.Power, "TOPLEFT", -3, 3)
-		panel2:SetPoint("BOTTOMRIGHT", self.Power, 2, -2)
+		ncUIdb:CreatePanel(panel2, 1, 1, "TOPLEFT", self.Power, "TOPLEFT", -2, 2)
+		panel2:SetPoint("BOTTOMRIGHT", self.Power, ncUIdb:Scale(2), ncUIdb:Scale(-2))	
 		panel2:SetFrameLevel(3)
 		panel2:SetFrameStrata("MEDIUM")
 		panel2:SetBackdrop{
@@ -372,8 +372,8 @@ local function style(self, unit)
 		if(select(2, UnitClass("player")) == "DEATHKNIGHT") then
 			self.Runes = CreateFrame("Frame", nil, self.Power)
 			self.Runes:SetPoint("TOPLEFT")
-			self.Runes:SetHeight(4)
-			self.Runes:SetWidth(230)
+			self.Runes:SetHeight(ncUIdb:Scale(4))
+			self.Runes:SetWidth(ncUIdb:Scale(230))
 			self.Runes:SetBackdrop(backdrop)
 			self.Runes:SetBackdropColor(0, 0, 0)
 			self.Runes.anchor = "TOPLEFT"

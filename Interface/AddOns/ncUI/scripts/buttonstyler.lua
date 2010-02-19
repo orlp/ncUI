@@ -36,16 +36,16 @@ local function style(self)
 	Border:Hide()
 	
 	if not _G[name.."Panel"] then
-		self:SetWidth(ncUIdb:Scale(39))
-		self:SetHeight(ncUIdb:Scale(39))
+		self:SetWidth(ncUIdb:Scale(29))
+		self:SetHeight(ncUIdb:Scale(29))
 		
 		local panel = CreateFrame("Frame", name.."Panel", self)
-		ncUIdb:CreatePanel(panel, 39, 39, "CENTER", self, "CENTER", 0,0)
+		ncUIdb:CreatePanel(panel, 29, 29, "CENTER", self, "CENTER", 0,0)
 		panel:SetBackdropColor(0, 0, 0, 0)
 
 		Icon:SetTexCoord(.08, .92, .08, .92)
-		Icon:SetPoint("TOPLEFT", Button, 2, -2)
-		Icon:SetPoint("BOTTOMRIGHT", Button, -2, 2)
+		Icon:SetPoint("TOPLEFT", Button, ncUIdb:Scale(2), ncUIdb:Scale(-2))
+		Icon:SetPoint("BOTTOMRIGHT", Button, ncUIdb:Scale(-2), ncUIdb:Scale(2))
 	end
 	
 	normal:ClearAllPoints()
@@ -60,11 +60,11 @@ local function stylesmallbutton(normal, button, icon, name, pet)
 	button:SetNormalTexture("")
 	
 	if not _G[name.."Panel"] then
-		button:SetWidth(ncUIdb:Scale(pet and 36 or 34))
-		button:SetHeight(ncUIdb:Scale(pet and 36 or 34))
+		button:SetWidth(ncUIdb:Scale(25))
+		button:SetHeight(ncUIdb:Scale(25))
 		
 		local panel = CreateFrame("Frame", name.."Panel", button)
-		ncUIdb:CreatePanel(panel, (pet and 36 or 34), (pet and 36 or 34), "CENTER", button, "CENTER", 0,0)
+		ncUIdb:CreatePanel(panel, 25, 25, "CENTER", button, "CENTER", 0,0)
 		panel:SetBackdropColor(unpack(ncUIdb["general"].colorscheme_backdrop))
 
 		icon:SetTexCoord(.08, .92, .08, .92)
@@ -75,11 +75,11 @@ local function stylesmallbutton(normal, button, icon, name, pet)
 			autocast:SetHeight(ncUIdb:Scale(62))
 			autocast:ClearAllPoints()
 			autocast:SetPoint("CENTER", button, 0, 0)
-			icon:SetPoint("TOPLEFT", button, 2, -2)
-			icon:SetPoint("BOTTOMRIGHT", button, -3, 3)
+			icon:SetPoint("TOPLEFT", button, ncUIdb:Scale(2), ncUIdb:Scale(-2))
+			icon:SetPoint("BOTTOMRIGHT", button, ncUIdb:Scale(-2), ncUIdb:Scale(2))
 		else
-			icon:SetPoint("TOPLEFT", button, 3, -3)
-			icon:SetPoint("BOTTOMRIGHT", button, -3, 3)
+			icon:SetPoint("TOPLEFT", button, ncUIdb:Scale(2), ncUIdb:Scale(-2))
+			icon:SetPoint("BOTTOMRIGHT", button, ncUIdb:Scale(-2), ncUIdb:Scale(2))
 		end
 	end
 	
