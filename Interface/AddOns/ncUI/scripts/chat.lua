@@ -1,6 +1,7 @@
 local hooks = {}
 local dummy = function() end
 local db = ncUIdb["chat"]
+local _G = getfenv(0)
 
 local function addmessage(frame, text, red, green, blue, id)
 	text = tostring(text) or ""
@@ -161,17 +162,18 @@ end)
 
 local orig1, orig2 = {}, {}
 local GameTooltip = GameTooltip
+local linktypes = {item = true, enchant = true, spell = true, quest = true, unit = true, talent = true, achievement = true, glyph = true}
 local function OnHyperlinkEnter(frame, link, ...)
-	local linktype = link:match("^([^:]+)") and not link:match("player")
-	if linktype then
+	local linktype = link:match("^([^:]+)")
+	if linktype and linktypes[linktype] then
 		GameTooltip:SetOwner(frame, "ANCHOR_NONE")
-		GameTooltip:SetHyperlink(link)
-		GameTooltip:Show()
 		if frame:GetName()=="ChatFrame1" then
 			GameTooltip:SetPoint("BOTTOMLEFT", CubeLeftBG, "TOPLEFT", 0, 10)
 		else
 			GameTooltip:SetPoint("BOTTOMRIGHT", CubeRightBG, "TOPRIGHT", 0, 10)
 		end
+		GameTooltip:SetHyperlink(link)
+		GameTooltip:Show()
 	end
 	if orig1[frame] then return orig1[frame](frame, link, ...) end
 end
@@ -179,14 +181,15 @@ local function OnHyperlinkLeave(frame, ...)
 	GameTooltip:Hide()
 	if orig2[frame] then return orig2[frame](frame, ...) end
 end
-local _G = getfenv(0)
 for i=1, NUM_CHAT_WINDOWS do
 	local frame = _G["ChatFrame"..i]
 	orig1[frame] = frame:GetScript("OnHyperlinkEnter")
 	frame:SetScript("OnHyperlinkEnter", OnHyperlinkEnter)
+
 	orig2[frame] = frame:GetScript("OnHyperlinkLeave")
 	frame:SetScript("OnHyperlinkLeave", OnHyperlinkLeave)
 end
+
 local function CreateCopyFrame()
 	local frame = CreateFrame("Frame", "CopyFrame", UIParent)
 	ncUIdb:CreatePanel(frame, 700, 190, "CENTER", UIParent, "CENTER", 0 ,0)
