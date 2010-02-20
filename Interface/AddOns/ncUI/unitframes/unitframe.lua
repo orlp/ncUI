@@ -1,6 +1,8 @@
 local max = math.max
 local floor = math.floor
 
+pfont:SetFont(ncUIdb["media"].pixelfont, ncUIdb:Scale(8), "THINOUTLINE")
+
 local texture = [[Interface\AddOns\ncUI\media\unitframe]]
 local backdrop = {
 	bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
@@ -105,10 +107,9 @@ end
 
 local function createAura(self, button, icons)
 	icons.showDebuffType = true
-	
-	--{button:GetRegions()}
-	
-	button.count:SetFont(ncUIdb["media"].pixelfont, ncUIdb:Scale(8))
+	button.count:SetFont(ncUIdb["media"].pixelfont, ncUIdb:Scale(8), "THINOUTLINE")
+	button.count:ClearAllPoints()
+	button.count:SetPoint("CENTER", 1, 0)
 	button.cd:SetAlpha(0)
 	ncUIdb:SetTemplate(button)
 	button.icon:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
