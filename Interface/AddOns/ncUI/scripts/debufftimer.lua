@@ -12,8 +12,8 @@ local function createbar(i)
 	f.bar = CreateFrame("StatusBar", nil, f)
 	f.bar:SetStatusBarTexture(ncUIdb["media"].unitframe)
 	f.bar:SetStatusBarColor(unpack(ncUIdb["general"].colorscheme_border))
-	f.bar:SetPoint("TOPLEFT", ncUIdb:Scale(3), ncUIdb:Scale(-3))
-	f.bar:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-3), ncUIdb:Scale(3))
+	f.bar:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
+	f.bar:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
 	f.bar:SetMinMaxValues(0, 1)
 	
 	f.time = f.bar:CreateFontString(nil, "OVERLAY")
@@ -32,19 +32,26 @@ local function createbar(i)
 	
 	f.icon = f:CreateTexture(nil, "ARTWORK")
 	f.icon:SetTexCoord(.08, .92, .08, .92)
-	f.icon:SetHeight(ncUIdb:Scale(16))
-	f.icon:SetWidth(ncUIdb:Scale(16))
+	f.icon:SetHeight(ncUIdb:Scale(17))
+	f.icon:SetWidth(ncUIdb:Scale(17))
 	f.icon:SetPoint("RIGHT", f, "LEFT", -7, 0)
 	
 	f.iconbg = CreateFrame("Frame", nil, f)
 	ncUIdb:SetTemplate(f.iconbg)
-	f.iconbg:SetPoint("TOPLEFT", f.icon, ncUIdb:Scale(-3), ncUIdb:Scale(3))
-	f.iconbg:SetPoint("BOTTOMRIGHT", f.icon, ncUIdb:Scale(3), ncUIdb:Scale(-3))
+	f.iconbg:SetPoint("TOPLEFT", f.icon, ncUIdb:Scale(-2), ncUIdb:Scale(2))
+	f.iconbg:SetPoint("BOTTOMRIGHT", f.icon, ncUIdb:Scale(2), ncUIdb:Scale(-2))
 	f.iconbg:SetFrameStrata("LOW")
 	
 	f.count = f:CreateFontString(nil, "OVERLAY")
 	f.count:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
 	f.count:SetPoint("CENTER", f.icon, 0, -1)
+	
+	f.startcast = CreateFrame("StatusBar", nil, f)
+	f.startcast:SetStatusBarTexture(ncUIdb["media"].unitframe)
+	f.startcast:SetStatusBarColor(1, 0, 0, .5)
+	f.startcast:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
+	f.startcast:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
+	f.startcast:SetMinMaxValues(0, 1)
 	
 	function f:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell)		
 		self.unit = unit
@@ -124,7 +131,7 @@ local function createbar(i)
 	end)
 	
 	if i==1 then
-		f:SetPoint("BOTTOMLEFT", InfoRight, "TOPLEFT", 25, 5) -- anchor
+		f:SetPoint("BOTTOMLEFT", InfoRight, "TOPLEFT", ncUIdb:Scale(25), 5) -- anchor
 		f:SetPoint("BOTTOMRIGHT", InfoRight, "TOPRIGHT", 0, 5)
 	else
 		f:SetPoint("BOTTOMLEFT", bars[i-1], "TOPLEFT", 0, ncUIdb:Scale(4)) -- spacing and growth
@@ -205,9 +212,7 @@ f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcena
 				if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) end
 			end
 		end
-	elseif event=="UNIT_TARGET" or event=="UPDATE_MOUSEOVER_UNIT" then
-		local target = target
-		if event=="UPDATE_MOUSEOVER_UNIT" then target = "mouseover" end
+	elseif event=="UNIT_TARGET" then
 		if not target then return end
 		local guid = UnitGUID(target)
 		local guidtarget = UnitGUID(target.."target")
@@ -249,7 +254,6 @@ f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcena
 		end
 	end
 end)
---f:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 f:RegisterEvent("UNIT_TARGET")
 f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 

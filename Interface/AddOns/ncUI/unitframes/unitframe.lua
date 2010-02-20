@@ -63,10 +63,10 @@ local function updatepower(self, event, unit, bar, minVal, maxVal)
 	if(unit ~= "target") then return end
 
 	if(maxVal ~= 0) then
-		self.Health:SetHeight(ncUIdb:Scale(48))
+		self.Health:SetHeight(ncUIdb:Scale(36))
 		bar:Show()
 	else
-		self.Health:SetHeight(ncUIdb:Scale(56))
+		self.Health:SetHeight(ncUIdb:Scale(42))
 		bar:Hide()
 	end
 end
@@ -110,7 +110,7 @@ local function createAura(self, button, icons)
 	ncUIdb:SetTemplate(button)
 	button.icon:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
 	button.icon:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
-	button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+	button.icon:SetTexCoord(.08, .92, .08, .92)
 	button.icon:SetDrawLayer("ARTWORK")
 	button.overlay:SetTexture()
 end
@@ -139,7 +139,7 @@ local function style(self, unit)
 	self.Health:SetPoint("TOPRIGHT")
 	self.Health:SetPoint("TOPLEFT")
 	self.Health:SetStatusBarTexture(ncUIdb["media"].unitframe)
-	self.Health:SetHeight(unit == "targettarget" and ncUIdb:Scale(42) or unit == "pet" and ncUIdb:Scale(20) or ncUIdb:Scale(48))
+	self.Health:SetHeight(unit == "targettarget" and ncUIdb:Scale(32) or unit == "pet" and ncUIdb:Scale(20) or ncUIdb:Scale(36))
 	self.Health.frequentUpdates = true
 	
 	self.Health.colorClass = true
@@ -165,15 +165,15 @@ local function style(self, unit)
 
 	self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
 	self.RaidIcon:SetPoint("TOP", self, 0, 8)
-	self.RaidIcon:SetHeight(16)
-	self.RaidIcon:SetWidth(16)
+	self.RaidIcon:SetHeight(ncUIdb:Scale(10))
+	self.RaidIcon:SetWidth(ncUIdb:Scale(10))
 	
 	if(unit == "focus") then
 		self.Health:ClearAllPoints()
 		self.Health:SetAllPoints(self)
 	elseif unit == "targettarget" then
-		self:SetAttribute("initial-height", ncUIdb:Scale(50))
-		self:SetAttribute("initial-width", ncUIdb:Scale(182))
+		self:SetAttribute("initial-height", ncUIdb:Scale(38))
+		self:SetAttribute("initial-width", ncUIdb:Scale(155))
 		
 		self.Power = CreateFrame("StatusBar", nil, self)
 		self.Power:SetPoint("BOTTOMRIGHT")
@@ -331,8 +331,8 @@ local function style(self, unit)
 	end
 	
 	if(unit == "player" or unit == "target") then
-		self:SetAttribute("initial-height", ncUIdb:Scale(56))
-		self:SetAttribute("initial-width", ncUIdb:Scale(230))
+		self:SetAttribute("initial-height", ncUIdb:Scale(42))
+		self:SetAttribute("initial-width", ncUIdb:Scale(173))
 
 		self.PostUpdatePower = updatepower
 	end
@@ -373,16 +373,16 @@ local function style(self, unit)
 			self.Runes = CreateFrame("Frame", nil, self.Power)
 			self.Runes:SetPoint("TOPLEFT")
 			self.Runes:SetHeight(ncUIdb:Scale(4))
-			self.Runes:SetWidth(ncUIdb:Scale(230))
+			self.Runes:SetWidth(ncUIdb:Scale(174))
 			self.Runes:SetBackdrop(backdrop)
 			self.Runes:SetBackdropColor(0, 0, 0)
 			self.Runes.anchor = "TOPLEFT"
 			self.Runes.growth = "RIGHT"
 			self.Runes.height = 4
 			self.Runes.spacing = ncUIdb.mult
-			self.Runes.width = 230 / 6 - ncUIdb.mult
+			self.Runes.width = ncUIdb:Scale(168) / 6
 			
-			self.Health:SetHeight(ncUIdb:Scale(40))
+			self.Health:SetHeight(ncUIdb:Scale(30))
 			self.Power:SetHeight(ncUIdb:Scale(2))
 			
 			for index = 1, 6 do
@@ -395,8 +395,8 @@ local function style(self, unit)
 			end
 			
 			local panel = CreateFrame("Frame", nil, self.Power)
-			ncUIdb:CreatePanel(panel, 1, 1, "TOPLEFT", self.Power, "TOPLEFT", -3, 3)
-			panel:SetPoint("BOTTOMRIGHT", self.Runes, 2, -2)
+			ncUIdb:CreatePanel(panel, 1, 1, "TOPLEFT", self.Power, "TOPLEFT", -2, 2)
+			panel:SetPoint("BOTTOMRIGHT", self.Runes, ncUIdb:Scale(1), ncUIdb:Scale(-1))
 			panel:SetFrameLevel(3)
 			panel:SetFrameStrata("MEDIUM")
 			panel:SetBackdrop{
@@ -407,7 +407,7 @@ local function style(self, unit)
 			panel.bg = panel:CreateTexture(nil, "BACKGROUND")
 			panel.bg:SetTexture(unpack(ncUIdb["general"].colorscheme_backdrop))
 			panel.bg:SetPoint("TOPLEFT", panel)
-			panel.bg:SetPoint("BOTTOMRIGHT", panel, -2, -1)
+			panel.bg:SetPoint("BOTTOMRIGHT", panel, ncUIdb:Scale(-2), ncUIdb:Scale(-1))
 		end
 
 		self.Leader = self.Health:CreateTexture(nil, "OVERLAY")
@@ -435,10 +435,10 @@ end
 oUF:RegisterStyle("ncUI", style)
 oUF:SetActiveStyle("ncUI")
 
-oUF:Spawn("player"):SetPoint("BOTTOMLEFT", ActionBarBackground, "TOPLEFT", ncUIdb:Scale(3), ncUIdb:Scale(10))
-oUF:Spawn("target"):SetPoint("BOTTOMRIGHT", ActionBarBackground, "TOPRIGHT", ncUIdb:Scale(-3), ncUIdb:Scale(10))
-oUF:Spawn("targettarget"):SetPoint("BOTTOM", ActionBarBackground, "TOP", 0, ncUIdb:Scale(10))
-oUF:Spawn("pet"):SetPoint("BOTTOMLEFT", oUF.units.player, "TOPLEFT", 0, ncUIdb:Scale(10))
+oUF:Spawn("player"):SetPoint("BOTTOMLEFT", ActionBarBackground, "TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(6))
+oUF:Spawn("target"):SetPoint("BOTTOMRIGHT", ActionBarBackground, "TOPRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(6))
+oUF:Spawn("targettarget"):SetPoint("BOTTOM", ActionBarBackground, "TOP", 0, ncUIdb:Scale(6))
+oUF:Spawn("pet"):SetPoint("BOTTOMLEFT", oUF.units.player, "TOPLEFT", 0, ncUIdb:Scale(6))
 
 local focus = oUF:Spawn("focus")
 focus:SetPoint("TOPLEFT", InfoRight, 2, -3)

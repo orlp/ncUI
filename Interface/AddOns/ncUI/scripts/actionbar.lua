@@ -7,7 +7,7 @@ local db = ncUIdb["actionbar"]
 PetActionBarFrame:SetParent(petbarholder)
 PetActionBarFrame:SetWidth(.01)
 PetActionButton1:ClearAllPoints()
-PetActionButton1:SetPoint("TOP", PetActionBarBackground, "TOP", 0, ncUIdb:Scale(-6))
+PetActionButton1:SetPoint("TOP", PetActionBarBackground, "TOP", 0, ncUIdb:Scale(-5))
 PetActionButton1:SetFrameLevel(3)
 
 BonusActionBarFrame:SetParent(bonusactionbarholder)
@@ -28,6 +28,11 @@ end)
 
 for i=1, 8 do
 	_G["ActionButton"..i]:SetParent(UIParent)
+	_G["ActionButton"..i]:SetAttribute("showgrid", 1)
+end
+
+for i=1, 8 do
+	_G["BonusActionButton"..i]:SetAttribute("showgrid", 1)
 end
 
 local MicroButtons = {

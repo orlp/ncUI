@@ -60,19 +60,19 @@ local function stylesmallbutton(normal, button, icon, name, pet)
 	button:SetNormalTexture("")
 	
 	if not _G[name.."Panel"] then
-		button:SetWidth(ncUIdb:Scale(25))
-		button:SetHeight(ncUIdb:Scale(25))
+		button:SetWidth(ncUIdb:Scale(24))
+		button:SetHeight(ncUIdb:Scale(24))
 		
 		local panel = CreateFrame("Frame", name.."Panel", button)
-		ncUIdb:CreatePanel(panel, 25, 25, "CENTER", button, "CENTER", 0,0)
+		ncUIdb:CreatePanel(panel, 24, 24, "CENTER", button, "CENTER", 0,0)
 		panel:SetBackdropColor(unpack(ncUIdb["general"].colorscheme_backdrop))
 
 		icon:SetTexCoord(.08, .92, .08, .92)
 		icon:ClearAllPoints()
 		if pet then
 			local autocast = _G[name.."AutoCastable"]
-			autocast:SetWidth(ncUIdb:Scale(60))
-			autocast:SetHeight(ncUIdb:Scale(62))
+			autocast:SetWidth(ncUIdb:Scale(41))
+			autocast:SetHeight(ncUIdb:Scale(40))
 			autocast:ClearAllPoints()
 			autocast:SetPoint("CENTER", button, 0, 0)
 			icon:SetPoint("TOPLEFT", button, ncUIdb:Scale(2), ncUIdb:Scale(-2))
@@ -158,7 +158,7 @@ local function onupdate(self, elapsed)
 	end
 end
 
-ActionButton_OnUpdate = onupdate
+hooksecurefunc("ActionButton_OnUpdate", onupdate)
 hooksecurefunc("ActionButton_Update", style)
 hooksecurefunc("ActionButton_UpdateUsable", usable)
 hooksecurefunc("PetActionBar_Update", stylepet)
