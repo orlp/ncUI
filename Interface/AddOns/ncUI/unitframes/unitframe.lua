@@ -106,7 +106,10 @@ end
 local function createAura(self, button, icons)
 	icons.showDebuffType = true
 	
-	button.cd:SetReverse()
+	--{button:GetRegions()}
+	
+	button.count:SetFont(ncUIdb["media"].pixelfont, ncUIdb:Scale(8))
+	button.cd:SetAlpha(0)
 	ncUIdb:SetTemplate(button)
 	button.icon:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
 	button.icon:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
@@ -339,22 +342,22 @@ local function style(self, unit)
 
 	if(unit == "target") then
 		self.Buffs = CreateFrame("Frame", nil, self)
-		self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPLEFT", -3, 8)
-		self.Buffs:SetHeight(ncUIdb:Scale(30))
-		self.Buffs:SetWidth(ncUIdb:Scale(230))
-		self.Buffs.num = 7
-		self.Buffs.size = 30
-		self.Buffs.spacing = 4
+		self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPLEFT", ncUIdb:Scale(-2), ncUIdb:Scale(5))
+		self.Buffs:SetHeight(ncUIdb:Scale(17))
+		self.Buffs:SetWidth(ncUIdb:Scale(174))
+		self.Buffs.num = 9
+		self.Buffs.size = ncUIdb:Scale(17)
+		self.Buffs.spacing = ncUIdb:Scale(3)
 		self.Buffs.initialAnchor = "TOPLEFT"
 		self.Buffs["growth-y"] = "DOWN"
 	
 		self.Debuffs = CreateFrame("Frame", nil, self)
-		self.Debuffs:SetPoint("BOTTOMLEFT", self.Buffs, "TOPLEFT", 0, 5)
-		self.Debuffs:SetHeight(ncUIdb:Scale(30))
+		self.Debuffs:SetPoint("BOTTOMLEFT", self.Buffs, "TOPLEFT", 0, ncUIdb:Scale(3))
+		self.Debuffs:SetHeight(ncUIdb:Scale(17))
 		self.Debuffs:SetWidth(ncUIdb:Scale(230))
-		self.Debuffs.num = 7
-		self.Debuffs.size = 30
-		self.Debuffs.spacing = 4
+		self.Debuffs.num = 9
+		self.Debuffs.size = ncUIdb:Scale(17)
+		self.Debuffs.spacing = ncUIdb:Scale(3)
 		self.Debuffs.initialAnchor = "TOPLEFT"
 		self.Debuffs["growth-y"] = "DOWN"
 		self.PostCreateAuraIcon = createAura
@@ -378,7 +381,7 @@ local function style(self, unit)
 			self.Runes:SetBackdropColor(0, 0, 0)
 			self.Runes.anchor = "TOPLEFT"
 			self.Runes.growth = "RIGHT"
-			self.Runes.height = 4
+			self.Runes.height = ncUIdb:Scale(3)
 			self.Runes.spacing = ncUIdb.mult
 			self.Runes.width = ncUIdb:Scale(168) / 6
 			

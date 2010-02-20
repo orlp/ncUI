@@ -28,11 +28,6 @@ end)
 
 for i=1, 8 do
 	_G["ActionButton"..i]:SetParent(UIParent)
-	_G["ActionButton"..i]:SetAttribute("showgrid", 1)
-end
-
-for i=1, 8 do
-	_G["BonusActionButton"..i]:SetAttribute("showgrid", 1)
 end
 
 local MicroButtons = {
@@ -157,4 +152,11 @@ end
 
 for i=1,12 do
 	securehandler:WrapScript(_G["MultiBarBottomRightButton"..i], "OnShow", "self:Hide()")
+end
+
+for i=1,12 do
+	securehandler:WrapScript(_G["ActionButton"..i], "OnHide", "self:Show()")
+	securehandler:WrapScript(_G["BonusActionButton"..i], "OnHide", "self:Show()")
+	_G["ActionButton"..i]:Show()
+	_G["BonusActionButton"..i]:Hide()
 end

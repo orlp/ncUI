@@ -46,12 +46,12 @@ local function createbar(i)
 	f.count:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
 	f.count:SetPoint("CENTER", f.icon, 0, -1)
 	
-	f.startcast = CreateFrame("StatusBar", nil, f)
+	--[[f.startcast = CreateFrame("StatusBar", nil, f)
 	f.startcast:SetStatusBarTexture(ncUIdb["media"].unitframe)
 	f.startcast:SetStatusBarColor(1, 0, 0, .5)
 	f.startcast:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
 	f.startcast:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
-	f.startcast:SetMinMaxValues(0, 1)
+	f.startcast:SetMinMaxValues(0, 1)--]]
 	
 	function f:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell)		
 		self.unit = unit

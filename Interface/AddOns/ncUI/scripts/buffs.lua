@@ -29,8 +29,8 @@ local function StyleBuffs(buttonName, index, debuff)
 		icon:SetPoint("TOPLEFT", buff, ncUIdb:Scale(2), ncUIdb:Scale(-2))
 		icon:SetPoint("BOTTOMRIGHT", buff, ncUIdb:Scale(-2), ncUIdb:Scale(2))
 		
-		buff:SetHeight(ncUIdb:Scale(25))
-		buff:SetWidth(ncUIdb:Scale(25))
+		buff:SetHeight(ncUIdb:Scale(24))
+		buff:SetWidth(ncUIdb:Scale(24))
 		
 		duration:ClearAllPoints()
 		duration:SetPoint("BOTTOM", ncUIdb.mult, ncUIdb:Scale(-10))
@@ -41,7 +41,7 @@ local function StyleBuffs(buttonName, index, debuff)
 		count:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
 		
 		local panel = CreateFrame("Frame", buttonName..index.."Panel", buff)
-		ncUIdb:CreatePanel(panel, 25, 25, "CENTER", buff, "CENTER", 0,0)
+		ncUIdb:CreatePanel(panel, 24, 24, "CENTER", buff, "CENTER", 0,0)
 
 		if debuff then
 			_G[buttonName..index.."Panel"]:SetBackdropBorderColor(134/255, 12/255, 12/255)
@@ -60,14 +60,14 @@ function UpdateBuffAnchors()
 			buff:SetPoint("RIGHT", Minimap, "LEFT", ncUIdb:Scale(-8), 0)
 		elseif index == 1 then
 			if (mainhand and not offhand) or (offhand and not mainhand) then
-				buff:SetPoint("RIGHT", TempEnchant1, "LEFT", ncUIdb:Scale(-6), 0)
+				buff:SetPoint("RIGHT", TempEnchant1, "LEFT", ncUIdb:Scale(-4), 0)
 			elseif (mainhand and offhand) then
-				buff:SetPoint("RIGHT", TempEnchant2, "LEFT", ncUIdb:Scale(-6), 0)
+				buff:SetPoint("RIGHT", TempEnchant2, "LEFT", ncUIdb:Scale(-4), 0)
 			else
 				buff:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", ncUIdb:Scale(-8), ncUIdb:Scale(2)) -- diff 35
 			end
 		else
-			buff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", ncUIdb:Scale(-6), 0)
+			buff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", ncUIdb:Scale(-4), 0)
 		end
 	end
 end
@@ -79,7 +79,7 @@ function UpdateDebuffAnchors(buttonName, index)
 	if index == 1 then
 		debuff:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", ncUIdb:Scale(-8), ncUIdb:Scale(-2))
 	else
-		debuff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", ncUIdb:Scale(-6), 0)
+		debuff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", ncUIdb:Scale(-4), 0)
 	end
 end
 

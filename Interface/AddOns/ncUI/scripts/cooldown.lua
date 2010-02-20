@@ -57,6 +57,7 @@ local function startcd(self, start, duration)
 		self.nextupdate = 0
 		
 		local height = self:GetHeight()
+		if height < ncUIdb:Scale(20) then return end
 		self.height = height
 		
 		local text = self.text or createtext(self)
