@@ -13,8 +13,9 @@ libs\ouf\ouf.xml
 
 config.lua
 
-scripts\font.lua
+media\font.xml
 scripts\core.lua
+scripts\font.lua
 scripts\panels.lua
 scripts\datatext.lua
 scripts\bindings.lua
@@ -41,7 +42,6 @@ scripts\marking.lua
 
 unitframes\plugins\dropdown.lua
 
-unitframes\template.xml
 unitframes\tags.lua
 unitframes\unitframe.lua
 unitframes\raid.lua

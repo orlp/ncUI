@@ -23,7 +23,7 @@ local function style(self)
 
 	Count:ClearAllPoints()
 	Count:SetPoint("BOTTOMRIGHT", 0, 2)
-	Count:SetFont(media.pixelfont, 11, "THINOUTLINE")
+	Count:SetFontObject("ncUIfont")
 	
 	HotKey:SetText("")
 	HotKey:Hide()

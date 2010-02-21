@@ -52,7 +52,7 @@ local function CreateStyle(self, unit)
 	self.Health.bg.bg:SetAllPoints(self.Health)
 	self.Health.bg.bg:SetTexture(unpack(ncUIdb["general"].colorscheme_backdrop))
  
-	local health = self.Health:CreateFontString(nil, "OVERLAY", "pfontright")
+	local health = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfontright")
 	health:SetPoint('CENTER', 0, 1)
 
  
@@ -60,7 +60,7 @@ local function CreateStyle(self, unit)
 	--power:SetPoint('LEFT', 3, 0)
 	--self:Tag(power, '[smartpp]')
  
-	self.Health.name = self.Health:CreateFontString(nil, "OVERLAY", "pfontright")
+	self.Health.name = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfontright")
 	self.Health.name:SetFont(fontlol, 11, "THINOUTLINE")
 	self.Health.name:SetPoint('LEFT', self, 'RIGHT', 5, 1)
 	self:Tag(self.Health.name, '[name( )][leader( )]')

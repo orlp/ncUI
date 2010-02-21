@@ -17,16 +17,16 @@ local function createbar(i)
 	f.bar:SetMinMaxValues(0, 1)
 	
 	f.time = f.bar:CreateFontString(nil, "OVERLAY")
-	f.time:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
+	f.time:SetFontObject("ncUIfont")
 	f.time:SetPoint("LEFT", 5, 0)
 	
 	f.target = f.bar:CreateFontString(nil, "OVERLAY")
-	f.target:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
+	f.target:SetFontObject("ncUIfont")
 	f.target:SetPoint("RIGHT", -2, 0)
 	f.target:SetJustifyH("RIGHT")
 	
 	f.spellname = f.bar:CreateFontString(nil, "OVERLAY")
-	f.spellname:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
+	f.spellname:SetFontObject("ncUIfont")
 	f.spellname:SetPoint("LEFT")
 	f.spellname:SetPoint("RIGHT", f.target, "LEFT")
 	
@@ -43,7 +43,7 @@ local function createbar(i)
 	f.iconbg:SetFrameStrata("LOW")
 	
 	f.count = f:CreateFontString(nil, "OVERLAY")
-	f.count:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
+	f.count:SetFontObject("ncUIfont")
 	f.count:SetPoint("CENTER", f.icon, 0, -1)
 	
 	--[[f.startcast = CreateFrame("StatusBar", nil, f)

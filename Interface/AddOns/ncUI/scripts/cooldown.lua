@@ -64,7 +64,7 @@ local function startcd(self, start, duration)
 		if height==0 then
 			height = 20
 		end
-		text:SetFont((height < 34 and ncUIdb["media"].pixelfont or ncUIdb["media"].font), (height < 34 and 11 or 19), (height < 34 and "MONOCHROME" or "").."THINOUTLINE")
+		text:SetFont((height < 34 and ncUIdb["media"].pixelfont or ncUIdb["media"].font), (height < 34 and ncUIdb:Scale(8) or 19), "THINOUTLINE")
 		text:Show()
 	end
 end

@@ -1,8 +1,6 @@
 local max = math.max
 local floor = math.floor
 
-pfont:SetFont(ncUIdb["media"].pixelfont, ncUIdb:Scale(8), "THINOUTLINE")
-
 local texture = [[Interface\AddOns\ncUI\media\unitframe]]
 local backdrop = {
 	bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
@@ -162,7 +160,7 @@ local function style(self, unit)
 	self.Health.bg.bg:SetAllPoints(self.Health)
 	self.Health.bg.bg:SetTexture(unpack(ncUIdb["general"].colorscheme_backdrop))
 
-	local health = self.Health:CreateFontString(nil, "OVERLAY", "pfontright")
+	local health = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfontright")
 	health:SetPoint("RIGHT", self.Health, -2, 0)
 	health.frequentUpdates = 0.25
 	self:Tag(health, "[phealth]")
@@ -230,25 +228,25 @@ local function style(self, unit)
 			self.Castbar.bg = CreateFrame("Frame", nil, self.Castbar)
 			ncUIdb:SetTemplate(self.Castbar.bg)
 			self.Castbar.bg:SetFrameLevel(1)
-			self.Castbar.bg:SetPoint("TOPLEFT", -2, 3)
-			self.Castbar.bg:SetPoint("BOTTOMRIGHT", 3, -2)
+			self.Castbar.bg:SetPoint("TOPLEFT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
+			self.Castbar.bg:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
 
-			self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY", "pfontleft")
+			self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY", "ncUIfontleft")
 			self.Castbar.Text:SetPoint("LEFT", 5, 0)
 			self.Castbar.Text:SetPoint("RIGHT", self.Castbar.Time)
 
-			self.Castbar.Time = self.Castbar:CreateFontString(nil, "OVERLAY", "pfontright")
-			self.Castbar.Time:SetPoint("RIGHT", -2, 0)
+			self.Castbar.Time = self.Castbar:CreateFontString(nil, "OVERLAY", "ncUIfontright")
+			self.Castbar.Time:SetPoint("RIGHT", ncUIdb:Scale(-2), 0)
 			self.Castbar.CustomTimeText = casttime
 
 			self.Castbar.Button = CreateFrame("Frame", nil, self.Castbar)
-			self.Castbar.Button:SetHeight(ncUIdb:Scale(46))
-			self.Castbar.Button:SetWidth(ncUIdb:Scale(46))
+			self.Castbar.Button:SetHeight(ncUIdb:Scale(44))
+			self.Castbar.Button:SetWidth(ncUIdb:Scale(44))
 			ncUIdb:SetTemplate(self.Castbar.Button)
 
 			self.Castbar.Icon = self.Castbar.Button:CreateTexture(nil, "ARTWORK")
-			self.Castbar.Icon:SetPoint("TOPLEFT", self.Castbar.Button, 3, -3)
-			self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar.Button, -3, 3)
+			self.Castbar.Icon:SetPoint("TOPLEFT", self.Castbar.Button, ncUIdb:Scale(2), ncUIdb:Scale(-2))
+			self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar.Button, ncUIdb:Scale(-2), ncUIdb:Scale(2))
 			self.Castbar.Icon:SetTexCoord(0.08, 0.92, 0.08, .92)
 		end
 
@@ -257,13 +255,13 @@ local function style(self, unit)
 			self.Castbar.SafeZone:SetTexture(ncUIdb["media"].unitframe)
 			self.Castbar.SafeZone:SetVertexColor(1, 0, 0, .25)
 			self.Castbar:SetPoint("BOTTOM", UIParent, "CENTER", -25, -300)
-			self.Castbar.Button:SetPoint("BOTTOMLEFT", self.Castbar, "BOTTOMRIGHT", 7, -2)
+			self.Castbar.Button:SetPoint("BOTTOMLEFT", self.Castbar, "BOTTOMRIGHT", 7, ncUIdb:Scale(-2))
 			playercast = self.Castbar
 		elseif(unit == "target") then
 			self.PostCastStart = casticon
 			self.PostChannelStart = casticon
 			self.Castbar:SetPoint("TOP", playercast, "BOTTOM", 0, ncUIdb:Scale(-10))
-			self.Castbar.Button:SetPoint("BOTTOMLEFT", self.Castbar, "BOTTOMRIGHT", 7, -2)
+			self.Castbar.Button:SetPoint("BOTTOMLEFT", self.Castbar, "BOTTOMRIGHT", 7, ncUIdb:Scale(-2))
 		end
 	end
 
@@ -284,7 +282,7 @@ local function style(self, unit)
 			self.Experience.Rested:SetBackdrop(backdrop)
 			self.Experience.Rested:SetBackdropColor(0, 0, 0)
 
-			self.Experience.Text = self.Experience:CreateFontString(nil, "OVERLAY", "pfont")
+			self.Experience.Text = self.Experience:CreateFontString(nil, "OVERLAY", "ncUIfont")
 			self.Experience.Text:SetPoint("CENTER", self.Experience)
 
 			self.Experience.bg = self.Experience.Rested:CreateTexture(nil, "BORDER")
@@ -292,12 +290,12 @@ local function style(self, unit)
 			self.Experience.bg:SetTexture(0.3, 0.3, 0.3)
 		end
 
-		local power = self.Health:CreateFontString(nil, "OVERLAY", "pfontleft")
+		local power = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfontleft")
 		power:SetPoint("LEFT", self.Health, 2, 0)
 		power.frequentUpdates = 0.1
 		self:Tag(power, "[ppower][( )druidpower]")
 	else
-		local info = self.Health:CreateFontString(nil, "OVERLAY", "pfontleft")
+		local info = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfontleft")
 		info:SetPoint("LEFT", self.Health, 2, 0)
 		info:SetPoint("RIGHT", health, "LEFT")
 		self:Tag(info, "[pname]|cff0090ff[( )rare]|r")
@@ -424,7 +422,7 @@ local function style(self, unit)
 		self.Assistant:SetHeight(16)
 		self.Assistant:SetWidth(16)
 
-		local info = self.Health:CreateFontString(nil, "OVERLAY", "pfont")
+		local info = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfont")
 		info:SetPoint("CENTER")
 		info.frequentUpdates = 0.25
 		self:Tag(info, "[pthreat]|cffff0000[( )pvptime]|r")

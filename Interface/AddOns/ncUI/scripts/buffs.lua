@@ -17,7 +17,7 @@ for i = 1, 2 do
 	_G["TempEnchant"..i]:SetWidth(ncUIdb:Scale(24))	
 	_G["TempEnchant"..i.."Duration"]:ClearAllPoints()
 	_G["TempEnchant"..i.."Duration"]:SetPoint("BOTTOM", ncUIdb.mult, ncUIdb:Scale(-10))
-	_G["TempEnchant"..i.."Duration"]:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
+	_G["TempEnchant"..i.."Duration"]:SetFontObject("ncUIfont")
 end
 
 local function StyleBuffs(buttonName, index, debuff)
@@ -36,11 +36,11 @@ local function StyleBuffs(buttonName, index, debuff)
 		
 		duration:ClearAllPoints()
 		duration:SetPoint("BOTTOM", ncUIdb.mult, ncUIdb:Scale(-10))
-		duration:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
+		duration:SetFontObject("ncUIfont")
 		
 		count:ClearAllPoints()
-		count:SetPoint("BOTTOM", ncUIdb.mult, ncUIdb:Scale(3))
-		count:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
+		count:SetPoint("BOTTOM", ncUIdb.mult, ncUIdb:Scale(4))
+		count:SetFontObject("ncUIfont")
 		
 		local panel = CreateFrame("Frame", buttonName..index.."Panel", buff)
 		ncUIdb:CreatePanel(panel, 24, 24, "CENTER", buff, "CENTER", 0,0)
