@@ -3,6 +3,10 @@ local dummy = function() end
 local db = ncUIdb["chat"]
 local _G = getfenv(0)
 
+local tankicon = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:16:16:0:0:64:64:0:19:22:41|t"
+local healicon = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:16:16:0:0:64:64:20:39:1:20|t"
+local dpsicon = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:16:16:0:0:64:64:20:39:22:41|t"
+
 local function addmessage(frame, text, red, green, blue, id)
 	text = tostring(text) or ""
 	for k,v in pairs(db.replaces) do
@@ -14,6 +18,11 @@ local function addmessage(frame, text, red, green, blue, id)
 	text = text:gsub(" whispers:", " <")
 	text = text:gsub("To (|Hplayer.+|h):", "%1 >")
 	text = text:gsub("(|Hplayer.+|h) has earned the achievement (.+)!", "%1 ! %2")
+	local player = text:gsub("|Hplayer:([^:]+):.+|h.+", "%1")
+	if UnitInParty(player) then
+		local tank, heal, dps = UnitGroupRolesAssigned(player)		
+		text = (tank and tankicon or heal and healicon or dps and dpsicon or "")..text
+	end
 	return hooks[frame](frame, text, red, green, blue, id)
 end
 

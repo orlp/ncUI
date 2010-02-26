@@ -10,12 +10,15 @@ scripts\init.lua
 
 libs\libstub.lua
 libs\ouf\ouf.xml
+libs\guidmap.lua
 
 config.lua
 
 media\font.xml
 scripts\core.lua
 scripts\font.lua
+
+scripts\focus.lua
 scripts\panels.lua
 scripts\datatext.lua
 scripts\bindings.lua

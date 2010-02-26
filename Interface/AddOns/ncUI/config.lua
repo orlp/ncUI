@@ -19,10 +19,6 @@ ncUIdb["media"] = { -- media locations
 	["unitframe"] = [[Interface\Addons\ncUI\media\solid]],
 }
 
-ncUIdb["actionbar"] = {
-	["rows"] = 1, -- 1 or 2 rows of actionbars
-}
-
 ncUIdb["worldmap"] = {
 	["enable"] = true, -- true to enable this mod, false to disable
 	["scale"] = 0.7, -- scales the worldmap by this amount
@@ -83,9 +79,6 @@ ncUIdb["error"] = {
 	},
 }
 
-ncUIdb["actionbar"] = {
-}
-
 ncUIdb["extrabuttons"] = {
 	["enable"] = true, -- true to enable this mod, false to disable
 }
@@ -116,11 +109,6 @@ ncUIdb["resurrect"] = {
 	["enable"] = true,
 }
 
-ncUIdb["minimap"] = {
-	["speed"] = 20,
-	["combatspeed"] = 80,
-}
-
 ncUIdb["datatext"] = { -- Determine what feed a datatext slot should have. Possible datafeeds are: bag, mail, dur, money, ms, mem, exprep.
 	left1 = "bag",
 	left2 = "mail",
@@ -140,6 +128,12 @@ ncUIdb["nameplates"] = {
 
 ncUIdb["bags"] = {
 	["enable"] = true,
+}
+
+ncUIdb["focus"] = {
+	["enable"] = true,
+	["button"] = 1,
+	["modify"] = "alt",
 }
 
 ncUIdb["spellalerter"] = {

@@ -1,6 +1,5 @@
 local bars, identifiers = {}, {}
-local UnitID, cache = {}, {}
-local GUID = {}
+local lib = LibStub("LibGUIDMap")
 local function hex(r, g, b) if type(r) == "table" then if r.r then r, g, b = r.r, r.g, r.b else r, g, b = unpack(r) end	end	return string.format("|cff%02x%02x%02x", r*255, g*255, b*255) end
 local function createbar(i)
 	local f = CreateFrame("Frame", "DebuffTimerBar"..i, UIParent)
@@ -98,6 +97,7 @@ local function createbar(i)
 	function f:Refresh(duration, expire, count)
 		self.duration = duration
 		self.expire = expire
+		local count = tonumber(count)
 		if count and count > 1 then self.count:SetText(count) else self.count:SetText(nil) end		
 	end
 	
@@ -174,7 +174,6 @@ local function start(unit, spell, expire, duration, spellname, icon, count, name
 	bar:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell)
 end
 
-local justdone = 0
 local function stop(unit, spell)
 	local unit = identifiers[unit]
 	if not unit or not unit[spell] then return end
@@ -185,173 +184,23 @@ end
 local player = UnitGUID("player")
 local f = CreateFrame("Frame")
 f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcename, sourceflags, destguid, destname, destflags, id)
-	if event=="COMBAT_LOG_EVENT_UNFILTERED" then
-		if spell=="SPELL_AURA_REMOVED" and sourceguid==player then
-			local unitid = GUID[destguid]
-			if not unitid then
-				if not cache[destguid] then cache[destguid] = {} end
-				cache[destguid][id] = true
-			else
-				local unitname = UnitName(unitid)
-				local spellname, rank = GetSpellInfo(id)
-				if not string.match(rank, "%d") then rank = nil end
-				if not UnitDebuff(unitid, spellname, rank) then
-					stop(destguid, id)
-				end
+	if spell=="SPELL_AURA_REMOVED" and sourceguid==player then
+		lib:GetUnitID(destguid, function(unitid)
+			local unitname = UnitName(unitid)
+			local spellname, rank = GetSpellInfo(id)
+			if not string.match(rank, "%d") then rank = nil end
+			if not UnitDebuff(unitid, spellname, rank) then
+				stop(destguid, id)
 			end
-		elseif spell=="SPELL_AURA_APPLIED" and sourceguid==player and destguid~=player then
-			local unitid = GUID[destguid]
-			if not unitid then
-				if not cache[destguid] then cache[destguid] = {} end
-				cache[destguid][id] = true
-			else
-				local unitname = UnitName(unitid)
-				local spellname, rank = GetSpellInfo(id)
-				if not string.match(rank, "%d") then rank = nil end
-				local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(unitid, spellname, rank)
-				if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) end
-			end
-		end
-	elseif event=="UNIT_TARGET" then
-		if not target then return end
-		local guid = UnitGUID(target)
-		local guidtarget = UnitGUID(target.."target")
-		local old, oldtarget = UnitID[target], UnitID[target.."target"]
-		
-		if old then	GUID[old] = nil	end
-		if oldtarget then GUID[oldtarget] = nil end
-		
-		if guid then
-			GUID[guid] = target
-			UnitID[target] = guid
-		else
-			UnitID[target] = nil
-		end
-		if guidtarget then
-			GUID[guidtarget] = target.."target"
-			UnitID[target.."target"] = guidtarget
-		else
-			UnitID[target.."target"] = nil
-		end
-		
-		for destguid, tab in pairs(cache) do
-			local unitid
-			if destguid==guid then
-				unitid = target
-			elseif destguid==guidtarget then
-				unitid = target.."target"
-			end
-			if unitid then
-				for id in pairs(tab) do
-					local unitname = UnitName(unitid)
-					local spellname, rank = GetSpellInfo(id)
-					if not string.match("%d+", rank) then rank = nil end
-					local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(unitid, spellname, rank)
-					if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) else stop(destguid, id) end
-					cache[destguid][id] = nil
-				end
-			end
-		end
+		end)
+	elseif spell=="SPELL_AURA_APPLIED" and sourceguid==player and destguid~=player then
+		lib:GetUnitID(destguid, function(unitid)
+			local unitname = UnitName(unitid)
+			local spellname, rank = GetSpellInfo(id)
+			if not string.match(rank, "%d") then rank = nil end
+			local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(unitid, spellname, rank)
+			if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) end
+		end)
 	end
 end)
-f:RegisterEvent("UNIT_TARGET")
 f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-
-
-
-
-
---[[local colors = {}
-colors.power = {}
-colors.reaction = {}
-colors.class = {}
-for power, color in next, PowerBarColor do
-	if(type(power) == "string") then
-		colors.power[power] = {color.r, color.g, color.b}
-	end
-end
-for reaction, color in next, FACTION_BAR_COLORS do
-	colors.reaction[reaction] = {color.r, color.g, color.b}
-end
-for class, color in next, RAID_CLASS_COLORS do
-	colors.class[class] = {color.r, color.g, color.b}
-end
-colors.power.MANA = {0, 144/255, 1}
-
-local f = CreateFrame("Frame", nil, UIParent)
-ncUIdb:SetTemplate(f)
-f:SetSize(200, 25)
-f:SetFrameStrata("TOOLTIP")
-
-f.health = CreateFrame("StatusBar", nil, f)
-f.health:SetStatusBarTexture(ncUIdb["media"].unitframe)
-f.health:SetStatusBarColor(unpack(ncUIdb["general"].colorscheme_border))
-f.health:SetPoint("TOPLEFT", ncUIdb:Scale(3), ncUIdb:Scale(-3))
-f.health:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-3), ncUIdb:Scale(3))
-f.health:SetMinMaxValues(0, 1)
-
-f.power = CreateFrame("StatusBar", nil, f)
-f.power:SetFrameLevel(3)
-f.power:SetStatusBarTexture(ncUIdb["media"].unitframe)
-f.power:SetStatusBarColor(.6, .6, .6)
-f.power:SetPoint("BOTTOMLEFT", ncUIdb:Scale(3), ncUIdb:Scale(3))
-f.power:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-3), ncUIdb:Scale(3))
-f.power:SetMinMaxValues(0, 1)
-f.power:SetHeight(5)
-
-f.power.bg = CreateFrame("Frame", nil, f.power)
-f.power.bg:SetPoint("LEFT", -2, 0)
-f.power.bg:SetPoint("RIGHT", 1, 0)
-f.power.bg:SetPoint("BOTTOM", f.power, "TOP")
-f.power.bg:SetHeight(ncUIdb:Scale(1))
-f.power.bg:SetBackdrop({
-	bgFile = ncUIdb["media"].solid, 
-	edgeFile = ncUIdb["media"].solid, 
-	tile = false, tileSize = 0, edgeSize = ncUIdb.mult, 
-	insets = { left = -0, right = 0, top = -ncUIdb.mult, bottom = -ncUIdb.mult}
-})
-f.power.bg:SetBackdropColor(unpack(ncUIdb["general"].colorscheme_backdrop))
-f.power.bg:SetBackdropBorderColor(unpack(ncUIdb["general"].colorscheme_border))
-
-f:SetScript("OnUpdate", function(self)
-	if not UnitExists("mouseover") then
-		self:Hide()
-		return
-	end
-
-	local x, y = GetCursorPosition()
-	local scale = UIParent:GetEffectiveScale()
-	x, y = x/scale, y/scale
-	self:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x, y+20)
-	
-	local health, maxhealth = UnitHealth("mouseover"), UnitHealthMax("mouseover")
-	self.health:SetValue(health/maxhealth)
-	
-	local power, maxpower = UnitPower("mouseover"), UnitPowerMax("mouseover")
-	self.power:SetValue(power/maxpower)
-end)
-f:SetScript("OnEvent", function(self)
-	if GetMouseFocus():GetName()~="WorldFrame" then return end
-
-	local _, class = UnitClass("mouseover")
-	local reaction =  UnitReaction("player", "mouseover")
-	local _, powertype = UnitPowerType("mouseover")
-	
-	if UnitIsPlayer("mouseover") and class then
-		self.health:SetStatusBarColor(unpack(colors.class[class]))
-	elseif reaction then
-		self.health:SetStatusBarColor(unpack(colors.reaction[reaction]))
-	else
-		self.health:SetStatusBarColor(unpack(ncUIdb["general"].colorscheme_border))
-	end
-	
-	if power==0 then
-		self.power:Hide()
-	else
-		self.power:SetStatusBarColor(unpack(colors.power[powertype]))
-		self.power:Show()
-	end
-	
-	self:Show()
-end)
-f:RegisterEvent("UPDATE_MOUSEOVER_UNIT")--]]

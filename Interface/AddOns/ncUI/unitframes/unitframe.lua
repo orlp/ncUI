@@ -127,7 +127,7 @@ local playercast
 local function style(self, unit)
 	self.colors = colors
 	self.menu = menu
-
+	
 	self:RegisterForClicks("AnyUp")
 	self:SetAttribute("type2", "menu")
 
@@ -437,11 +437,11 @@ end
 oUF:RegisterStyle("ncUI", style)
 oUF:SetActiveStyle("ncUI")
 
-oUF:Spawn("player"):SetPoint("BOTTOMLEFT", ActionBarBackground, "TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(6))
-oUF:Spawn("target"):SetPoint("BOTTOMRIGHT", ActionBarBackground, "TOPRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(6))
-oUF:Spawn("targettarget"):SetPoint("BOTTOM", ActionBarBackground, "TOP", 0, ncUIdb:Scale(6))
-oUF:Spawn("pet"):SetPoint("BOTTOMLEFT", oUF.units.player, "TOPLEFT", 0, ncUIdb:Scale(6))
+oUF:Spawn("player", "ncUIPlayerFrame"):SetPoint("BOTTOMLEFT", ActionBarBackground, "TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(6))
+oUF:Spawn("target", "ncUITargetFrame"):SetPoint("BOTTOMRIGHT", ActionBarBackground, "TOPRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(6))
+oUF:Spawn("targettarget", "ncUITargetTargetFrame"):SetPoint("BOTTOM", ActionBarBackground, "TOP", 0, ncUIdb:Scale(6))
+oUF:Spawn("pet", "ncUIPetFrame"):SetPoint("BOTTOMLEFT", oUF.units.player, "TOPLEFT", 0, ncUIdb:Scale(6))
 
-local focus = oUF:Spawn("focus")
-focus:SetPoint("TOPLEFT", InfoRight, 2, -3)
-focus:SetPoint("BOTTOMRIGHT", InfoRight, -3, 2)
+local focus = oUF:Spawn("focus", "ncUIFocusFrame")
+focus:SetPoint("TOPLEFT", InfoRight, ncUIdb:Scale(2), ncUIdb:Scale(-2))
+focus:SetPoint("BOTTOMRIGHT", InfoRight, ncUIdb:Scale(-2), ncUIdb:Scale(2))
