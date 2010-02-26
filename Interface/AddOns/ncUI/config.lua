@@ -20,7 +20,7 @@ ncUIdb["media"] = { -- media locations
 }
 
 ncUIdb["actionbar"] = {
-	["bars"] = 2, -- 1 or 2 bars
+	["bars"] = 1, -- 1 or 2 bars
 }
 
 ncUIdb["worldmap"] = {

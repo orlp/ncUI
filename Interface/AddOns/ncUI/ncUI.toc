@@ -26,6 +26,7 @@ scripts\actionbar.lua
 scripts\chat.lua
 scripts\buttonstyler.lua
 scripts\minimap.lua
+scripts\debufftimer.lua
 scripts\nameplates.lua
 scripts\cooldown.lua
 scripts\core.lua

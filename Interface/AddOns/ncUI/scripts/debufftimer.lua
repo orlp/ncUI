@@ -6,6 +6,7 @@ local function createbar(i)
 	f:Hide()
 
 	f:SetHeight(ncUIdb:Scale(21))
+	f:SetWidth(ncUIdb:Scale(250))
 	ncUIdb:SetTemplate(f)
 	
 	f.bar = CreateFrame("StatusBar", nil, f)
@@ -15,7 +16,7 @@ local function createbar(i)
 	f.bar:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
 	f.bar:SetMinMaxValues(0, 1)
 	
-	f.time = f.bar:CreateFontString(nil, "OVERLAY")
+	f.time = f.bar:CreateFontString(nil, "HIGHLIGHT")
 	f.time:SetFontObject("ncUIfont")
 	f.time:SetPoint("LEFT", 5, 0)
 	
@@ -46,19 +47,21 @@ local function createbar(i)
 	f.count:SetPoint("CENTER", f.icon, 0, -1)
 	
 	f.startcast = CreateFrame("StatusBar", nil, f)
+	f.startcast:SetFrameLevel(3)
 	f.startcast:SetStatusBarTexture(ncUIdb["media"].unitframe)
-	f.startcast:SetStatusBarColor(1, 0, 0, .5)
+	f.startcast:SetStatusBarColor(0, 1, 0, .5)
 	f.startcast:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
 	f.startcast:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
 	f.startcast:SetMinMaxValues(0, 1)
 	
-	function f:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell, startcast)		
+	function f:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell, casttime)		
 		self.unit = unit
 		self.expire = expire
 		self.duration = duration
 		self.spell = spell
 		self.debufftype = debufftype
-		self.startcast = startcast
+		self.casttime = casttime
+		
 
 		local color = DebuffTypeColor[debufftype] or DebuffTypeColor.none
 		self.bar:SetStatusBarColor(color.r, color.g, color.b)		
@@ -68,8 +71,8 @@ local function createbar(i)
 		local count = tonumber(count)
 		if count and count > 1 then self.count:SetText(count) else self.count:SetText(nil) end
 		
-		if startcast then
-			self.startcast:SetValue(startcast/duration*1e-3)
+		if casttime then
+			self.startcast:SetValue(casttime/duration*1e-3)
 		end
 		
 		if not identifiers[unit] then
@@ -90,7 +93,7 @@ local function createbar(i)
 		self.expire,
 		self.duration,
 		self.spell,
-		self.startcast
+		self.casttime
 	end
 	
 	function f:WipeSettings()
@@ -98,7 +101,6 @@ local function createbar(i)
 		self.expire = nil
 		self.duration = nil
 		self.spell = nil
-		self.startcast = nil
 	end
 	
 	function f:Refresh(duration, expire, count)
@@ -138,8 +140,7 @@ local function createbar(i)
 	end)
 	
 	if i==1 then
-		f:SetPoint("BOTTOMLEFT", InfoRight, "TOPLEFT", ncUIdb:Scale(25), 5) -- anchor
-		f:SetPoint("BOTTOMRIGHT", InfoRight, "TOPRIGHT", 0, 5)
+		f:SetPoint("BOTTOMRIGHT", UIParent, "CENTER", ncUIdb:Scale(-250), 5) -- anchor
 	else
 		f:SetPoint("BOTTOMLEFT", bars[i-1], "TOPLEFT", 0, ncUIdb:Scale(4)) -- spacing and growth
 		f:SetPoint("BOTTOMRIGHT", bars[i-1], "TOPRIGHT", 0, ncUIdb:Scale(4)) -- spacing and growth
@@ -200,6 +201,13 @@ f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcena
 				stop(destguid, id)
 			end
 		end)
+	elseif spell=="UNIT_DIED" then
+		local unit = identifiers[destguid]
+		if unit then
+			for spell, slot in pairs(unit) do
+				stop(destguid, spell)
+			end
+		end
 	elseif spell=="SPELL_AURA_APPLIED" and sourceguid==player and destguid~=player then
 		lib:GetUnitID(destguid, function(unitid)
 			local unitname = UnitName(unitid)

@@ -42,6 +42,7 @@ function addon:UNIT_TARGET(unit)
 	reg(unit, true)
 end
 function addon:PLAYER_FOCUS_CHANGED() reg("focus", true) end
+function addon:UPDATE_MOUSEOVER_UNIT() reg("mouseover", true) end
 
 function lib:GetUnitID(guid, func)
 	if not guid then return elseif guid==player then return "player" end
