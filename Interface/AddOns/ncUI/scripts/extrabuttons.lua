@@ -4,6 +4,15 @@ if not db.enable then return end
 local header = CreateFrame("Button", "ncExtrabuttonsHeader", UIParent, "SecureHandlerClickTemplate")
 db.buttons = {}
 
+--[[
+	Default Blizzard IDs:
+	13-24 Second Bar
+	25-36 Side Bar 1
+	37-48 Side Bar 2
+	49-60 Bottom Right Bar
+	61-72 Bottom Left Bar
+]]
+
 -- Setup class specific actionbutton id's
 local _, class = UnitClass("player")
 if class == "DRUID" then
@@ -31,8 +40,8 @@ if class == "DRUID" then
 		58,
 		59,
 		60,
-		38,
-		39,
+		47,
+		48,
 	}
 elseif class == "WARRIOR" then
 	db["buttonids"] = {

@@ -49,7 +49,7 @@ end
   
 PossessBarFrame:SetParent(barholder)
 PossessButton1:ClearAllPoints()
-PossessButton1:SetPoint("LEFT",MultiBarBottomLeftButton1,"RIGHT",0,0)
+PossessButton1:SetPoint("LEFT",MultiBarLeftButton1,"RIGHT",0,0)
 
 local function showhide(alpha)
 	for i=1,8 do
@@ -129,34 +129,50 @@ for i=2, 8 do
     b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(4), 0)
 end
 
-MultiBarBottomLeftButton1:ClearAllPoints()
-MultiBarBottomLeftButton1:SetPoint("LEFT", ActionButton8,"RIGHT", ncUIdb:Scale(5), 0)
+MultiBarLeftButton1:ClearAllPoints()
+MultiBarLeftButton1:SetPoint("LEFT", ActionButton8,"RIGHT", ncUIdb:Scale(5), 0)
 for i=2, 8 do
-    local b = _G["MultiBarBottomLeftButton"..i]
-    local b2 = _G["MultiBarBottomLeftButton"..i-1]
+    local b = _G["MultiBarLeftButton"..i]
+    local b2 = _G["MultiBarLeftButton"..i-1]
     b:ClearAllPoints()
     b:SetPoint("LEFT",b2,"RIGHT", ncUIdb:Scale(4), 0)
 end
 
+if ncUIdb["actionbar"].bars~=1 then
+	MultiBarBottomLeftButton1:ClearAllPoints()
+	MultiBarBottomLeftButton1:SetPoint("BOTTOM", ActionButton1,"TOP", 0, ncUIdb:Scale(5))
+	MultiBarBottomRightButton1:ClearAllPoints()
+	MultiBarBottomRightButton1:SetPoint("LEFT", MultiBarBottomLeftButton8,"RIGHT", ncUIdb:Scale(5), 0)
+	for i= 2, 8 do
+	    local b = _G["MultiBarBottomLeftButton"..i]
+		local b2 = _G["MultiBarBottomLeftButton"..i-1]
+		b:ClearAllPoints()
+		b:SetPoint("LEFT", b2,"RIGHT", ncUIdb:Scale(4), 0)
+		
+		local b = _G["MultiBarBottomRightButton"..i]
+		local b2 = _G["MultiBarBottomRightButton"..i-1]
+		b:ClearAllPoints()
+		b:SetPoint("LEFT", b2,"RIGHT", ncUIdb:Scale(4), 0)
+	end
+end
+
 local securehandler = CreateFrame("Frame", nil, nil, "SecureHandlerBaseTemplate")
 for i=9,12 do
-	securehandler:WrapScript(_G["MultiBarBottomLeftButton"..i], "OnShow", "self:Hide()")
-	securehandler:WrapScript(_G["BonusActionButton"..i], "OnShow", "self:Hide()")
-	_G["BonusActionButton"..i]:Hide()
-end
-
-for i=1,12 do
 	securehandler:WrapScript(_G["MultiBarLeftButton"..i], "OnShow", "self:Hide()")
-	securehandler:WrapScript(_G["MultiBarRightButton"..i], "OnShow", "self:Hide()")
-end
-
-for i=1,12 do
+	securehandler:WrapScript(_G["BonusActionButton"..i], "OnShow", "self:Hide()")
+	securehandler:WrapScript(_G["MultiBarBottomLeftButton"..i], "OnShow", "self:Hide()")
 	securehandler:WrapScript(_G["MultiBarBottomRightButton"..i], "OnShow", "self:Hide()")
 end
 
 for i=1,12 do
-	securehandler:WrapScript(_G["ActionButton"..i], "OnHide", "self:Show()")
-	securehandler:WrapScript(_G["BonusActionButton"..i], "OnHide", "self:Show()")
+	securehandler:WrapScript(_G["MultiBarRightButton"..i], "OnShow", "self:Hide()")
+	if ncUIdb["actionbar"].bars==1 then
+		securehandler:WrapScript(_G["MultiBarBottomLeftButton"..i], "OnShow", "self:Hide()")
+		securehandler:WrapScript(_G["MultiBarBottomRightButton"..i], "OnShow", "self:Hide()")
+	end
+end
+
+for i=1,12 do
 	_G["ActionButton"..i]:Show()
 	_G["BonusActionButton"..i]:Hide()
 end

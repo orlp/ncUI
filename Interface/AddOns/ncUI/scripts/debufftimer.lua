@@ -45,19 +45,20 @@ local function createbar(i)
 	f.count:SetFontObject("ncUIfont")
 	f.count:SetPoint("CENTER", f.icon, 0, -1)
 	
-	--[[f.startcast = CreateFrame("StatusBar", nil, f)
+	f.startcast = CreateFrame("StatusBar", nil, f)
 	f.startcast:SetStatusBarTexture(ncUIdb["media"].unitframe)
 	f.startcast:SetStatusBarColor(1, 0, 0, .5)
 	f.startcast:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
 	f.startcast:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
-	f.startcast:SetMinMaxValues(0, 1)--]]
+	f.startcast:SetMinMaxValues(0, 1)
 	
-	function f:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell)		
+	function f:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell, startcast)		
 		self.unit = unit
 		self.expire = expire
 		self.duration = duration
 		self.spell = spell
 		self.debufftype = debufftype
+		self.startcast = startcast
 
 		local color = DebuffTypeColor[debufftype] or DebuffTypeColor.none
 		self.bar:SetStatusBarColor(color.r, color.g, color.b)		
@@ -66,6 +67,10 @@ local function createbar(i)
 		self.icon:SetTexture(icon)
 		local count = tonumber(count)
 		if count and count > 1 then self.count:SetText(count) else self.count:SetText(nil) end
+		
+		if startcast then
+			self.startcast:SetValue(startcast/duration*1e-3)
+		end
 		
 		if not identifiers[unit] then
 			identifiers[unit] = {}
@@ -84,7 +89,8 @@ local function createbar(i)
 		self.debufftype,
 		self.expire,
 		self.duration,
-		self.spell
+		self.spell,
+		self.startcast
 	end
 	
 	function f:WipeSettings()
@@ -92,6 +98,7 @@ local function createbar(i)
 		self.expire = nil
 		self.duration = nil
 		self.spell = nil
+		self.startcast = nil
 	end
 	
 	function f:Refresh(duration, expire, count)
@@ -154,7 +161,7 @@ local function getbar(expire)
 	return createbar(#bars+1)
 end
 
-local function start(unit, spell, expire, duration, spellname, icon, count, name, debufftype)
+local function start(unit, spell, expire, duration, spellname, icon, count, name, debufftype, casttime)
 	local exists = identifiers[unit]
 	if exists and exists[spell] then
 		bars[exists[spell]]:Refresh(duration, expire, count)
@@ -171,7 +178,7 @@ local function start(unit, spell, expire, duration, spellname, icon, count, name
 			end
 		end
 	end
-	bar:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell)
+	bar:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell, casttime)
 end
 
 local function stop(unit, spell)
@@ -196,10 +203,10 @@ f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcena
 	elseif spell=="SPELL_AURA_APPLIED" and sourceguid==player and destguid~=player then
 		lib:GetUnitID(destguid, function(unitid)
 			local unitname = UnitName(unitid)
-			local spellname, rank = GetSpellInfo(id)
+			local spellname, rank, _, _, _, _, casttime = GetSpellInfo(id)
 			if not string.match(rank, "%d") then rank = nil end
 			local name, _, icon, count, debufftype, duration, expires, caster, _, _, spell = UnitDebuff(unitid, spellname, rank)
-			if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype) end
+			if caster=="player" then start(destguid, spell, expires, duration, name, icon, tonumber(count), unitname, debufftype, tonumber(casttime)) end
 		end)
 	end
 end)

@@ -39,9 +39,8 @@ scripts\worldmap.lua
 scripts\buffs.lua
 scripts\spellalerter.lua
 scripts\bags.lua
-scripts\coolline.lua
-scripts\debufftimer.lua
-scripts\marking.lua
+scripts\hovername.lua
+scripts\killingblow.lua
 
 unitframes\plugins\dropdown.lua
 

@@ -19,6 +19,10 @@ ncUIdb["media"] = { -- media locations
 	["unitframe"] = [[Interface\Addons\ncUI\media\solid]],
 }
 
+ncUIdb["actionbar"] = {
+	["bars"] = 2, -- 1 or 2 bars
+}
+
 ncUIdb["worldmap"] = {
 	["enable"] = true, -- true to enable this mod, false to disable
 	["scale"] = 0.7, -- scales the worldmap by this amount
@@ -134,6 +138,10 @@ ncUIdb["focus"] = {
 	["enable"] = true,
 	["button"] = 1,
 	["modify"] = "alt",
+}
+
+ncUIdb["killingblow"] = {
+	["enable"] = true,
 }
 
 ncUIdb["spellalerter"] = {
