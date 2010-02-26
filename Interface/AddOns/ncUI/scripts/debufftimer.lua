@@ -8,52 +8,53 @@ local function createbar(i)
 	f:SetHeight(ncUIdb:Scale(21))
 	f:SetWidth(ncUIdb:Scale(250))
 	ncUIdb:SetTemplate(f)
-	
+
 	f.bar = CreateFrame("StatusBar", nil, f)
 	f.bar:SetStatusBarTexture(ncUIdb["media"].unitframe)
 	f.bar:SetStatusBarColor(unpack(ncUIdb["general"].colorscheme_border))
 	f.bar:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
 	f.bar:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
 	f.bar:SetMinMaxValues(0, 1)
-	
-	f.time = f.bar:CreateFontString(nil, "HIGHLIGHT")
-	f.time:SetFontObject("ncUIfont")
-	f.time:SetPoint("LEFT", 5, 0)
-	
+	f.bar:SetFrameLevel(1)
+
 	f.target = f.bar:CreateFontString(nil, "OVERLAY")
 	f.target:SetFontObject("ncUIfont")
 	f.target:SetPoint("RIGHT", -2, 0)
 	f.target:SetJustifyH("RIGHT")
-	
+
 	f.spellname = f.bar:CreateFontString(nil, "OVERLAY")
 	f.spellname:SetFontObject("ncUIfont")
 	f.spellname:SetPoint("LEFT")
 	f.spellname:SetPoint("RIGHT", f.target, "LEFT")
-	
+
 	f.icon = f:CreateTexture(nil, "ARTWORK")
 	f.icon:SetTexCoord(.08, .92, .08, .92)
 	f.icon:SetHeight(ncUIdb:Scale(17))
 	f.icon:SetWidth(ncUIdb:Scale(17))
 	f.icon:SetPoint("RIGHT", f, "LEFT", -7, 0)
-	
+
 	f.iconbg = CreateFrame("Frame", nil, f)
 	ncUIdb:SetTemplate(f.iconbg)
 	f.iconbg:SetPoint("TOPLEFT", f.icon, ncUIdb:Scale(-2), ncUIdb:Scale(2))
 	f.iconbg:SetPoint("BOTTOMRIGHT", f.icon, ncUIdb:Scale(2), ncUIdb:Scale(-2))
 	f.iconbg:SetFrameStrata("LOW")
-	
+
 	f.count = f:CreateFontString(nil, "OVERLAY")
 	f.count:SetFontObject("ncUIfont")
 	f.count:SetPoint("CENTER", f.icon, 0, -1)
-	
+
 	f.startcast = CreateFrame("StatusBar", nil, f)
-	f.startcast:SetFrameLevel(3)
+	f.startcast:SetFrameLevel(2)
 	f.startcast:SetStatusBarTexture(ncUIdb["media"].unitframe)
 	f.startcast:SetStatusBarColor(0, 1, 0, .5)
 	f.startcast:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
 	f.startcast:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
 	f.startcast:SetMinMaxValues(0, 1)
 	
+	f.time = f.startcast:CreateFontString(nil, "OVERLAY")
+	f.time:SetFontObject("ncUIfont")
+	f.time:SetPoint("LEFT", 5, 0)
+
 	function f:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell, casttime)		
 		self.unit = unit
 		self.expire = expire
@@ -61,7 +62,6 @@ local function createbar(i)
 		self.spell = spell
 		self.debufftype = debufftype
 		self.casttime = casttime
-		
 
 		local color = DebuffTypeColor[debufftype] or DebuffTypeColor.none
 		self.bar:SetStatusBarColor(color.r, color.g, color.b)		
@@ -70,19 +70,19 @@ local function createbar(i)
 		self.icon:SetTexture(icon)
 		local count = tonumber(count)
 		if count and count > 1 then self.count:SetText(count) else self.count:SetText(nil) end
-		
+
 		if casttime then
 			self.startcast:SetValue(casttime/duration*1e-3)
 		end
-		
+
 		if not identifiers[unit] then
 			identifiers[unit] = {}
 		end
 		identifiers[unit][spell] = i
-		
+
 		self:Show()
 	end
-	
+
 	function f:GetSettings(bar)
 		return self.unit,
 		self.target:GetText(),
@@ -95,24 +95,24 @@ local function createbar(i)
 		self.spell,
 		self.casttime
 	end
-	
+
 	function f:WipeSettings()
 		self.unit = nil
 		self.expire = nil
 		self.duration = nil
 		self.spell = nil
 	end
-	
+
 	function f:Refresh(duration, expire, count)
 		self.duration = duration
 		self.expire = expire
 		local count = tonumber(count)
 		if count and count > 1 then self.count:SetText(count) else self.count:SetText(nil) end		
 	end
-	
+
 	function f:Stop()
 		if not self.spell then return end
-		
+
 		local unit = identifiers[self.unit]
 		if unit and unit[self.spell] == i then
 			identifiers[self.unit][self.spell] = nil
