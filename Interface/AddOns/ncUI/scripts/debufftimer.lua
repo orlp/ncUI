@@ -6,7 +6,7 @@ local function createbar(i)
 	f:Hide()
 
 	f:SetHeight(ncUIdb:Scale(21))
-	f:SetWidth(ncUIdb:Scale(250))
+	f:SetWidth(ncUIdb:Scale(300))
 	ncUIdb:SetTemplate(f)
 
 	f.bar = CreateFrame("StatusBar", nil, f)
@@ -192,6 +192,7 @@ end
 local player = UnitGUID("player")
 local f = CreateFrame("Frame")
 f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcename, sourceflags, destguid, destname, destflags, id)
+	if event=="PLAYER_ALIVE" then player = UnitGUID("player") f:UnregisterEvent("PLAYER_ALIVE") end
 	if spell=="SPELL_AURA_REMOVED" and sourceguid==player then
 		lib:GetUnitID(destguid, function(unitid)
 			local unitname = UnitName(unitid)
@@ -219,3 +220,4 @@ f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcena
 	end
 end)
 f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+f:RegisterEvent("PLAYER_ALIVE")

@@ -437,9 +437,9 @@ end
 oUF:RegisterStyle("ncUI", style)
 oUF:SetActiveStyle("ncUI")
 
-oUF:Spawn("player", "ncUIPlayerFrame"):SetPoint("BOTTOMLEFT", ActionBarBackground, "TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(6))
-oUF:Spawn("target", "ncUITargetFrame"):SetPoint("BOTTOMRIGHT", ActionBarBackground, "TOPRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(6))
-oUF:Spawn("targettarget", "ncUITargetTargetFrame"):SetPoint("BOTTOM", ActionBarBackground, "TOP", 0, ncUIdb:Scale(6))
+oUF:Spawn("player", "ncUIPlayerFrame"):SetPoint("BOTTOMLEFT", ncCooldownBar, "TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(6))
+oUF:Spawn("target", "ncUITargetFrame"):SetPoint("BOTTOMRIGHT", ncCooldownBar, "TOPRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(6))
+oUF:Spawn("targettarget", "ncUITargetTargetFrame"):SetPoint("BOTTOM", ncCooldownBar, "TOP", 0, ncUIdb:Scale(6))
 oUF:Spawn("pet", "ncUIPetFrame"):SetPoint("BOTTOMLEFT", oUF.units.player, "TOPLEFT", 0, ncUIdb:Scale(6))
 
 local focus = oUF:Spawn("focus", "ncUIFocusFrame")

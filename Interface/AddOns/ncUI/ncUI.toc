@@ -42,6 +42,7 @@ scripts\spellalerter.lua
 scripts\bags.lua
 scripts\hovername.lua
 scripts\killingblow.lua
+scripts\cdflash.lua
 
 unitframes\plugins\dropdown.lua
 

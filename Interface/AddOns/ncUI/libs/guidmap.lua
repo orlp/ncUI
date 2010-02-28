@@ -1,13 +1,14 @@
--- library
 local lib = LibStub:NewLibrary("LibGUIDMap", 1.0)
 if not lib then return end
 
-local player = UnitGUID("player")
+local player
 local GUID, UNIT, CALLBACK = {}, {}, {}
 local addon = CreateFrame("Frame")
 addon:SetScript("OnEvent", function(s,e,...)s[e](s,...)end)
 addon:RegisterEvent("UNIT_TARGET")
 addon:RegisterEvent("PLAYER_FOCUS_CHANGED")
+addon:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+addon:RegisterEvent("PLAYER_LOGIN")
 
 local function add(guid, unit)
 	if not (guid and unit) then return end
@@ -42,7 +43,14 @@ function addon:UNIT_TARGET(unit)
 	reg(unit, true)
 end
 function addon:PLAYER_FOCUS_CHANGED() reg("focus", true) end
-function addon:UPDATE_MOUSEOVER_UNIT() reg("mouseover", true) end
+function addon:UPDATE_MOUSEOVER_UNIT() reg("mouseover", true) self:Show() end
+function addon:PLAYER_LOGIN() player = UnitGUID("player") addon:UnregisterEvent("PLAYER_ALIVE") end
+addon:SetScript("OnUpdate", function(self)
+	if not UnitGUID("mouseover") then
+		reg("mouseover", true)
+		self:Hide()
+	end
+end)
 
 function lib:GetUnitID(guid, func)
 	if not guid then return elseif guid==player then return "player" end
