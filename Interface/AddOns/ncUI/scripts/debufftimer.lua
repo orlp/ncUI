@@ -103,13 +103,6 @@ local function createbar(i)
 		self.spell = nil
 	end
 
-	function f:Refresh(duration, expire, count)
-		self.duration = duration
-		self.expire = expire
-		local count = tonumber(count)
-		if count and count > 1 then self.count:SetText(count) else self.count:SetText(nil) end		
-	end
-
 	function f:Stop()
 		if not self.spell then return end
 
@@ -117,7 +110,7 @@ local function createbar(i)
 		if unit and unit[self.spell] == i then
 			identifiers[self.unit][self.spell] = nil
 		end
-		
+
 		for id = i, #bars do
 			local nextbar = bars[id+1]
 			if nextbar and nextbar.spell then
@@ -162,11 +155,17 @@ local function getbar(expire)
 	return createbar(#bars+1)
 end
 
+local function stop(unit, spell)
+	local unit = identifiers[unit]
+	if not unit or not unit[spell] then return end
+	bars[unit[spell]]:Stop()
+	if identifiers[unit]==0 then identifiers[unit] = nil end
+end
+
 local function start(unit, spell, expire, duration, spellname, icon, count, name, debufftype, casttime)
 	local exists = identifiers[unit]
 	if exists and exists[spell] then
-		bars[exists[spell]]:Refresh(duration, expire, count)
-		return
+		stop(unit, spell)
 	end
 	local bar = getbar(expire)
 	if bar.spell then
@@ -180,13 +179,6 @@ local function start(unit, spell, expire, duration, spellname, icon, count, name
 		end
 	end
 	bar:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell, casttime)
-end
-
-local function stop(unit, spell)
-	local unit = identifiers[unit]
-	if not unit or not unit[spell] then return end
-	bars[unit[spell]]:Stop()
-	if identifiers[unit]==0 then identifiers[unit] = nil end
 end
 
 local player = UnitGUID("player")
@@ -209,7 +201,7 @@ f:SetScript("OnEvent", function(self, event, target, spell, sourceguid, sourcena
 				stop(destguid, spell)
 			end
 		end
-	elseif spell=="SPELL_AURA_APPLIED" and sourceguid==player and destguid~=player then
+	elseif spell=="SPELL_AURA_APPLIED" or spell=="SPELL_AURA_REFRESH" and sourceguid==player and destguid~=player then
 		lib:GetUnitID(destguid, function(unitid)
 			local unitname = UnitName(unitid)
 			local spellname, rank, _, _, _, _, casttime = GetSpellInfo(id)
