@@ -6,14 +6,14 @@
 ## SavedVariablesPerCharacter: ncBindings, ncUIinstalled
 ## X-oUF: oUF
 
-scripts\init.lua
-
 libs\libstub.lua
-libs\ouf\ouf.xml
-libs\guidmap.lua
-libs\cooldown.lua
-
+scripts\init.lua
 config.lua
+libs\ncui.lua
+
+libs\ouf\ouf.xml
+libs\libguidmap.lua
+libs\libcooldown.lua
 
 media\font.xml
 scripts\core.lua
