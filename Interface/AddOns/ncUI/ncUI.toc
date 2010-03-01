@@ -11,6 +11,7 @@ scripts\init.lua
 libs\libstub.lua
 libs\ouf\ouf.xml
 libs\guidmap.lua
+libs\cooldown.lua
 
 config.lua
 
