@@ -86,7 +86,7 @@ oUF:SetActiveStyle('Raid')
 local raid = {}
 for i = 1, 8 do
 	local raidgroup = oUF:Spawn('header', 'oUF_Group'..i)
-	raidgroup:SetManyAttributes('groupFilter', tostring(i), 'showRaid', true, 'yOffset', -4)
+	raidgroup:SetManyAttributes('showParty', true, 'showRaid', true, 'yOffset', -4)
 	raidgroup:SetFrameStrata('BACKGROUND')	
 	table.insert(raid, raidgroup)
 	if(i == 1) then
