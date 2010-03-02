@@ -9,7 +9,7 @@
 libs\libstub.lua
 scripts\init.lua
 config.lua
-libs\ncui.lua
+libs\libncui.lua
 
 libs\ouf\ouf.xml
 libs\libguidmap.lua

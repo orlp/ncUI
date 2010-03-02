@@ -15,7 +15,7 @@ local tooltips = {
 
 for i=1, #tooltips do
 	tooltips[i]:SetBackdrop{bgFile = ncUIdb["media"].solid, edgeFile = ncUIdb["media"].solid, tile = 0, tileSize = 0, edgeSize = ncUIdb:Scale(1), insets = { left = -1, right = -1, top = -1, bottom = -1 } }
-	tooltips[i]:SetScript("OnShow", function(self) self:SetBackdropColor(unpack(ncUIdb["general"].colorscheme_backdrop)) self:SetBackdropBorderColor(unpack(ncUIdb["general"].colorscheme_border)) end)
+	tooltips[i]:SetScript("OnShow", function(self) self:SetBackdropColor(unpack(ncUIdb["general"].backdrop)) self:SetBackdropBorderColor(unpack(ncUIdb["general"].border)) end)
 end
 
 -- Setup Anchor/Healthbar/Instanthide

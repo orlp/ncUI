@@ -65,7 +65,7 @@ local function stylesmallbutton(normal, button, icon, name, pet)
 		
 		local panel = CreateFrame("Frame", name.."Panel", button)
 		ncUIdb:CreatePanel(panel, 24, 24, "CENTER", button, "CENTER", 0,0)
-		panel:SetBackdropColor(unpack(ncUIdb["general"].colorscheme_backdrop))
+		panel:SetBackdropColor(unpack(ncUIdb["general"].backdrop))
 
 		icon:SetTexCoord(.08, .92, .08, .92)
 		icon:ClearAllPoints()
@@ -83,7 +83,7 @@ local function stylesmallbutton(normal, button, icon, name, pet)
 		end
 	end
 	
-	normal:SetVertexColor(unpack(ncUIdb["general"].colorscheme_border))
+	normal:SetVertexColor(unpack(ncUIdb["general"].border))
 	normal:ClearAllPoints()
 	normal:SetPoint("TOPLEFT")
 	normal:SetPoint("BOTTOMRIGHT")
@@ -122,7 +122,7 @@ local function usable(self)
     elseif IsCurrentAction(action) then
 		normal:SetVertexColor(1, 1, 1)
 	else
-		normal:SetVertexColor(unpack(ncUIdb["general"].colorscheme_border))
+		normal:SetVertexColor(unpack(ncUIdb["general"].border))
     end
 	
 	local isusable, mana = IsUsableAction(action)

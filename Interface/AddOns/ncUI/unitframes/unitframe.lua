@@ -76,7 +76,7 @@ local function casticon(self, event, unit)
 	if (castbar.interrupt) then
 		castbar.Button:SetBackdropBorderColor(1, .5, 0)
 	else
-		castbar.Button:SetBackdropBorderColor(unpack(ncUIdb["general"].colorscheme_border))
+		castbar.Button:SetBackdropBorderColor(unpack(ncUIdb["general"].border))
 	end
 end
 
@@ -158,7 +158,7 @@ local function style(self, unit)
 	
 	self.Health.bg.bg = self.Health:CreateTexture(nil, "BACKGROUND")
 	self.Health.bg.bg:SetAllPoints(self.Health)
-	self.Health.bg.bg:SetTexture(unpack(ncUIdb["general"].colorscheme_backdrop))
+	self.Health.bg.bg:SetTexture(unpack(ncUIdb["general"].backdrop))
 
 	local health = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfontright")
 	health:SetPoint("RIGHT", self.Health, -2, 0)
@@ -223,7 +223,7 @@ local function style(self, unit)
 			self.Castbar:SetWidth(ncUIdb:Scale(301))
 			self.Castbar:SetHeight(ncUIdb:Scale(40))
 			self.Castbar:SetStatusBarTexture(ncUIdb["media"].unitframe)
-			self.Castbar:SetStatusBarColor(unpack(ncUIdb["general"].colorscheme_border))
+			self.Castbar:SetStatusBarColor(unpack(ncUIdb["general"].border))
 
 			self.Castbar.bg = CreateFrame("Frame", nil, self.Castbar)
 			ncUIdb:SetTemplate(self.Castbar.bg)
@@ -314,7 +314,7 @@ local function style(self, unit)
 			edgeFile = ncUIdb["media"].solid,
 			tile = false, tileSize = 0, edgeSize = ncUIdb.mult,
 		}
-		panel2:SetBackdropBorderColor(unpack(ncUIdb["general"].colorscheme_border))
+		panel2:SetBackdropBorderColor(unpack(ncUIdb["general"].border))
 	end
 
 	if(unit == "pet") then
@@ -405,9 +405,9 @@ local function style(self, unit)
 				edgeFile = ncUIdb["media"].solid,
 				tile = false, tileSize = 0, edgeSize = ncUIdb.mult,
 			}
-			panel:SetBackdropBorderColor(unpack(ncUIdb["general"].colorscheme_border))
+			panel:SetBackdropBorderColor(unpack(ncUIdb["general"].border))
 			panel.bg = panel:CreateTexture(nil, "BACKGROUND")
-			panel.bg:SetTexture(unpack(ncUIdb["general"].colorscheme_backdrop))
+			panel.bg:SetTexture(unpack(ncUIdb["general"].backdrop))
 			panel.bg:SetPoint("TOPLEFT", panel)
 			panel.bg:SetPoint("BOTTOMRIGHT", panel, ncUIdb:Scale(-2), ncUIdb:Scale(-1))
 		end

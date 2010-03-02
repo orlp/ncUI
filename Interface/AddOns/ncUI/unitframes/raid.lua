@@ -50,7 +50,7 @@ local function CreateStyle(self, unit)
 	
 	self.Health.bg.bg = self.Health:CreateTexture(nil, "BACKGROUND")
 	self.Health.bg.bg:SetAllPoints(self.Health)
-	self.Health.bg.bg:SetTexture(unpack(ncUIdb["general"].colorscheme_backdrop))
+	self.Health.bg.bg:SetTexture(unpack(ncUIdb["general"].backdrop))
  
 	local health = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfontright")
 	health:SetPoint('CENTER', 0, 1)

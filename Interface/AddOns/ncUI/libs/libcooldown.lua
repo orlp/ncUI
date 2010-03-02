@@ -24,25 +24,42 @@ local items = {}
 local watched = {}
 local nextupdate, lastupdate = 0, 0
 
-local function start(id, duration, class)
-	watched[id] = {
-		["dur"] = duration,
-		["class"] = class,
-	}
-	if nextupdate < 0 or duration < nextupdate then
-		nextupdate = duration
-	end
-	addon:Show()
-	
-	for _, func in next, lib.startcalls do
-		func(id, duration, class)
-	end
-end
 local function stop(id, class)
 	watched[id] = nil
 
 	for _, func in next, lib.stopcalls do
 		func(id, class)
+	end
+end
+
+local function update(self)
+	for id, tab in next, watched do
+		local duration = watched[id].dur - lastupdate
+		if duration < 0 then
+			stop(id, watched[id].class)
+		else
+			watched[id].dur = duration
+			if nextupdate < 0 or duration < nextupdate then
+				nextupdate = duration
+			end
+		end
+	end
+	lastupdate = 0
+	
+	if nextupdate < 0 then self:Hide() end
+end
+
+local function start(id, duration, class)
+	update(addon)
+
+	watched[id] = {
+		["dur"] = duration,
+		["class"] = class,
+	}
+	addon:Show()
+	
+	for _, func in next, lib.startcalls do
+		func(id, duration, class)
 	end
 end
 
@@ -123,20 +140,8 @@ local function onupdate(self, elapsed)
 	nextupdate = nextupdate - elapsed
 	lastupdate = lastupdate + elapsed
 	if nextupdate > 0 then return end
-	for id, tab in next, watched do
-		local duration = watched[id].dur - lastupdate
-		if duration < 0 then
-			stop(id, watched[id].class)
-		else
-			watched[id].dur = duration
-			if nextupdate < 0 or duration < nextupdate then
-				nextupdate = duration
-			end
-		end
-	end
-	
-	lastupdate = 0
-	if nextupdate < 0 then self:Hide() end
+
+	update(self)
 end
 addon:SetScript("OnUpdate", onupdate)
 addon:Hide()

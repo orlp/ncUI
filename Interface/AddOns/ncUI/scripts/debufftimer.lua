@@ -11,7 +11,7 @@ local function createbar(i)
 
 	f.bar = CreateFrame("StatusBar", nil, f)
 	f.bar:SetStatusBarTexture(ncUIdb["media"].unitframe)
-	f.bar:SetStatusBarColor(unpack(ncUIdb["general"].colorscheme_border))
+	f.bar:SetStatusBarColor(unpack(ncUIdb["general"].border))
 	f.bar:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
 	f.bar:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
 	f.bar:SetMinMaxValues(0, 1)
