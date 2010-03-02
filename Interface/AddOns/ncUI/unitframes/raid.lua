@@ -84,35 +84,22 @@ oUF:RegisterStyle('Raid', CreateStyle)
 oUF:SetActiveStyle('Raid')
  
 local raid = {}
-for i = 1, 8 do
-	local raidgroup = oUF:Spawn('header', 'oUF_Group'..i)
-	if i==1 then
-		raidgroup:SetManyAttributes('showParty', true)
-	end
-	raidgroup:SetManyAttributes('showRaid', true, 'yOffset', -4)
-	raidgroup:SetFrameStrata('BACKGROUND')	
-	table.insert(raid, raidgroup)
-	if(i == 1) then
-		raidgroup:SetPoint('TOPLEFT', UIParent, 15, -80)
+local raidgroup = oUF:Spawn('header', 'oUF_Group')
+raidgroup:SetManyAttributes('showParty', true, 'showRaid', true, 'yOffset', -4)
+raidgroup:SetFrameStrata('BACKGROUND')
+raidgroup:SetPoint('TOPLEFT', UIParent, 15, -80)
+local raidToggle = CreateFrame("Frame")
+raidToggle:RegisterEvent("PLAYER_LOGIN")
+raidToggle:RegisterEvent("RAID_ROSTER_UPDATE")
+raidToggle:RegisterEvent("PARTY_LEADER_CHANGED")
+raidToggle:RegisterEvent("PARTY_MEMBERS_CHANGED")
+raidToggle:SetScript("OnEvent", function(self)
+	if InCombatLockdown() then
+		self:RegisterEvent("PLAYER_REGEN_ENABLED")
 	else
-		raidgroup:SetPoint('TOP', raid[i-1], 'BOTTOM', 0, -15)
+		self:UnregisterEvent("PLAYER_REGEN_ENABLED")
+	raidgroup:Show()
 	end
-	local raidToggle = CreateFrame("Frame")
-	raidToggle:RegisterEvent("PLAYER_LOGIN")
-	raidToggle:RegisterEvent("RAID_ROSTER_UPDATE")
-	raidToggle:RegisterEvent("PARTY_LEADER_CHANGED")
-	raidToggle:RegisterEvent("PARTY_MEMBERS_CHANGED")
-	raidToggle:SetScript("OnEvent", function(self)
-		if InCombatLockdown() then
-			self:RegisterEvent("PLAYER_REGEN_ENABLED")
-		else
-			self:UnregisterEvent("PLAYER_REGEN_ENABLED")
-		raidgroup:Show()
-		end
-	end)
-end
- 
- 
- 
+end)
  
  
