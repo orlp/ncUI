@@ -29,6 +29,11 @@ ncUIdb["worldmap"] = {
 	["showcoords"] = true, -- true is to show coords, false is to hide
 }
 
+ncUIdb["cdflash"] = {
+	["enable"] = true,
+	["flashtime"] = .75,
+}
+
 ncUIdb["chat"] = {
 	sticky_channels = { -- if you just typed in a channel, when you press enter and the channel is sticky, then you will start typing in the same channel again
 		["say"] = true, -- set to true to make the channel sticky, false to not make it sticky

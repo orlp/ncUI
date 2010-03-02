@@ -1,8 +1,12 @@
+local db = ncUIdb["cdflash"]
+if not db.enable then return end
+
 local lib = LibStub("LibCooldown")
 if not lib then return end
 
-local bar = CreateFrame("Frame", "ncCooldownBar", UIParent)
-ncUIdb:CreatePanel(bar, 535, 20, "BOTTOM", ActionBarBackground, "TOP", 0, 4)
+
+local phase = db.flashtime/3
+local mult = 1/phase
 
 local flash = CreateFrame("Frame", nil, UIParent)
 flash:SetPoint("CENTER", UIParent)
@@ -15,12 +19,12 @@ flash.icon:SetTexCoord(.08, .92, .08, .92)
 flash:Hide()
 flash:SetScript("OnUpdate", function(self, e)
 	flash.e = flash.e + e
-	if flash.e > .75 then
+	if flash.e > db.flashtime then
 		flash:Hide()
-	elseif flash.e < .25 then
-		flash:SetAlpha(flash.e*4)
-	elseif flash.e > .5 then
-		flash:SetAlpha(1-(flash.e%.5)*4)
+	elseif flash.e < phase then
+		flash:SetAlpha(flash.e*mult)
+	elseif flash.e > (phase*2) then
+		flash:SetAlpha(1-(flash.e%(phase*2))*mult)
 	end
 end)
 

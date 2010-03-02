@@ -68,11 +68,11 @@ function addon:SPELL_UPDATE_COOLDOWN()
 	for id, tab in next, spells do
 		local _, duration, enabled = GetSpellCooldown(tab.name)
 
-		if enabled == 1 and duration > 1.5 then
+		if enabled == 1 and duration > 3 then
 			if not watched[id] then
 				start(id, duration, tab.class)
 			end
-		elseif enabled == 1 and watched[id] then
+		elseif enabled == 1 and watched[id] and duration==0 then
 			stop(id, tab.class)
 		end
 	end
