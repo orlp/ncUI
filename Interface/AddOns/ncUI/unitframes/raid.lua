@@ -82,8 +82,7 @@ end
  
 oUF:RegisterStyle('Raid', CreateStyle)
 oUF:SetActiveStyle('Raid')
- 
-local raid = {}
+
 local raidgroup = oUF:Spawn('header', 'oUF_Group')
 raidgroup:SetManyAttributes('showParty', true, 'showRaid', true, 'yOffset', -4)
 raidgroup:SetFrameStrata('BACKGROUND')
