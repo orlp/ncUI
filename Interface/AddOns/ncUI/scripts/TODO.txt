@@ -1,7 +1,0 @@
-actionbar.lua
-bags.lua
-bindings.lua
-buttonstyler.lua
-datatext.lua
-marking.lua
-panels.lua
