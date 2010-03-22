@@ -4,7 +4,7 @@ if not db.enable then return end
 local function setup()
 	f = WorldMapButton:CreateFontString(nil, "ARTWORK")
 	f:SetFontObject("GameFontNormal")
-	f:SetTextColor(1, 1, 1)
+	f:SetTextColor(1,1,1)
 	return f
 end
 local p, c = setup(), setup()
@@ -37,4 +37,3 @@ BlackoutWorld.Show = function() end
 UIPanelWindows["WorldMapFrame"] = {area = "center"}
 WorldMapFrame:HookScript("OnShow", function(self) self:SetScale(db.scale) end)
 WorldMapFrameSizeDownButton:Disable()
-WorldMapFrameSizeDownButton:SetAlpha(.1)

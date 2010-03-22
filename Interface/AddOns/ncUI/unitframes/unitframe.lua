@@ -301,6 +301,23 @@ local function style(self, unit)
 		self:Tag(info, "[pname]|cff0090ff[( )rare]|r")
 	end
 	
+	if unit=="player" or unit=="target" then
+		self.Portrait = CreateFrame("PlayerModel", nil, self)
+		self.Portrait:SetHeight(ncUIdb:Scale(150))
+		self.Portrait:SetWidth(ncUIdb:Scale(100))
+		self.PostUpdatePortrait = function()
+			self.Portrait:SetCamera(1)
+		end
+	end
+
+	if unit=="player" then
+		self.Portrait:SetPoint("RIGHT", self, "LEFT", ncUIdb:Scale(-5), 0)
+		self.Portrait:SetPoint("BOTTOM", LineToABLeft, "TOP")
+	elseif unit=="target" then
+		self.Portrait:SetPoint("LEFT", self, "RIGHT", ncUIdb:Scale(5), 0)
+		self.Portrait:SetPoint("BOTTOM", LineToABRight, "TOP")
+	end
+	
 	if unit~="focus" then
 		local panel = CreateFrame("Frame", nil, self)
 		ncUIdb:CreatePanel(panel, 1, 1, "TOPLEFT", self.Health, "TOPLEFT", -2, 2)
