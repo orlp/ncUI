@@ -1,13 +1,13 @@
+local C = select(2, ...):New(2)
+
 -- ncUI config
-ncUIdb["general"] = { -- core settings
+C["general"] = { -- core settings
 	uiscale = .64, -- the UI scale you want to use
 	backdrop = {.1, .1, .1, 1, }, -- red, green, blue, alpha | number between 1 and 0 where 0 is none and 1 is full(alpha 1 is fully visible, alpha 0 is fully hidden)
 	border = { .6, .6, .6, 1, }, -- same
 }
 
-
-
-ncUIdb["media"] = { -- media locations
+C["media"] = { -- media locations
 	["font"] = [[Fonts\FRIZQT__.ttf]], -- just a link to the gamefont
 	["pixelfont"] = [[Interface\AddOns\ncUI\media\slkscr.ttf]], -- pixelated font
 	["mask"] = [[Interface\ChatFrame\ChatFrameBackground]], -- minimap mask
@@ -21,22 +21,22 @@ ncUIdb["media"] = { -- media locations
 	["unitframe"] = [[Interface\Addons\ncUI\media\solid]],
 }
 
-ncUIdb["actionbar"] = {
+C["actionbar"] = {
 	["bars"] = 1, -- 1 or 2 bars
 }
 
-ncUIdb["worldmap"] = {
+C["worldmap"] = {
 	["enable"] = true, -- true to enable this mod, false to disable
 	["scale"] = 0.7, -- scales the worldmap by this amount
 	["showcoords"] = true, -- true is to show coords, false is to hide
 }
 
-ncUIdb["cdflash"] = {
+C["cdflash"] = {
 	["enable"] = true,
 	["flashtime"] = .75,
 }
 
-ncUIdb["chat"] = {
+C["chat"] = {
 	sticky_channels = { -- if you just typed in a channel, when you press enter and the channel is sticky, then you will start typing in the same channel again
 		["say"] = true, -- set to true to make the channel sticky, false to not make it sticky
 		["emote"] = true,
@@ -82,7 +82,7 @@ ncUIdb["chat"] = {
 	["colorscheme_editbox"] = { .6, .6, 1, 1, }, -- same parameters as other colorscheme_ settings, this one determines what color the editbox border should have
 }
 
-ncUIdb["error"] = {
+C["error"] = {
 	["enable"] = true, -- true to enable this mod, false to disable
 	filter = { -- what messages to not hide
 		["Inventory is full."] = true, -- inventory is full will not be hidden by default
@@ -90,15 +90,15 @@ ncUIdb["error"] = {
 	},
 }
 
-ncUIdb["extrabuttons"] = {
+C["extrabuttons"] = {
 	["enable"] = true, -- true to enable this mod, false to disable
 }
 
-ncUIdb["tooltip"] = {
+C["tooltip"] = {
 	["enable"] = true, -- true to enable this mod, false to disable
 }
 
-ncUIdb["cooldown"] = {
+C["cooldown"] = {
 	enable = true, -- true to enable this mod, false to disable
 	fade = true, -- if set to true buttons will fade when they are on cooldown
 	treshold = 6.5, -- if the cooldown remainder is less than this in seconds the tresholdcolor will be applied
@@ -106,21 +106,21 @@ ncUIdb["cooldown"] = {
 	tresholdcolor = {1, 0, 0}, -- the color of the cooldowntext when below the treshold in red, green, blue values
 }
 
-ncUIdb["merchant"] = {
+C["merchant"] = {
 	["enable"] = true, -- true to enable this mod, false to disable
 	["sellgrays"] = true, -- automaticly sell grays?
 	["autorepair"] = true, -- automaticly repair?
 }
 
-ncUIdb["quest"] = {
+C["quest"] = {
 	["enable"] = true, -- true to enable this mod, false to disable
 }
 
-ncUIdb["resurrect"] = {
+C["resurrect"] = {
 	["enable"] = true,
 }
 
-ncUIdb["datatext"] = { -- Determine what feed a datatext slot should have. Possible datafeeds are: bag, mail, dur, money, ms, mem, exprep.
+C["datatext"] = { -- Determine what feed a datatext slot should have. Possible datafeeds are: bag, mail, dur, money, ms, mem, exprep.
 	left1 = "bag",
 	left2 = "exprep",
 	left3 = "dur",
@@ -129,29 +129,29 @@ ncUIdb["datatext"] = { -- Determine what feed a datatext slot should have. Possi
 	right3 = "mem",
 }
 
-ncUIdb["nameplates"] = {
+C["nameplates"] = {
 	["enable"] = true,
-	["font"] = ncUIdb["media"].pixelfont,
+	["font"] = C["media"].pixelfont,
 	["fontsize"] = 7,
 	["tags"] = "THINOUTLINE",
-	["texture"] = ncUIdb["media"].unitframe,
+	["texture"] = C["media"].unitframe,
 }
 
-ncUIdb["bags"] = {
+C["bags"] = {
 	["enable"] = true,
 }
 
-ncUIdb["focus"] = {
+C["focus"] = {
 	["enable"] = true,
 	["button"] = 1,
 	["modify"] = "alt",
 }
 
-ncUIdb["killingblow"] = {
+C["killingblow"] = {
 	["enable"] = true,
 }
 
-ncUIdb["spellalerter"] = {
+C["spellalerter"] = {
 	["enable"] = true,
 	HARMFUL_SPELLS = {
 		-- Priest
@@ -348,3 +348,5 @@ ncUIdb["spellalerter"] = {
 		[GetSpellInfo(24378)] = 1, -- Berserking
 	},
 }
+
+ncUIdb = C
