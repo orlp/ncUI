@@ -5,9 +5,9 @@ WORLDMAP_RATIO_MINI = 1 -- else pixelperfectness gets screwed up, just like font
 WORLDMAP_WINDOWED_SIZE = WORLDMAP_RATIO_MINI -- for a smooth transition 3.3.2 to 3.3.3
 
 
-local mapbg = F:CreateFrame("Panel", nil, WorldMapDetailFrame)
+local mapbg = F:CreateFrame("Frame", nil, WorldMapDetailFrame)
 
-local movebutton = f:CreateFrame("Frame", nil, WorldMapFrameSizeUpButton)
+local movebutton = F:CreateFrame("Frame", nil, WorldMapFrameSizeUpButton)
 movebutton:SetHeight(32)
 movebutton:SetWidth(32)
 movebutton:SetPoint("TOP", WorldMapFrameSizeUpButton, "BOTTOM", -1, 4)
