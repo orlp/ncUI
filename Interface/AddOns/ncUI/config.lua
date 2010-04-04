@@ -1,12 +1,11 @@
-local C = select(2, ...):New(2)
-C = ncUIdb
-
 -- ncUI config
 ncUIdb["general"] = { -- core settings
 	uiscale = .64, -- the UI scale you want to use
 	backdrop = {.1, .1, .1, 1, }, -- red, green, blue, alpha | number between 1 and 0 where 0 is none and 1 is full(alpha 1 is fully visible, alpha 0 is fully hidden)
 	border = { .6, .6, .6, 1, }, -- same
 }
+
+
 
 ncUIdb["media"] = { -- media locations
 	["font"] = [[Fonts\FRIZQT__.ttf]], -- just a link to the gamefont
