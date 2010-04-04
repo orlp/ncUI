@@ -1,8 +1,9 @@
-local db = ncUIdb["tooltip"]
+local F, C = select(2, ...):Fetch()
+
 local gt = GameTooltip
 local unitExists, maxHealth
 
-if not db.enable then return end
+if not C.tooltip.enable then return end
 
 local tooltips = {
 	GameTooltip,
@@ -14,8 +15,8 @@ local tooltips = {
 }
 
 for i=1, #tooltips do
-	tooltips[i]:SetBackdrop{bgFile = ncUIdb["media"].solid, edgeFile = ncUIdb["media"].solid, tile = 0, tileSize = 0, edgeSize = ncUIdb:Scale(1), insets = { left = -1, right = -1, top = -1, bottom = -1 } }
-	tooltips[i]:SetScript("OnShow", function(self) self:SetBackdropColor(unpack(ncUIdb["general"].backdrop)) self:SetBackdropBorderColor(unpack(ncUIdb["general"].border)) end)
+	tooltips[i]:SetBackdrop(F.BACKDROP)
+	tooltips[i]:SetScript("OnShow", function(self) self:SetBackdropColor(unpack(C.general.backdrop)) self:SetBackdropBorderColor(unpack(C.general.border)) end)
 end
 
 -- Setup Anchor/Healthbar/Instanthide
@@ -29,7 +30,7 @@ local function update(self, ...)
 	-- Align World Units/Objects to mouse
 	if owner == UIParent and not unitExists then
 		self:ClearAllPoints()
-		self:SetPoint("BOTTOMRIGHT", InfoRight, "TOPRIGHT", 0, 5)
+		self:SetPoint("TOP", UIParent, "TOP", 0, F:Scale(-12))
 	end
 
 	if not UnitExists("mouseover") and unitExists then
@@ -174,7 +175,7 @@ end
 
 local function default(tooltip, parent)		
 	tooltip:SetOwner(parent, "ANCHOR_NONE")
-	tooltip:SetPoint("BOTTOMRIGHT", InfoRight, "TOPRIGHT", 0, 5)
+	tooltip:SetPoint("TOP", UIParent, "TOP", 0, F:Scale(-12))
 end
 
 gt:SetScript("OnUpdate", update)

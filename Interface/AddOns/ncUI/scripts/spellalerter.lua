@@ -1,4 +1,5 @@
-if not ncUIdb["spellalerter"] then return end
+local F, C = select(2, ...):Fetch()
+if not C.spellalerter.enable then return end
 
 local ncSpellalert = CreateFrame("Frame", "ncSpellalert")	
 local band, bor = bit.band, bit.bor
@@ -15,7 +16,7 @@ local function tohex(val) return string.format("%.2x", val) end
 local function getclasscolor(class) local color = RAID_CLASS_COLORS[class] if not color then return "ffffff" end return tohex(color.r*255)..tohex(color.g*255)..tohex(color.b*255) end
 local function colorize(name) if name then return "|cff"..getclasscolor(select(2,UnitClass(name)))..name.."|r" else return nil end end
 local function createmessageframe(name)
-	local f = CreateFrame("MessageFrame", name, UIParent)
+	local f = F:CreateFrame("MessageFrame", name, UIParent)
 	f:SetPoint("LEFT", UIParent)
 	f:SetPoint("RIGHT", UIParent)
 	f:SetHeight(25)
@@ -51,14 +52,14 @@ end
 
 function ncSpellalert:COMBAT_LOG_EVENT_UNFILTERED(event, timestamp, eventType, sourceGUID, sourcename, sourceFlags, destGUID, destname, destFlags, spellid, spellname)
 	if (spellname==deathcoil and select(2, UnitClass(sourceGUID))=="DEATHKNIGHT") or spellid == 59752 or spellid == 42292 or spellid == 7744 then return end -- ignores
-	if eventType == "SPELL_AURA_APPLIED" and ncUIdb["spellalerter"].BUFF_SPELLS[spellname] and isenemy(destFlags) then
+	if eventType == "SPELL_AURA_APPLIED" and C.spellalerter.BUFF_SPELLS[spellname] and isenemy(destFlags) then
 		buff:AddMessage(format(ACTION_SPELL_AURA_APPLIED_BUFF_FULL_TEXT_NO_SOURCE, nil, "|cff00ff00"..spellname.."|r", nil, colorize(destname)))
 	elseif eventType == "SPELL_CAST_START" and isenemy(sourceFlags) then
 		local color		
 		
-		if ncUIdb["spellalerter"].HARMFUL_SPELLS[spellname] then
+		if C.spellalerter.HARMFUL_SPELLS[spellname] then
 			color = "ff0000"
-		elseif ncUIdb["spellalerter"].HEALING_SPELLS[spellname] then
+		elseif C.spellalerter.HEALING_SPELLS[spellname] then
 			color = "ffff00"
 		end
 		

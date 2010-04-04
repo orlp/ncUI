@@ -1,5 +1,5 @@
-local db = ncUIdb["resurrect"]
-if not db.enable then return end
+local F, C = select(2, ...):Fetch()
+if not C.resurrect.enable then return end
 
 local f = CreateFrame("Frame")
 f:SetScript("OnEvent", function(self, event, ...)

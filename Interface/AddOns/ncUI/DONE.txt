@@ -1,0 +1,5 @@
+scripts/worldmap.lua
+scripts/tooltip.lua
+scripts/spellalerter.lua
+scripts/resurrect.lua
+scripts/quest.lua

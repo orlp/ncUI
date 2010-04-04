@@ -1,8 +1,7 @@
 local F, C = select(2, ...):Fetch()
 if not C.worldmap.enable or IsAddOnLoaded("Mapster") then return end
 
-WORLDMAP_RATIO_MINI = 1 -- else pixelperfectness gets screwed up, just like font sizes
-WORLDMAP_WINDOWED_SIZE = WORLDMAP_RATIO_MINI -- for a smooth transition 3.3.2 to 3.3.3
+WORLDMAP_RATIO_MINI, WORLDMAP_WINDOWED_SIZE = 1, 1 -- else pixelperfectness gets screwed up, just like font sizes
 
 local mapbg = F:CreateFrame("Panel", nil, WorldMapDetailFrame)
 local movebutton = F:CreateFrame("Frame", nil, WorldMapFrameCloseButton)
@@ -19,7 +18,6 @@ addon:RegisterEvent("PLAYER_REGEN_DISABLED")
 
 SetCVar("miniWorldMap", 1)
 SetCVar("advancedWorldMap", 1)
-
 
 hooksecurefunc("WorldMap_ToggleSizeDown", function()
 	F:Destroy(WorldMapBlobFrame)

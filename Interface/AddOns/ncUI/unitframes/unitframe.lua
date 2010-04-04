@@ -316,6 +316,7 @@ local function style(self, unit)
 		self.Portrait:SetWidth(ncUIdb:Scale(100))
 		self.PostUpdatePortrait = function()
 			self.Portrait:SetCamera(1)
+			self.Portrait:SetRotation(0)
 		end
 	end
 

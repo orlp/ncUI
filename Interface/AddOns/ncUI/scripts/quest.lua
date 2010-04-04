@@ -1,5 +1,5 @@
-local db = ncUIdb["quest"]
-if not db.enable then return end
+local F, C = select(2, ...):Fetch()
+if not C.quest.enable then return end
 
 local f = CreateFrame("Frame")
 
