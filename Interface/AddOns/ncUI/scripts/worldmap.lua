@@ -4,50 +4,36 @@ if not C.worldmap.enable or IsAddOnLoaded("Mapster") then return end
 WORLDMAP_RATIO_MINI = 1 -- else pixelperfectness gets screwed up, just like font sizes
 WORLDMAP_WINDOWED_SIZE = WORLDMAP_RATIO_MINI -- for a smooth transition 3.3.2 to 3.3.3
 
-
-local mapbg = F:CreateFrame("Frame", nil, WorldMapDetailFrame)
-
-local movebutton = F:CreateFrame("Frame", nil, WorldMapFrameSizeUpButton)
-movebutton:SetHeight(32)
-movebutton:SetWidth(32)
-movebutton:SetPoint("TOP", WorldMapFrameSizeUpButton, "BOTTOM", -1, 4)
+local mapbg = F:CreateFrame("Panel", nil, WorldMapDetailFrame)
+local movebutton = F:CreateFrame("Frame", nil, WorldMapFrameCloseButton)
+movebutton:SetSize(25)
+movebutton:SetPoint("TOP", WorldMapFrameCloseButton, "BOTTOM", -1, 2)
 movebutton:SetBackdrop{bgFile=C.media.cross}
 
-local addon = CreateFrame('Frame')
-addon:RegisterEvent('PLAYER_LOGIN')
+local addon = F:CreateFrame("Frame")
+addon:RegisterEvent("PLAYER_LOGIN")
 addon:RegisterEvent("PARTY_MEMBERS_CHANGED")
 addon:RegisterEvent("RAID_ROSTER_UPDATE")
 addon:RegisterEvent("PLAYER_REGEN_ENABLED")
 addon:RegisterEvent("PLAYER_REGEN_DISABLED")
 
--- because smallmap > bigmap by far
-local SmallerMap = GetCVarBool("miniWorldMap")
-if SmallerMap == nil then
-	SetCVar("miniWorldMap", 1);
-end
+SetCVar("miniWorldMap", 1)
+SetCVar("advancedWorldMap", 1)
 
--- look if map is not locked
-local MoveMap = GetCVarBool("advancedWorldMap")
-if MoveMap == nil then
-	SetCVar("advancedWorldMap", 1)
-end
 
 local SmallerMapSkin = function()
-	-- because it cause "action failed" when rescaling smaller map ...
 	F:Destroy(WorldMapBlobFrame)
+	F:Destroy(WorldMapFrameSizeUpButton) -- NO SIZING UP MWUHAHAHAA
 	
 	-- new frame to put zone and title text in
 	local ald = CreateFrame ("Frame", nil, WorldMapButton)
 	ald:SetFrameStrata("TOOLTIP")
 	
-	-- map border and bg
-	mapbg:SetBackdropColor(unpack(C.general.backdrop))
-	mapbg:SetBackdropBorderColor(unpack(C.general.border))
-	mapbg:SetScale(1 / WORLDMAP_RATIO_MINI)
-	mapbg:SetPoint("TOPLEFT", WorldMapDetailFrame, F:Scale(-2), F:Scale(2))
-	mapbg:SetPoint("BOTTOMRIGHT", WorldMapDetailFrame, F:Scale(2), F:Scale(-2))
+	mapbg:SetPoint("TOPLEFT", WorldMapDetailFrame, -2, 2)
+	mapbg:SetPoint("BOTTOMRIGHT", WorldMapDetailFrame, 2, -2)
 	mapbg:SetFrameStrata("MEDIUM")
 	mapbg:SetFrameLevel(20)
+	
 	
 	-- move buttons / texts and hide default border
 	WorldMapButton:SetAllPoints(WorldMapDetailFrame)
@@ -89,13 +75,6 @@ local SmallerMapSkin = function()
 end
 hooksecurefunc("WorldMap_ToggleSizeDown", function() SmallerMapSkin() end)
 
-local BiggerMapSkin = function()
-	-- 3.3.3, show the dropdown added into this patch
-	WorldMapLevelDropDown:SetAlpha(1)
-	WorldMapLevelDropDown:SetScale(1)
-end
-hooksecurefunc("WorldMap_ToggleSizeUp", function() BiggerMapSkin() end)
-
 local function OnMouseDown()
 	WorldMapScreenAnchor:ClearAllPoints();
 	WorldMapFrame:ClearAllPoints();
@@ -119,7 +98,8 @@ local function UpdateIconColor(self, t)
 	self.icon:SetVertexColor(color.r, color.g, color.b)
 end
 
-local OnEvent = function()
+
+addon:SetScript("OnEvent", function()
 	-- fixing a stupid bug error by blizzard on default ui :x
 	if event == "PLAYER_REGEN_DISABLED" then
 		WorldMapFrameSizeDownButton:Disable() 
@@ -142,6 +122,4 @@ local OnEvent = function()
 			_G["WorldMapParty"..p]:SetScript("OnUpdate", UpdateIconColor)
 		end
 	end
-end
-addon:SetScript("OnEvent", OnEvent)
-
+end)
