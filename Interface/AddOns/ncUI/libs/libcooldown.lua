@@ -1,4 +1,4 @@
-local lib = LibStub:NewLibrary("LibCooldown", 1.0)
+local lib = select(2, ...):New(4)
 if not lib then return end
 
 lib.startcalls = {}

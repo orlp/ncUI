@@ -1,5 +1,5 @@
 local bars, identifiers = {}, {}
-local lib = LibStub("LibGUIDMap")
+local lib = select(2, ...):Fetch(5)
 local function hex(r, g, b) if type(r) == "table" then if r.r then r, g, b = r.r, r.g, r.b else r, g, b = unpack(r) end	end	return string.format("|cff%02x%02x%02x", r*255, g*255, b*255) end
 local function createbar(i)
 	local f = CreateFrame("Frame", "DebuffTimerBar"..i, UIParent)

@@ -1,4 +1,4 @@
-local lib = LibStub:NewLibrary("LibGUIDMap", 1.0)
+local lib = select(2, ...):New(5)
 if not lib then return end
 
 local player

@@ -1,7 +1,7 @@
 local db = ncUIdb["cdflash"]
 if not db.enable then return end
 
-local lib = LibStub("LibCooldown")
+local lib = select(2, ...):Fetch(4)
 if not lib then return end
 
 
