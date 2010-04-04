@@ -35,31 +35,3 @@ lib:RegisterCallback("stop", function(id, class)
 	flash.e = 0
 	flash:Show()
 end)
-
--- REMOVE AFTER THIS LINE FOR RELEASE --
-
-local player
-local f = CreateFrame("Frame", nil, UIParent)
-local text = f:CreateFontString(nil, "OVERLAY")
-local update = 0
-
-f:RegisterEvent("PLAYER_ENTERING_WORLD")
-f:SetScript("OnEvent", function(self)
-	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
-	self:SetScript("OnEvent", nil)
-	text:SetFont("Fonts\\FRIZQT__.TTF", 22*(768/string.match(GetCVar("gxResolution"), "%d+x(%d+)")/GetCVar("uiScale")), "OUTLINE")
-	text:SetPoint("CENTER", UIParent, 0, 200)
-	text:SetText("ART OF WAR")
-	player = UnitGUID("player")
-end)
-f:SetScript("OnUpdate", function(self, elapsed)
-	update = update + elapsed
-	if update > .1 then
-		update = 0
-		if UnitBuff("player", "The Art of War") then
-			text:Show()
-		else
-			text:Hide()
-		end
-	end
-end)
