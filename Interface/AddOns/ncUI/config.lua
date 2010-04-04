@@ -1,3 +1,6 @@
+local C = select(2, ...):New(2)
+C = ncUIdb
+
 -- ncUI config
 ncUIdb["general"] = { -- core settings
 	uiscale = .64, -- the UI scale you want to use
@@ -120,7 +123,7 @@ ncUIdb["resurrect"] = {
 
 ncUIdb["datatext"] = { -- Determine what feed a datatext slot should have. Possible datafeeds are: bag, mail, dur, money, ms, mem, exprep.
 	left1 = "bag",
-	left2 = "mail",
+	left2 = "exprep",
 	left3 = "dur",
 	right1 = "money",
 	right2 = "ms",

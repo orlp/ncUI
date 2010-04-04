@@ -144,6 +144,15 @@ local function style(self, unit)
 	self.Health:SetHeight(unit == "targettarget" and ncUIdb:Scale(32) or unit == "pet" and ncUIdb:Scale(20) or ncUIdb:Scale(36))
 	self.Health.frequentUpdates = true
 	
+	if unit=="player" or unit=="target" then
+		local dbh = self.Health:CreateTexture(nil, "OVERLAY")
+		dbh:SetAllPoints(self.Health)
+		dbh:SetTexture("Something")
+		dbh:SetBlendMode("ADD")
+		dbh:SetVertexColor(0,0,0,0)
+		self.DebuffHighlight = dbh
+	end
+	
 	self.Health.colorClass = true
 	self.Health.colorReaction = true
 	self.Health.colorTapping = true
@@ -447,7 +456,6 @@ local function style(self, unit)
 		self.CustomAuraFilter = customFilter
 	end
 
-	self.DebuffHighlightBackdrop = true
 	self.DebuffHighlightFilter = true
 end
 

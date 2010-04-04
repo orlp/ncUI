@@ -44,6 +44,7 @@ scripts\bags.lua
 scripts\hovername.lua
 scripts\killingblow.lua
 scripts\cdflash.lua
+scripts\marking.lua
 
 unitframes\plugins\dropdown.lua
 
@@ -52,3 +53,4 @@ unitframes\unitframe.lua
 unitframes\raid.lua
 
 unitframes\plugins\smooth.lua
+unitframes\plugins\debuffhighlight.lua
