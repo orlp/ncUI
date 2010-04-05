@@ -40,12 +40,14 @@ f:SetScript("OnEvent", function(self)
 	if focus and focus:GetName()~="WorldFrame" then return end
 	
 	local name = UnitName("mouseover")
-	local AFK = UnitIsAFK("mouseover")
-	local DND = UnitIsDND("mouseover")
+	local level = UnitLevel("mouseover")
 	local prefix = ""
 	
-	if AFK then prefix = "<AFK> " end
-	if DND then prefix = "<DND> " end
+	if level and level~=UnitLevel("player") then
+		local difficulty = GetQuestDifficultyColor(level)
+		
+		prefix = format("|cFF%02x%02x%02x%s |r ", difficulty.r*255, difficulty.g*255, difficulty.b*255, tostring(level))
+	end
 	
 	self.text:SetTextColor(getcolor())
 	self.text:SetText(prefix..name)

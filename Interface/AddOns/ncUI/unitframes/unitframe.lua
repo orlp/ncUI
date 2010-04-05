@@ -347,7 +347,6 @@ local function style(self, unit)
 					local Scale, X, Y, Z = ( "|" ):split(ModelCameras[path:lower()] or "")
 					self:SetModelScale(tonumber(Scale) or 1)
 					self:SetPosition(tonumber(Z) or 0, tonumber(X) or 0, tonumber(Y) or 0)
-					print(path)
 				else
 					self:SetModelScale(1)
 				end

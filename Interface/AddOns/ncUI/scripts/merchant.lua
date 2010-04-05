@@ -1,9 +1,10 @@
-local db = ncUIdb["merchant"]
-if not db.enable then return end
+local F, C = select(2, ...):Fetch()
+
+if not C.merchant.enable then return end
 
 local f = CreateFrame("Frame")
 f:SetScript("OnEvent", function()
-	if db.sellgrays then
+	if C.merchant.sellgrays then
 		local c = 0
 		for b=0,4 do
 			for s=1,GetContainerNumSlots(b) do
@@ -28,7 +29,7 @@ f:SetScript("OnEvent", function()
 			OpenStackSplitFrame(100000, self, "BOTTOMLEFT", "TOPLEFT")
 		end
 	end)
-	if CanMerchantRepair() and db.autorepair then
+	if CanMerchantRepair() and C.merchant.autorepair then
 		cost, possible = GetRepairAllCost()
 		if cost>0 then
 			if possible then

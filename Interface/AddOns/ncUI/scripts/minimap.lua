@@ -1,9 +1,9 @@
 local F, C = select(2, ...):Fetch()
 
-local bg = CreateFrame("Panel", "MapBorder", Minimap)
+local bg = F:CreateFrame("Panel", "MapBorder", Minimap)
 bg:SetSize(145)
-p:SetPoint("TOPLEFT", -2, 2)
-p:SetPoint("BOTTOMRIGHT", 2, -2)
+bg:SetPoint("TOPLEFT", -2, 2)
+bg:SetPoint("BOTTOMRIGHT", 2, -2)
 F:SetToolbox(Minimap)
 Minimap:SetMaskTexture(C.media.mask)
 Minimap:SetFrameStrata("BACKGROUND")

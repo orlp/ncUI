@@ -40,55 +40,6 @@ function ncUIdb:SetTemplate(f)
 	f:SetBackdropBorderColor(unpack(db.border))
 end
 
-function ncUIdb:CreateText(parent, tab, pos)
-	local content, onclick, tooltip = tab.content or function() return "" end, tab.onclick or nil, tab.tooltip or nil
-	local f = CreateFrame("Frame", _, parent)
-	local t = f:CreateFontString(nil, "OVERLAY", "ncUIfont")
-	t:SetPoint("CENTER", f)
-	t:SetTextColor(unpack(ncUIdb["general"].border))
-	f:SetPoint(unpack(pos))
-	function f:Update(self, event, ...)
-		t:SetText(string.upper(content(self, event, ...)))		
-		f:SetHeight(t:GetStringHeight())
-		f:SetWidth(t:GetStringWidth())
-	end
-	if onclick then
-		f:EnableMouse(true)
-		f:SetScript("OnMouseDown", function(self, button)
-			onclick(button)
-		end)
-	end
-	if tooltip then
-		f:EnableMouse(true)
-		f:SetScript("OnEnter", function()
-			GameTooltip:SetOwner(this, "ANCHOR_CURSOR");
-			for i=1,#tooltip do
-				if type(tooltip[i]) == "table" then
-					GameTooltip:AddDoubleLine(tooltip[i][1],tooltip[i][2])
-				elseif type(tooltip[i]) == "function" then
-					tooltip[i]()
-				else
-					GameTooltip:AddLine(tooltip[i])
-				end
-			end				
-			GameTooltip:Show()
-		end)
-		f:SetScript("OnLeave", function()
-			GameTooltip:Hide()
-		end)
-	end
-	f.elapsed = 0
-	f:SetScript("OnUpdate", function(self, elapsed)
-		f.elapsed = f.elapsed + elapsed
-		if (f.elapsed>1) then
-			f.elapsed = 0
-			f:Update()
-		end
-	end)
-	f:RegisterEvent("PLAYER_ENTERING_WORLD")
-	return f
-end
-
 local function install()
 	SetMultisampleFormat(1)
 	SetCVar("useUiScale", 1)

@@ -9,12 +9,3 @@ function master:New(i)
 	master[i] = {}
 	return master[i]
 end
-
-ncUIdb = { -- Create the complete databaseholder
-	["general"] = {},
-	["worldmap"] = {},
-	["media"] = {},
-	["chat"] = {},
-	["error"] = {},
-	["extrabuttons"] = {},
-}

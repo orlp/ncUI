@@ -1,8 +1,8 @@
-local db = ncUIdb["extrabuttons"]
-if not db.enable then return end
+local F, C = select(2, ...):Fetch()
+if not C.extrabuttons.enable then return end
 
 local header = CreateFrame("Button", "ncExtrabuttonsHeader", UIParent, "SecureHandlerClickTemplate")
-db.buttons = {}
+C.extrabuttons.buttons = {}
 
 --[[
 	Default Blizzard IDs:
@@ -16,7 +16,7 @@ db.buttons = {}
 -- Setup class specific actionbutton id's
 local _, class = UnitClass("player")
 if class == "DRUID" then
-	db["buttonids"] = {
+	C.extrabuttons["buttonids"] = {
 		24,
 		25,
 		26,
@@ -44,7 +44,7 @@ if class == "DRUID" then
 		61,
 	}
 elseif class == "WARRIOR" then
-	db["buttonids"] = {
+	C.extrabuttons["buttonids"] = {
 		1,
 		2,
 		3,
@@ -72,7 +72,7 @@ elseif class == "WARRIOR" then
 		120,
 	}
 else
-	db["buttonids"] = {
+	C.extrabuttons["buttonids"] = {
 		96,
 		97,
 		98,
@@ -107,49 +107,49 @@ BINDING_HEADER_ncUI = "ncUI extra functions"
 -- Create the buttons
 for i = 1, 25 do
 	local button = CreateFrame("CheckButton", "ncExtrabuttonsButton"..i, header, "ActionBarButtonTemplate")
-	db.buttons[i] = button
+	C.extrabuttons.buttons[i] = button
 	if i == 1 then
 		button:SetPoint("CENTER", header, "CENTER", 0, 0)
 	elseif i == 2 then
-		button:SetPoint("RIGHT", db.buttons[i-1], "LEFT", -2, 0)
+		button:SetPoint("RIGHT", C.extrabuttons.buttons[i-1], "LEFT", -2, 0)
 	elseif i == 3 then
-		button:SetPoint("LEFT", db.buttons[i-2], "RIGHT", 2, 0)
+		button:SetPoint("LEFT", C.extrabuttons.buttons[i-2], "RIGHT", 2, 0)
 	elseif i == 4 then
-		button:SetPoint("BOTTOM", db.buttons[i-3], "TOP", 0, 2)
+		button:SetPoint("BOTTOM", C.extrabuttons.buttons[i-3], "TOP", 0, 2)
 	elseif i == 5 then
-		button:SetPoint("TOP", db.buttons[i-4], "BOTTOM", 0, -2)
+		button:SetPoint("TOP", C.extrabuttons.buttons[i-4], "BOTTOM", 0, -2)
 	elseif i == 6 or i == 14 then
-		button:SetPoint("RIGHT", db.buttons[i-2], "LEFT", -2, 0)
+		button:SetPoint("RIGHT", C.extrabuttons.buttons[i-2], "LEFT", -2, 0)
 	elseif i == 7 or i == 15 then
-		button:SetPoint("LEFT", db.buttons[i-3], "RIGHT", 2, 0)
+		button:SetPoint("LEFT", C.extrabuttons.buttons[i-3], "RIGHT", 2, 0)
 	elseif i == 8 or i == 16 then
-		button:SetPoint("RIGHT", db.buttons[i-3], "LEFT", -2, 0)
+		button:SetPoint("RIGHT", C.extrabuttons.buttons[i-3], "LEFT", -2, 0)
 	elseif i == 9 or i == 17 then
-		button:SetPoint("LEFT", db.buttons[i-4], "RIGHT", 2, 0)
+		button:SetPoint("LEFT", C.extrabuttons.buttons[i-4], "RIGHT", 2, 0)
 	elseif i == 10 or i == 22 or i == 24 then
-		button:SetPoint("RIGHT", db.buttons[i-8], "LEFT", -2, 0)
+		button:SetPoint("RIGHT", C.extrabuttons.buttons[i-8], "LEFT", -2, 0)
 	elseif i == 11 or i == 23 or i == 25 then
-		button:SetPoint("LEFT", db.buttons[i-8], "RIGHT", 2, 0)
+		button:SetPoint("LEFT", C.extrabuttons.buttons[i-8], "RIGHT", 2, 0)
 	elseif i == 12 then
-		button:SetPoint("BOTTOM", db.buttons[i-8], "TOP", 0, 2)
+		button:SetPoint("BOTTOM", C.extrabuttons.buttons[i-8], "TOP", 0, 2)
 	elseif i == 13 then
-		button:SetPoint("TOP", db.buttons[i-8], "BOTTOM", 0, -2)
+		button:SetPoint("TOP", C.extrabuttons.buttons[i-8], "BOTTOM", 0, -2)
 	elseif i == 18 or i == 20 then
-		button:SetPoint("RIGHT", db.buttons[i-12], "LEFT", -2, 0)
+		button:SetPoint("RIGHT", C.extrabuttons.buttons[i-12], "LEFT", -2, 0)
 	elseif i == 19 or i == 21 then
-		button:SetPoint("LEFT", db.buttons[i-12], "RIGHT", 2, 0)
+		button:SetPoint("LEFT", C.extrabuttons.buttons[i-12], "RIGHT", 2, 0)
 	end
 	button:SetAttribute("*type*", "action")
-	button:SetAttribute("*action*", db["buttonids"][i])
+	button:SetAttribute("*action*", C.extrabuttons["buttonids"][i])
 end
 
 -- Setup the virtual button with binding
-header:RegisterForClicks("AnyDown","AnyUp")
+header:RegisterForClicks("AnyDown", "AnyUp")
 header:Hide()
 header:SetAttribute("_onclick", [[
 	self:SetPoint("CENTER", "$cursor")
-	if self:IsShown() then
-		self:Hide()
-	else
+	if down then
 		self:Show()
+	else
+		self:Hide()
 end]])

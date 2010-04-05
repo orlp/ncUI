@@ -6,3 +6,13 @@ scripts/quest.lua
 scripts/panels.lua
 scripts/nameplates.lua
 scripts/minimap.lua
+scripts/merchant.lua
+scripts/marking.lua
+scripts/killingblow.lua
+scripts/hovername.lua
+scripts/font.lua
+scripts/focus.lua
+scripts/extrabuttons.lua
+scripts/error.lua
+scripts/debufftimer.lua
+scripts/datatext.lua
