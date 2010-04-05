@@ -145,12 +145,10 @@ end
 statsleft:SetScript("OnUpdate", update)
 update(statsleft, 10)
 
-local statsright = CreateFrame("Frame", "MinimapStatsRight", Minimap)
-ncUIdb:CreatePanel(statsright, 30, 16, "TOPRIGHT", Minimap, "BOTTOMRIGHT", 2, -5)
+local statsright = F:CreateFrame("Panel", "MinimapStatsRight", Minimap)
+statsright:SetSize(30, 16)
 statsright:EnableMouse(true)
-statsright:SetScript("OnMouseDown", function()
-	ToggleCharacter("PaperDollFrame")
-end)
+statsright:SetScript("OnMouseDown", function() ToggleCharacter("PaperDollFrame") end)
 statsright:SetFrameLevel(3)
 statsright.e = 1
 statsright.bars = {}
