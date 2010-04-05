@@ -23,6 +23,33 @@ local colors = setmetatable({
 	}, {__index = oUF.colors.runes})
 }, {__index = oUF.colors})
 
+local ModelCameras = {
+	[ [[creature\spectraltigerferal\spectraltigerferal.m2]] ] = "||-.25|1", -- Gondria
+	[ [[creature\abyssaloutland\abyssal_outland.m2]] ] = "|.3|1|-8", -- Kraator
+	[ [[creature\ancientofarcane\ancientofarcane.m2]] ] = "1.25", -- Old Crystalbark
+	[ [[creature\arcanegolem\arcanegolem.m2]] ] = ".6|.25", -- Ever-Core the Punisher
+	[ [[creature\bonegolem\bonegolem.m2]] ] = "|.4|.6", -- Crippler
+	[ [[creature\bonespider\bonespider.m2]] ] = "||-1", -- Terror Spinner
+	[ [[creature\crocodile\crocodile.m2]] ] = ".7||-.5", -- Goretooth
+	[ [[creature\dragon\northrenddragon.m2]] ] = ".5||20|-14", -- Hemathion, Vyragosa
+	[ [[creature\fungalmonster\fungalmonster.m2]] ] = ".5|.2|1", -- Bog Lurker
+	[ [[creature\mammoth\mammoth.m2]] ] = ".35|.9|2.7", -- Tukemuth
+	[ [[creature\mountaingiantoutland\mountaingiant_bladesedge.m2]] ] = ".19|-.2|1.2", -- Morcrush
+	[ [[creature\northrendfleshgiant\northrendfleshgiant.m2]] ] = "||2", -- Putridus the Ancient
+	[ [[creature\protodragon\protodragon.m2]] ] = "1.3||-3", -- Time-Lost Proto Drake
+	[ [[creature\satyr\satyr.m2]] ] = ".7|.3|.5", -- Ambassador Jerrikar
+	[ [[creature\wight\wight.m2]] ] = ".7", -- Griegen
+	[ [[creature\zuldrakgolem\zuldrakgolem.m2]] ] = ".45|.1|1.3", -- Zul'drak Sentinel
+	[ [[creature\spells\waterelementaltotem.m2]] ] = ".8|0|1.2|0", --watertotem
+	[ [[creature\spells\fireelementaltotem.m2]] ] = ".8|0|1.2|0",
+	[ [[creature\spells\earthelementaltotem.m2]] ] = ".8|0|1.2|0",
+	[ [[creature\spells\airelementaltotem.m2]] ] = ".8|0|1.2|0",
+	[ [[creature\spells\draeneitotem_water.m2]] ] = ".8|0|1.2|0",
+	[ [[creature\spells\draeneitotem_fire.m2]] ] = ".8|0|1.2|0",
+	[ [[creature\spells\draeneitotem_air.m2]] ] = ".8|0|.8|0",
+	[ [[creature\spells\draeneitotem_earth.m2]] ] = ".8|0|1.2|0",
+}
+
 local bufffilter = {
 	[GetSpellInfo(52610)] = true, -- Druid: Savage Roar
 	[GetSpellInfo(22812)] = true, -- Druid: Barkskin
@@ -311,21 +338,71 @@ local function style(self, unit)
 	end
 	
 	if unit=="player" or unit=="target" then
-		self.Portrait = CreateFrame("PlayerModel", nil, self)
-		self.Portrait:SetHeight(ncUIdb:Scale(150))
-		self.Portrait:SetWidth(ncUIdb:Scale(100))
-		self.PostUpdatePortrait = function()
-			self.Portrait:SetCamera(1)
-			self.Portrait:SetRotation(0)
+		self.Model = CreateFrame("PlayerModel", nil, self)
+		local function OnUpdate(self)
+			local path = self:GetModel()
+			if (type(path)=="string") then
+				self:SetScript("OnUpdate", nil)
+				if not UnitIsPlayer(self.unit) then -- NPC
+					local Scale, X, Y, Z = ( "|" ):split(ModelCameras[path:lower()] or "")
+					self:SetModelScale(tonumber(Scale) or 1)
+					self:SetPosition(tonumber(Z) or 0, tonumber(X) or 0, tonumber(Y) or 0)
+					print(path)
+				else
+					self:SetModelScale(1)
+				end
+			end
+        end
+        local function OnUpdateModel(self)
+			self:SetScript("OnUpdateModel", nil)
+			self:SetScript("OnUpdate", OnUpdate)
+        end
+        function self.Model:Reset()
+			self:ClearModel()
+			self:SetModelScale(1)
+			self:SetPosition(0, 0, 0)
+			self:SetFacing(0)
+
+			self:SetScript("OnUpdate", nil)
+			self:SetScript("OnUpdateModel", OnUpdateModel)
+        end
+		local function update(self, event, unit)
+			if event=="PLAYER_ENTERING_WORLD" then
+				self:Reset()
+				self:SetUnit(self.unit)
+				self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+			end
+
+			if not unit then unit="target" end
+			if(not UnitIsUnit(self.unit, unit)) then return end
+			if(not UnitExists(unit) or not UnitIsConnected(unit) or not UnitIsVisible(unit)) then
+				self:SetModelScale(4.25)
+				self:SetPosition(0, 0, -1.5)
+				self:SetModel"Interface\\Buttons\\talktomequestionmark.mdx"
+			else
+				self:Reset()
+				self:SetUnit(unit)
+			end
 		end
+		self.Model:SetHeight(ncUIdb:Scale(150))
+		self.Model:SetWidth(ncUIdb:Scale(100))
+		self.Model:SetCamera(1)
+		self.Model:SetRotation(0)
+		self.Model.unit = unit
+		
+		self.Model:RegisterEvent("UNIT_MODEL_CHANGED")
+		self.Model:RegisterEvent("UNIT_PORTRAIT_UPDATE")
+		self.Model:RegisterEvent("PLAYER_TARGET_CHANGED")
+		self.Model:RegisterEvent("PLAYER_ENTERING_WORLD")
+		self.Model:SetScript("OnEvent", update)
 	end
 
 	if unit=="player" then
-		self.Portrait:SetPoint("RIGHT", self, "LEFT", ncUIdb:Scale(-5), 0)
-		self.Portrait:SetPoint("BOTTOM", LineToABLeft, "TOP")
+		self.Model:SetPoint("RIGHT", self, "LEFT", ncUIdb:Scale(-5), 0)
+		self.Model:SetPoint("BOTTOM", LineToABLeft, "TOP", 0, ncUIdb:Scale(1))
 	elseif unit=="target" then
-		self.Portrait:SetPoint("LEFT", self, "RIGHT", ncUIdb:Scale(5), 0)
-		self.Portrait:SetPoint("BOTTOM", LineToABRight, "TOP")
+		self.Model:SetPoint("LEFT", self, "RIGHT", ncUIdb:Scale(5), 0)
+		self.Model:SetPoint("BOTTOM", LineToABRight, "TOP", 0, ncUIdb:Scale(1))
 	end
 	
 	if unit~="focus" then
