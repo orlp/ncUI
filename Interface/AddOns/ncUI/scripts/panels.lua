@@ -146,7 +146,7 @@ statsleft:SetScript("OnUpdate", update)
 update(statsleft, 10)
 
 local statsright = F:CreateFrame("Panel", "MinimapStatsRight", Minimap)
-statsright:SetSize(30, 16)
+statsright:SetSize(30, 16)statsright:SetPoint("TOPRIGHT", Minimap, "BOTTOMRIGHT", 2, -5)
 statsright:EnableMouse(true)
 statsright:SetScript("OnMouseDown", function() ToggleCharacter("PaperDollFrame") end)
 statsright:SetFrameLevel(3)
@@ -169,15 +169,14 @@ function statsright:GetValue()
 end
 local height = 2
 for f=1, 6 do
-	statsright.bars[f] = CreateFrame("Frame",nil, UIParent)
-	ncUIdb:CreatePanel(statsright.bars[f], 1, height, "TOP", Minimap, "BOTTOM", 0, -5)
-	statsright.bars[f]:ClearAllPoints()
+	statsright.bars[f] = F:CreateFrame("Panel",nil, UIParent)
+	statsright.bars[f]:SetSize(1, height)
 	statsright.bars[f]:SetFrameLevel(4)
 	if f==1 then
-		statsright.bars[f]:SetPoint("BOTTOMRIGHT",statsright,"BOTTOMRIGHT", ncUIdb:Scale(-5), ncUIdb:Scale(4))
+		statsright.bars[f]:SetPoint("BOTTOMRIGHT", statsright, "BOTTOMRIGHT", -5, 4)
 	end
 	if f>1 then
-		statsright.bars[f]:SetPoint("BOTTOMRIGHT",statsright.bars[f-1],"BOTTOMLEFT", ncUIdb:Scale(-3), 0)
+		statsright.bars[f]:SetPoint("BOTTOMRIGHT", statsright.bars[f-1], "BOTTOMLEFT", -3, 0)
 	end
 	height = height + 1
 end
@@ -185,8 +184,8 @@ statsright:SetScript("OnUpdate", update)
 update(statsright, 10)
 
 
-local minimaptime = CreateFrame("Frame", "MinimapTime", Minimap)
-ncUIdb:CreatePanel(minimaptime, 1, 16, "TOP", Minimap, "BOTTOM", 0, -5)
+local minimaptime = F:CreateFrame("Panel", "MinimapTime", Minimap)
+minimaptime:SetHeight(16)minimaptime:SetPoint("TOP", Minimap, "BOTTOM", 0, -5)
 minimaptime:SetPoint("LEFT", statsleft, "RIGHT", 4, 0)
 minimaptime:SetPoint("RIGHT", statsright, "LEFT", -4, 0)
 minimaptime:EnableMouse(true)
@@ -194,7 +193,7 @@ minimaptime.e = 1
 local text  = minimaptime:CreateFontString(nil, "OVERLAY")
 text:SetFontObject("ncUIfont")
 text:SetPoint("CENTER")
-text:SetTextColor(unpack(ncUIdb["general"].border))
+text:SetTextColor(unpack(C.general.border))
 local function Update(self, e)
 	local pending = CalendarGetNumPendingInvites()
 	minimaptime.e = minimaptime.e - e
@@ -239,7 +238,7 @@ minimaptime:SetScript("OnEnter", function(self)
 			local sec = format("%02.f", floor(wgtime - hour*3600 - min *60))				
 			wgtime = (hour>0 and hour..":" or "")..min..":"..sec				
 		end
-		GameTooltip:AddDoubleLine("Time to Wintergrasp:",wgtime)
+		GameTooltip:AddDoubleLine("Time to Wintergrasp:", wgtime)
 		GameTooltip:Show()
 	end	
 end)

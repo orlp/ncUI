@@ -1,4 +1,5 @@
-local db = ncUIdb["nameplates"]
+local F, C, L = select(2, ...):Fetch()
+
 local reactions = {}
 for class, color in next, FACTION_BAR_COLORS do
 	reactions[class] = {color.r, color.g, color.b}
@@ -47,11 +48,11 @@ local function updateNameplate(frame)
 
 	frame.healthBar:ClearAllPoints()
 	frame.healthBar:SetPoint("CENTER", frame.healthBar:GetParent())
-	frame.healthBar:SetHeight(7)
-	frame.healthBar:SetWidth(100)
+	frame.healthBar:SetHeight(10)
+	frame.healthBar:SetWidth(120)
 	
 	frame.levelText:ClearAllPoints()
-	frame.levelText:SetPoint("RIGHT", frame.healthBar, "LEFT", -2, 0)
+	frame.levelText:SetPoint("RIGHT", frame.healthBar, "LEFT", -3, 0)
 	
 	frame.castBar:ClearAllPoints()
 	frame.castBar:SetPoint("TOPLEFT", frame.healthBar, "BOTTOMLEFT", 0, -1.5)
@@ -73,16 +74,26 @@ local function styleNameplate(frame)
 	frame.levelText = levelTextRegion
 	frame.nameText = nameTextRegion
 	
-	healthBar:SetStatusBarTexture(db.texture)
+	F:SetToolbox(frame.castBar)
+	F:SetToolbox(healthBar)
+	F:SetToolbox(levelTextRegion)
+	
+	healthBar:SetStatusBarTexture(C.nameplates.texture)
 	healthBar.bg = healthBar:CreateTexture(nil, "BORDER")
 	healthBar.bg:SetAllPoints(healthBar)
-	healthBar.bg:SetTexture(db.texture)
+	healthBar.bg:SetTexture(C.nameplates.texture)
 	healthBar.bg:SetVertexColor(.15, .15, .15)
+	healthBar:SetFrameStrata("BACKGROUND")
+	healthBar:SetFrameLevel(1)
+	healthBar:SetScale(C.general.uiscale)
 	
-	levelTextRegion:SetFont(db.font, db.fontsize, db.flags)
+	local bg = F:CreateFrame("Panel", nil, healthBar)
+	bg:SetPoint("TOPLEFT", -2, 2)
+	bg:SetPoint("BOTTOMRIGHT", 2, -2)
+	
+	levelTextRegion:SetParent(healthBar)
+	levelTextRegion:SetFontObject("ncUIfont")
 	levelTextRegion:SetShadowOffset(0, 0)
-	levelTextRegion:ClearAllPoints()
-	levelTextRegion:SetPoint("RIGHT", healthBar, "LEFT", -2, 0)
 	
 	local classicontexture = frame:CreateTexture(nil, "OVERLAY")
 	classicontexture:SetPoint("BOTTOM", healthBar, "TOP", 0, 10)
@@ -91,17 +102,20 @@ local function styleNameplate(frame)
 	classicontexture:SetHeight(40)
 	frame.icon = classicontexture
 	
-	castBar:SetStatusBarTexture(db.texture)
+	castBar:SetStatusBarTexture(C.nameplates.texture)
 	castBar.bg = castBar:CreateTexture(nil, "BORDER")
 	castBar.bg:SetAllPoints(castBar)
-	castBar.bg:SetTexture(db.texture)
+	castBar.bg:SetTexture(C.nameplates.texture)
 	castBar.bg:SetVertexColor(.15, .15, .15)
 	
-	nameTextRegion:SetFont(db.font, db.fontsize, db.flags)
+	F:SetToolbox(nameTextRegion)
+	nameTextRegion:SetParent(healthBar)
+	nameTextRegion:SetFontObject("ncUIfont")	
 	nameTextRegion:SetShadowOffset(0, 0)
 	nameTextRegion:ClearAllPoints()
-	nameTextRegion:SetPoint("BOTTOM", healthBar, "TOP", 0, 2)
+	nameTextRegion:SetPoint("BOTTOM", healthBar, "TOP", 0, 5)
 	
+	F:SetToolbox(spellIconRegion)
 	spellIconRegion:ClearAllPoints()
 	spellIconRegion:SetPoint("TOPLEFT", healthBar, "TOPRIGHT", 1.2, 0)
 	spellIconRegion:SetTexCoord(.08, .92, .08, .92)

@@ -3,3 +3,6 @@ scripts/tooltip.lua
 scripts/spellalerter.lua
 scripts/resurrect.lua
 scripts/quest.lua
+scripts/panels.lua
+scripts/nameplates.lua
+scripts/minimap.lua
