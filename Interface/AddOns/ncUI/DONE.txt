@@ -16,3 +16,7 @@ scripts/extrabuttons.lua
 scripts/error.lua
 scripts/debufftimer.lua
 scripts/datatext.lua
+scripts/cooldown.lua
+scripts/chat.lua
+scripts/cdflash.lua
+scripts/buttonstyler.lua

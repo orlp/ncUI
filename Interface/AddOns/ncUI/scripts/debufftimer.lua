@@ -6,7 +6,7 @@ local function createbar(i)
 	local f = F:CreateFrame("Panel", "DebuffTimerBar"..i, UIParent)
 	f:Hide()
 
-	f:SetSize(300, 21)
+	f:SetSize(300, 18)
 
 	f.bar = F:CreateFrame("StatusBar", nil, f)
 	f.bar:SetStatusBarTexture(C.media.unitframe)
@@ -18,20 +18,21 @@ local function createbar(i)
 
 	f.target = f.bar:CreateFontString(nil, "OVERLAY")
 	f.target:SetFontObject("ncUIfont")
-	f.target:SetPoint("RIGHT", -2, 0)
+	f.target:SetPoint("RIGHT", -2, 1)
 	f.target:SetJustifyH("RIGHT")
 
 	f.spellname = f.bar:CreateFontString(nil, "OVERLAY")
 	f.spellname:SetFontObject("ncUIfont")
-	f.spellname:SetPoint("LEFT")
+	f.spellname:SetPoint("LEFT", 0, 1)
 	f.spellname:SetPoint("RIGHT", f.target, "LEFT")
 
 	f.iconbg = F:CreateFrame("Panel", nil, f)
-	f.iconbg:SetSize(F:Scale(15), F:Scale(15))
+	f.iconbg:SetSize(18, 18)
 	f.iconbg:SetPoint("RIGHT", f, "LEFT", -7, 0)
 	f.iconbg:SetFrameStrata("LOW")
 	
 	f.icon = f.iconbg:CreateTexture(nil, "OVERLAY")
+	F:SetToolbox(f.icon)
 	f.icon:SetTexCoord(.08, .92, .08, .92)
 	f.icon:SetPoint("TOPLEFT", f.iconbg, 2, -2)
 	f.icon:SetPoint("BOTTOMRIGHT", f.iconbg, -2, 2)
@@ -50,7 +51,7 @@ local function createbar(i)
 	
 	f.time = f.startcast:CreateFontString(nil, "OVERLAY")
 	f.time:SetFontObject("ncUIfont")
-	f.time:SetPoint("LEFT", 5, 0)
+	f.time:SetPoint("LEFT", 5, 1)
 
 	function f:SetSettings(unit, name, spellname, icon, count, debufftype, expire, duration, spell, casttime)		
 		self.unit = unit
@@ -130,7 +131,8 @@ local function createbar(i)
 	end)
 	
 	if i==1 then
-		f:SetPoint("BOTTOMRIGHT", UIParent, "CENTER", -250, 5) -- anchor
+		f:SetPoint("BOTTOMLEFT", CubeLeftBG, "TOPLEFT", 25, 15) -- anchor
+		f:SetPoint("RIGHT", InfoLeft)
 	else
 		f:SetPoint("BOTTOMLEFT", bars[i-1], "TOPLEFT", 0, 4) -- spacing and growth
 		f:SetPoint("BOTTOMRIGHT", bars[i-1], "TOPRIGHT", 0, 4) -- spacing and growth

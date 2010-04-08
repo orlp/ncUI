@@ -338,7 +338,7 @@ local function style(self, unit)
 	end
 	
 	if unit=="player" or unit=="target" then
-		self.Model = CreateFrame("PlayerModel", nil, self)
+		self.Model = CreateFrame("PlayerModel", "ncUI"..unit.."Model", self)
 		local function OnUpdate(self)
 			local path = self:GetModel()
 			if (type(path)=="string") then

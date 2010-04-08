@@ -1,5 +1,6 @@
+local F, C = select(2, ...):Fetch()
+
 local _G = _G
-local media = ncUIdb["media"]
 local securehandler = CreateFrame("Frame", nil, nil, "SecureHandlerBaseTemplate")
 
 local function style(self)  
@@ -16,9 +17,9 @@ local function style(self)
 
 	Flash:SetTexture("")
 	
-	Button:SetCheckedTexture(media.button)
-	Button:SetHighlightTexture(media.highlight)
-	Button:SetPushedTexture(media.button)
+	Button:SetCheckedTexture(C.media.button)
+	Button:SetHighlightTexture(C.media.highlight)
+	Button:SetPushedTexture(C.media.button)
 	Button:SetNormalTexture("")
 
 	Count:ClearAllPoints()
@@ -36,16 +37,18 @@ local function style(self)
 	Border:Hide()
 	
 	if not _G[name.."Panel"] then
-		self:SetWidth(ncUIdb:Scale(29))
-		self:SetHeight(ncUIdb:Scale(29))
+		F:SetToolbox(self)
+		F:SetToolbox(Icon)
+		self:SetSize(29)
 		
-		local panel = CreateFrame("Frame", name.."Panel", self)
-		ncUIdb:CreatePanel(panel, 29, 29, "CENTER", self, "CENTER", 0,0)
+		local panel = F:CreateFrame("Panel", name.."Panel", self)
+		panel:SetSize(29)
+		panel:SetPoint("CENTER")
 		panel:SetBackdropColor(0, 0, 0, 0)
 
 		Icon:SetTexCoord(.08, .92, .08, .92)
-		Icon:SetPoint("TOPLEFT", Button, ncUIdb:Scale(2), ncUIdb:Scale(-2))
-		Icon:SetPoint("BOTTOMRIGHT", Button, ncUIdb:Scale(-2), ncUIdb:Scale(2))
+		Icon:SetPoint("TOPLEFT", Button, 2, -2)
+		Icon:SetPoint("BOTTOMRIGHT", Button, -2, 2)
 	end
 	
 	normal:ClearAllPoints()
@@ -54,36 +57,39 @@ local function style(self)
 end
 
 local function stylesmallbutton(normal, button, icon, name, pet)
-	button:SetCheckedTexture(media.button)
-	button:SetHighlightTexture(media.highlight)
-	button:SetPushedTexture(media.button)
+	button:SetCheckedTexture(C.media.button)
+	button:SetHighlightTexture(C.media.highlight)
+	button:SetPushedTexture(C.media.button)
 	button:SetNormalTexture("")
 	
 	if not _G[name.."Panel"] then
-		button:SetWidth(ncUIdb:Scale(24))
-		button:SetHeight(ncUIdb:Scale(24))
+		F:SetToolbox(button)
+		F:SetToolbox(icon)
+		button:SetWidth(24)
+		button:SetHeight(24)
 		
-		local panel = CreateFrame("Frame", name.."Panel", button)
-		ncUIdb:CreatePanel(panel, 24, 24, "CENTER", button, "CENTER", 0,0)
-		panel:SetBackdropColor(unpack(ncUIdb["general"].backdrop))
+		local panel = F:CreateFrame("Panel", name.."Panel", button)
+		panel:SetSize(24)
+		panel:SetPoint("CENTER")
+		panel:SetBackdropColor(unpack(C.general.backdrop))
 
 		icon:SetTexCoord(.08, .92, .08, .92)
 		icon:ClearAllPoints()
 		if pet then
 			local autocast = _G[name.."AutoCastable"]
-			autocast:SetWidth(ncUIdb:Scale(41))
-			autocast:SetHeight(ncUIdb:Scale(40))
+			F:SetToolbox(autocast)
+			autocast:SetSize(41, 40)
 			autocast:ClearAllPoints()
 			autocast:SetPoint("CENTER", button, 0, 0)
-			icon:SetPoint("TOPLEFT", button, ncUIdb:Scale(2), ncUIdb:Scale(-2))
-			icon:SetPoint("BOTTOMRIGHT", button, ncUIdb:Scale(-2), ncUIdb:Scale(2))
+			icon:SetPoint("TOPLEFT", button, 2, -2)
+			icon:SetPoint("BOTTOMRIGHT", button, -2, 2)
 		else
-			icon:SetPoint("TOPLEFT", button, ncUIdb:Scale(2), ncUIdb:Scale(-2))
-			icon:SetPoint("BOTTOMRIGHT", button, ncUIdb:Scale(-2), ncUIdb:Scale(2))
+			icon:SetPoint("TOPLEFT", button, 2, -2)
+			icon:SetPoint("BOTTOMRIGHT", button, -2, 2)
 		end
 	end
 	
-	normal:SetVertexColor(unpack(ncUIdb["general"].border))
+	normal:SetVertexColor(unpack(C.general.border))
 	normal:ClearAllPoints()
 	normal:SetPoint("TOPLEFT")
 	normal:SetPoint("BOTTOMRIGHT")
@@ -122,7 +128,7 @@ local function usable(self)
     elseif IsCurrentAction(action) then
 		normal:SetVertexColor(1, 1, 1)
 	else
-		normal:SetVertexColor(unpack(ncUIdb["general"].border))
+		normal:SetVertexColor(unpack(C.general.border))
     end
 	
 	local isusable, mana = IsUsableAction(action)

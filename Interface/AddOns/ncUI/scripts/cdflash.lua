@@ -1,25 +1,25 @@
-local db = ncUIdb["cdflash"]
-if not db.enable then return end
+local F, C = select(2, ...):Fetch()
+if not C.cdflash.enable then return end
 
 local lib = select(2, ...):Fetch(4)
 if not lib then return end
 
 
-local phase = db.flashtime/3
+local phase = C.cdflash.flashtime/3
 local mult = 1/phase
 
-local flash = CreateFrame("Frame", nil, UIParent)
-flash:SetPoint("CENTER", UIParent)
-flash:SetSize(ncUIdb:Scale(100),ncUIdb:Scale(100))
-ncUIdb:SetTemplate(flash)
+local flash = F:CreateFrame("Panel", nil, UIParent)
+flash:SetPoint("CENTER")
+flash:SetSize(75)
 flash.icon = flash:CreateTexture(nil, "OVERLAY")
-flash.icon:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
-flash.icon:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
+F:SetToolbox(flash.icon)
+flash.icon:SetPoint("TOPLEFT", 2, -2)
+flash.icon:SetPoint("BOTTOMRIGHT", -2, 2)
 flash.icon:SetTexCoord(.08, .92, .08, .92)
 flash:Hide()
 flash:SetScript("OnUpdate", function(self, e)
 	flash.e = flash.e + e
-	if flash.e > db.flashtime then
+	if flash.e > C.cdflash.flashtime then
 		flash:Hide()
 	elseif flash.e < phase then
 		flash:SetAlpha(flash.e*mult)

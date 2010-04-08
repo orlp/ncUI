@@ -45,6 +45,7 @@ scripts\hovername.lua
 scripts\killingblow.lua
 scripts\cdflash.lua
 scripts\marking.lua
+scripts\lockdown.lua
 
 unitframes\plugins\dropdown.lua
 

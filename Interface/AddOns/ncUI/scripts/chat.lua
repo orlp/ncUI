@@ -1,6 +1,7 @@
+local F, C = select(2, ...):Fetch()
+
 local hooks = {}
 local dummy = function() end
-local db = ncUIdb["chat"]
 local _G = getfenv(0)
 
 local tankicon = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:16:16:0:0:64:64:0:19:22:41|t"
@@ -9,7 +10,7 @@ local dpsicon = "|TInterface\\LFGFrame\\UI-LFG-ICON-PORTRAITROLES.blp:16:16:0:0:
 
 local function addmessage(frame, text, red, green, blue, id)
 	text = tostring(text) or ""
-	for k,v in pairs(db.replaces) do
+	for k,v in pairs(C.chat.replaces) do
 		text = text:gsub("|h%["..k.."%]|h", "|h"..v.."|h")
 	end
 	text = text:gsub("|h%[(%d+)%. .-%]|h", "|h%1|h")
@@ -135,7 +136,7 @@ local function enter()
 	hideframe(ChatFrameMenuButton)
 end
 
-for channel, val in pairs(db.sticky_channels) do
+for channel, val in pairs(C.chat.sticky_channels) do
 	if val then
 		ChatTypeInfo[string.upper(channel)].sticky = 1
 	end
@@ -160,7 +161,7 @@ hooksecurefunc("ChatEdit_UpdateHeader", function()
 	if (typ == "CHANNEL") then
 		local id = GetChannelName(DEFAULT_CHAT_FRAME.editBox:GetAttribute("channelTarget"))
 		if id == 0 then
-			colorborder(unpack(ncUIdb["chat"].colorscheme_editbox))
+			colorborder(unpack(C.chat.colorscheme_editbox))
 		else
 			colorborder(ChatTypeInfo[typ..id].r,ChatTypeInfo[typ..id].g,ChatTypeInfo[typ..id].b)
 		end
@@ -200,8 +201,9 @@ for i=1, NUM_CHAT_WINDOWS do
 end
 
 local function CreateCopyFrame()
-	local frame = CreateFrame("Frame", "CopyFrame", UIParent)
-	ncUIdb:CreatePanel(frame, 700, 190, "CENTER", UIParent, "CENTER", 0 ,0)
+	local frame = F:CreateFrame("Panel", "CopyFrame", UIParent)
+	frame:SetSize(700, 190)
+	frame:SetPoint("CENTER")
 	frame:Hide()
 	frame:SetFrameStrata("DIALOG")
 	local scrollArea = CreateFrame("ScrollFrame", "CopyScroll", frame, "UIPanelScrollFrameTemplate")
