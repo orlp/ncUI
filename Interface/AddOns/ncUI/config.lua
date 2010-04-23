@@ -348,5 +348,3 @@ C["spellalerter"] = {
 		[GetSpellInfo(24378)] = 1, -- Berserking
 	},
 }
-
-ncUIdb = C
