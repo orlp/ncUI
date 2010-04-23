@@ -30,7 +30,7 @@ local function update(self, ...)
 	-- Align World Units/Objects to mouse
 	if owner == UIParent and not unitExists then
 		self:ClearAllPoints()
-		self:SetPoint("TOP", UIParent, "TOP", 0, F:Scale(-12))
+		self:Place("TOP", UIParent, "TOP", 0, -12)
 	end
 
 	if not UnitExists("mouseover") and unitExists then
@@ -175,7 +175,7 @@ end
 
 local function default(tooltip, parent)		
 	tooltip:SetOwner(parent, "ANCHOR_NONE")
-	tooltip:SetPoint("TOP", UIParent, "TOP", 0, F:Scale(-12))
+	tooltip:Place("TOP", UIParent, "TOP", 0, -12)
 end
 
 gt:SetScript("OnUpdate", update)

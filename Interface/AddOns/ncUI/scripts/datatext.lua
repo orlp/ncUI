@@ -1,11 +1,11 @@
 local F, C = select(2, ...):Fetch()
 local slots = {
-	left1 = {"LEFT", InfoLeft, "LEFT", 15, 0},
-	left2 = {"CENTER", InfoLeft, "CENTER", 0, 0},
-	left3 = {"RIGHT", InfoLeft, "RIGHT", -15, 0},
-	right1 = {"LEFT", InfoRight, "LEFT", 15, 0},
-	right2 = {"CENTER", InfoRight, "CENTER", 0, 0},
-	right3 = {"RIGHT", InfoRight, "RIGHT", -15, 0},
+	left1 = {"LEFT", InfoLeft, "LEFT", 15, 1},
+	left2 = {"CENTER", InfoLeft, "CENTER", 0, 1},
+	left3 = {"RIGHT", InfoLeft, "RIGHT", -15, 1},
+	right1 = {"LEFT", InfoRight, "LEFT", 15, 1},
+	right2 = {"CENTER", InfoRight, "CENTER", 0, 1},
+	right3 = {"RIGHT", InfoRight, "RIGHT", -15, 1},
 }
 
 local function formatmem(t)	

@@ -2,45 +2,45 @@ local F, C = select(2, ...):Fetch()
 
 local barbg = F:CreateFrame("Panel", "ActionBarBackground", UIParent)
 barbg:Size(535, C.actionbar.bars==1 and 39 or 73)
-barbg:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 7)
+barbg:Place("BOTTOM", UIParent, "BOTTOM", 0, 7)
 
 local ileftlv = F:CreateFrame("Panel", "InfoLeftLineVertical", barbg)
 ileftlv:Size(2, 125)
-ileftlv:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 23, 25)
+ileftlv:Place("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 23, 25)
 
 local irightlv = F:CreateFrame("Panel", "InfoRightLineVertical", barbg)
 irightlv:Size(2, 125)
-irightlv:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -23, 25)
+irightlv:Place("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -23, 25)
 
 local ltoabl = F:CreateFrame("Panel", "LineToABLeft", barbg)
 ltoabl:Size(5, 2)
-ltoabl:SetPoint("BOTTOMLEFT", ileftlv, "BOTTOMLEFT")
-ltoabl:SetPoint("RIGHT", barbg, "LEFT", -1, 0)
+ltoabl:Place("BOTTOMLEFT", ileftlv, "BOTTOMLEFT")
+ltoabl:Place("RIGHT", barbg, "LEFT", -1, 0)
 
 local ltoabr = F:CreateFrame("Panel", "LineToABRight", barbg)
 ltoabr:Size(5, 2)
-ltoabr:SetPoint("LEFT", barbg, "RIGHT", 1, 0)
-ltoabr:SetPoint("BOTTOMRIGHT", irightlv, "BOTTOMRIGHT")
+ltoabr:Place("LEFT", barbg, "RIGHT", 1, 0)
+ltoabr:Place("BOTTOMRIGHT", irightlv, "BOTTOMRIGHT")
 
 local ileft = F:CreateFrame("Panel", "InfoLeft", barbg)
 ileft:Size(250, 22)
-ileft:SetPoint("LEFT", ltoabl, "LEFT", 14, 0)
+ileft:Place("LEFT", ltoabl, "LEFT", 14, 0)
 ileft:SetFrameLevel(2)
 
 local iright = F:CreateFrame("Panel", "InfoRight", barbg)
 iright:Size(250, 22)
-iright:SetPoint("RIGHT", ltoabr, "RIGHT", -14, 0)
+iright:Place("RIGHT", ltoabr, "RIGHT", -14, 0)
 iright:SetFrameLevel(2)
 
 local cubeleft = F:CreateFrame("Panel", "CubeLeft", ileftlv)
 cubeleft:Size(8)
-cubeleft:SetPoint("CENTER", ileftlv, "TOP")
+cubeleft:Place("CENTER", ileftlv, "TOP")
 cubeleft:SetBackdropColor(unpack(C.general.border))
 cubeleft:SetFrameLevel(2)
 
 local cubeleftbg = F:CreateFrame("Panel", "CubeLeftBG", ileftlv)
 cubeleftbg:Size(10)
-cubeleftbg:SetPoint("CENTER", ileftlv, "TOP")
+cubeleftbg:Place("CENTER", ileftlv, "TOP")
 cubeleftbg:SetBackdropBorderColor(unpack(C.general.backdrop))
 
 cubeleftbg:EnableMouse(true)
@@ -51,13 +51,13 @@ end)
 
 local cuberight = F:CreateFrame("Panel", "CubeRight", irightlv)
 cuberight:Size(8)
-cuberight:SetPoint("CENTER", irightlv, "TOP")
+cuberight:Place("CENTER", irightlv, "TOP")
 cuberight:SetBackdropColor(unpack(C.general.border))
 cuberight:SetFrameLevel(2)
 
 local cuberightbg = F:CreateFrame("Panel", "CubeRightBG", irightlv)
 cuberightbg:Size(10)
-cuberightbg:SetPoint("CENTER", irightlv, "TOP")
+cuberightbg:Place("CENTER", irightlv, "TOP")
 cuberightbg:SetBackdropBorderColor(unpack(C.general.backdrop))
 
 local edit = F:CreateFrame("Panel", "ChatFrameEditBoxBackground", ChatFrameEditBox)
@@ -66,36 +66,36 @@ edit:SetFrameLevel(4)
 
 local petbg = F:CreateFrame("Panel", "PetActionBarBackground", PetActionButton1)
 petbg:Size(34, 286)
-petbg:SetPoint("RIGHT", UIParent, "RIGHT", -7, 0)
+petbg:Place("RIGHT", UIParent, "RIGHT", -7, 0)
 
 local ltpetbg = F:CreateFrame("Panel", "LineToPetActionBarBackground", petbg)
 ltpetbg:Size(2, 40)
-ltpetbg:SetPoint("TOP", petbg, "BOTTOM", 0, -1)
+ltpetbg:Place("TOP", petbg, "BOTTOM", 0, -1)
 
 local ltpetbg2 = F:CreateFrame("Panel", "LineToPetActionBarBackground2", petbg)
 ltpetbg2:Size(2, 40)
-ltpetbg2:SetPoint("BOTTOM", petbg, "TOP", 0, 1)
+ltpetbg2:Place("BOTTOM", petbg, "TOP", 0, 1)
 
 local cubetop = F:CreateFrame("Panel", "CubeTop", ltpetbg2)
 cubetop:Size(8)
-cubetop:SetPoint("CENTER", ltpetbg2, "TOP")
+cubetop:Place("CENTER", ltpetbg2, "TOP")
 cubetop:SetBackdropColor(unpack(C.general.border))
 cubetop:SetFrameLevel(2)
 
 local cubetopbg = F:CreateFrame("Panel", "CubeTopBG", ltpetbg2)
 cubetopbg:Size(10)
-cubetopbg:SetPoint("CENTER", ltpetbg2, "TOP")
+cubetopbg:Place("CENTER", ltpetbg2, "TOP")
 cubetopbg:SetBackdropBorderColor(unpack(C.general.backdrop))
 
 local cubebottom = F:CreateFrame("Panel", "CubeBottom", ltpetbg)
 cubebottom:Size(8)
-cubebottom:SetPoint("CENTER", ltpetbg, "BOTTOM")
+cubebottom:Place("CENTER", ltpetbg, "BOTTOM")
 cubebottom:SetBackdropColor(unpack(C.general.border))
 cubebottom:SetFrameLevel(2)
 
 local cubebottombg = F:CreateFrame("Panel", "CubeBottomBG", ltpetbg)
 cubebottombg:Size(10)
-cubebottombg:SetPoint("CENTER", ltpetbg, "BOTTOM")
+cubebottombg:Place("CENTER", ltpetbg, "BOTTOM")
 cubebottombg:SetBackdropBorderColor(unpack(C.general.backdrop))
 
 function updatebars(self, num)
@@ -118,7 +118,7 @@ end
 
 local statsleft = F:CreateFrame("Panel", "MinimapStatsLeft", Minimap)
 statsleft:Size(30, 16)
-statsleft:SetPoint("TOPLEFT", Minimap, "BOTTOMLEFT", -2, -5)
+statsleft:Place("TOPLEFT", Minimap, "BOTTOMLEFT", -2, -5)
 statsleft:EnableMouse(true)
 statsleft:SetScript("OnMouseDown", function()
 	ToggleBackpack()
@@ -141,10 +141,10 @@ for f=1, 6 do
 	statsleft.bars[f]:Size(1, height)
 	statsleft.bars[f]:SetFrameLevel(4)
 	if f==1 then
-		statsleft.bars[f]:SetPoint("BOTTOMLEFT", statsleft, 5, 4)
+		statsleft.bars[f]:Place("BOTTOMLEFT", statsleft, 5, 4)
 	end
 	if f>1 then
-		statsleft.bars[f]:SetPoint("BOTTOMLEFT", statsleft.bars[f-1], "BOTTOMRIGHT", 3, 0)
+		statsleft.bars[f]:Place("BOTTOMLEFT", statsleft.bars[f-1], "BOTTOMRIGHT", 3, 0)
 	end
 	height = height + 1
 end
@@ -152,7 +152,7 @@ statsleft:SetScript("OnUpdate", update)
 update(statsleft, 10)
 
 local statsright = F:CreateFrame("Panel", "MinimapStatsRight", Minimap)
-statsright:Size(30, 16)statsright:SetPoint("TOPRIGHT", Minimap, "BOTTOMRIGHT", 2, -5)
+statsright:Size(30, 16)statsright:Place("TOPRIGHT", Minimap, "BOTTOMRIGHT", 2, -5)
 statsright:EnableMouse(true)
 statsright:SetScript("OnMouseDown", function() ToggleCharacter("PaperDollFrame") end)
 statsright:SetFrameLevel(3)
@@ -179,10 +179,10 @@ for f=1, 6 do
 	statsright.bars[f]:Size(1, height)
 	statsright.bars[f]:SetFrameLevel(4)
 	if f==1 then
-		statsright.bars[f]:SetPoint("BOTTOMRIGHT", statsright, "BOTTOMRIGHT", -5, 4)
+		statsright.bars[f]:Place("BOTTOMRIGHT", statsright, "BOTTOMRIGHT", -5, 4)
 	end
 	if f>1 then
-		statsright.bars[f]:SetPoint("BOTTOMRIGHT", statsright.bars[f-1], "BOTTOMLEFT", -3, 0)
+		statsright.bars[f]:Place("BOTTOMRIGHT", statsright.bars[f-1], "BOTTOMLEFT", -3, 0)
 	end
 	height = height + 1
 end
@@ -191,14 +191,14 @@ update(statsright, 10)
 
 
 local minimaptime = F:CreateFrame("Panel", "MinimapTime", Minimap)
-minimaptime:SetHeight(16)minimaptime:SetPoint("TOP", Minimap, "BOTTOM", 0, -5)
-minimaptime:SetPoint("LEFT", statsleft, "RIGHT", 4, 0)
-minimaptime:SetPoint("RIGHT", statsright, "LEFT", -4, 0)
+minimaptime:SetHeight(F:Scale(16))minimaptime:Place("TOP", Minimap, "BOTTOM", 0, -5)
+minimaptime:Place("LEFT", statsleft, "RIGHT", 4, 0)
+minimaptime:Place("RIGHT", statsright, "LEFT", -4, 0)
 minimaptime:EnableMouse(true)
 minimaptime.e = 1
 local text  = minimaptime:CreateFontString(nil, "OVERLAY")
 text:SetFontObject("ncUIfont")
-text:SetPoint("CENTER")
+text:Place("CENTER", minimaptime)
 text:SetTextColor(unpack(C.general.border))
 local function Update(self, e)
 	local pending = CalendarGetNumPendingInvites()

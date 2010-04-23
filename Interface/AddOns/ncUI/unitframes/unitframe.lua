@@ -6,7 +6,7 @@ local floor = math.floor
 local texture = [[Interface\AddOns\ncUI\media\unitframe]]
 local backdrop = {
 	bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
-	insets = {top = ncUIdb:Scale(-1), bottom = ncUIdb:Scale(-1), left = ncUIdb:Scale(-1), right = ncUIdb:Scale(-1)}
+	insets = {top = F:Scale(-1), bottom = F:Scale(-1), left = F:Scale(-1), right = F:Scale(-1)}
 }
 
 local colors = setmetatable({
@@ -92,10 +92,10 @@ local function updatepower(self, event, unit, bar, minVal, maxVal)
 	if(unit ~= "target") then return end
 
 	if(maxVal ~= 0) then
-		self.Health:SetHeight(ncUIdb:Scale(36))
+		self.Health:SetHeight(F:Scale(36))
 		bar:Show()
 	else
-		self.Health:SetHeight(ncUIdb:Scale(42))
+		self.Health:SetHeight(F:Scale(42))
 		bar:Hide()
 	end
 end
@@ -105,7 +105,7 @@ local function casticon(self, event, unit)
 	if (castbar.interrupt) then
 		castbar.Button:SetBackdropBorderColor(1, .5, 0)
 	else
-		castbar.Button:SetBackdropBorderColor(unpack(ncUIdb["general"].border))
+		castbar.Button:SetBackdropBorderColor(unpack(C.general.border))
 	end
 end
 
@@ -134,13 +134,13 @@ end
 
 local function createAura(self, button, icons)
 	icons.showDebuffType = true
-	button.count:SetFont(ncUIdb["media"].pixelfont, ncUIdb:Scale(8), "THINOUTLINE")
+	button.count:SetFontObject(ncUIfont)
 	button.count:ClearAllPoints()
-	button.count:SetPoint("CENTER", 1, 0)
+	button.count:Place("CENTER", 1, 0)
 	button.cd:SetAlpha(0)
-	ncUIdb:SetTemplate(button)
-	button.icon:SetPoint("TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
-	button.icon:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
+	F:SetTemplate(button)
+	button.icon:Place("TOPLEFT", button, 2, -2)
+	button.icon:Place("BOTTOMRIGHT", button, -2, 2)
 	button.icon:SetTexCoord(.08, .92, .08, .92)
 	button.icon:SetDrawLayer("ARTWORK")
 	button.overlay:SetTexture()
@@ -169,8 +169,8 @@ local function style(self, unit)
 	self.Health = CreateFrame("StatusBar", nil, self)
 	self.Health:SetPoint("TOPRIGHT")
 	self.Health:SetPoint("TOPLEFT")
-	self.Health:SetStatusBarTexture(ncUIdb["media"].unitframe)
-	self.Health:SetHeight(unit == "targettarget" and ncUIdb:Scale(32) or unit == "pet" and ncUIdb:Scale(20) or ncUIdb:Scale(36))
+	self.Health:SetStatusBarTexture(C.media.unitframe)
+	self.Health:SetHeight(unit == "targettarget" and F:Scale(32) or unit == "pet" and F:Scale(20) or F:Scale(36))
 	self.Health.frequentUpdates = true
 	
 	if unit=="player" or unit=="target" then
@@ -191,35 +191,35 @@ local function style(self, unit)
 
 	self.Health.bg = self.Health:CreateTexture(nil, "BORDER")
 	self.Health.bg:SetAllPoints(self.Health)
-	self.Health.bg:SetTexture(ncUIdb["media"].unitframe)
+	self.Health.bg:SetTexture(C.media.unitframe)
 	self.Health.bg:SetAlpha(.25)
 	
 	self.Health.bg.bg = self.Health:CreateTexture(nil, "BACKGROUND")
 	self.Health.bg.bg:SetAllPoints(self.Health)
-	self.Health.bg.bg:SetTexture(unpack(ncUIdb["general"].backdrop))
+	self.Health.bg.bg:SetTexture(unpack(C.general.backdrop))
 
 	local health = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfontright")
-	health:SetPoint("RIGHT", self.Health, -2, 0)
+	health:Place("RIGHT", self.Health, -2, 0)
 	health.frequentUpdates = 0.25
 	self:Tag(health, "[phealth]")
 
 	self.RaidIcon = self.Health:CreateTexture(nil, "OVERLAY")
-	self.RaidIcon:SetPoint("TOP", self, 0, 8)
-	self.RaidIcon:SetHeight(ncUIdb:Scale(10))
-	self.RaidIcon:SetWidth(ncUIdb:Scale(10))
+	self.RaidIcon:Place("TOP", self, 0, 8)
+	self.RaidIcon:SetHeight(F:Scale(10))
+	self.RaidIcon:SetWidth(F:Scale(10))
 	
 	if(unit == "focus") then
 		self.Health:ClearAllPoints()
 		self.Health:SetAllPoints(self)
 	elseif unit == "targettarget" then
-		self:SetAttribute("initial-height", ncUIdb:Scale(38))
-		self:SetAttribute("initial-width", ncUIdb:Scale(155))
+		self:SetAttribute("initial-height", F:Scale(38))
+		self:SetAttribute("initial-width", F:Scale(155))
 		
 		self.Power = CreateFrame("StatusBar", nil, self)
 		self.Power:SetPoint("BOTTOMRIGHT")
 		self.Power:SetPoint("BOTTOMLEFT")
-		self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
-		self.Power:SetStatusBarTexture(ncUIdb["media"].unitframe)
+		self.Power:Place("TOP", self.Health, "BOTTOM", 0, -3)
+		self.Power:SetStatusBarTexture(C.media.unitframe)
 		self.Power.frequentUpdates = true
 
 		--self.Power.colorTapping = true
@@ -238,8 +238,8 @@ local function style(self, unit)
 		self.Power = CreateFrame("StatusBar", nil, self)
 		self.Power:SetPoint("BOTTOMRIGHT")
 		self.Power:SetPoint("BOTTOMLEFT")
-		self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
-		self.Power:SetStatusBarTexture(ncUIdb["media"].unitframe)
+		self.Power:Place("TOP", self.Health, "BOTTOM", 0, -3)
+		self.Power:SetStatusBarTexture(C.media.unitframe)
 		self.Power.frequentUpdates = true
 
 		self.Power.colorTapping = true
@@ -258,64 +258,64 @@ local function style(self, unit)
 		
 		if unit~="pet" then
 			self.Castbar = CreateFrame("StatusBar", nil, self)
-			self.Castbar:SetWidth(ncUIdb:Scale(301))
-			self.Castbar:SetHeight(ncUIdb:Scale(40))
-			self.Castbar:SetStatusBarTexture(ncUIdb["media"].unitframe)
-			self.Castbar:SetStatusBarColor(unpack(ncUIdb["general"].border))
+			self.Castbar:SetWidth(F:Scale(301))
+			self.Castbar:SetHeight(F:Scale(40))
+			self.Castbar:SetStatusBarTexture(C.media.unitframe)
+			self.Castbar:SetStatusBarColor(unpack(C.general.border))
 
 			self.Castbar.bg = CreateFrame("Frame", nil, self.Castbar)
-			ncUIdb:SetTemplate(self.Castbar.bg)
+			F:SetTemplate(self.Castbar.bg)
 			self.Castbar.bg:SetFrameLevel(1)
-			self.Castbar.bg:SetPoint("TOPLEFT", ncUIdb:Scale(-2), ncUIdb:Scale(2))
-			self.Castbar.bg:SetPoint("BOTTOMRIGHT", ncUIdb:Scale(2), ncUIdb:Scale(-2))
+			self.Castbar.bg:Place("TOPLEFT", self.Castbar, -2, 2)
+			self.Castbar.bg:Place("BOTTOMRIGHT", self.Castbar, 2, -2)
 
 			self.Castbar.Text = self.Castbar:CreateFontString(nil, "OVERLAY", "ncUIfontleft")
-			self.Castbar.Text:SetPoint("LEFT", 5, 0)
+			self.Castbar.Text:Place("LEFT", self.Castbar, 5, 0)
 			self.Castbar.Text:SetPoint("RIGHT", self.Castbar.Time)
 
 			self.Castbar.Time = self.Castbar:CreateFontString(nil, "OVERLAY", "ncUIfontright")
-			self.Castbar.Time:SetPoint("RIGHT", ncUIdb:Scale(-2), 0)
+			self.Castbar.Time:Place("RIGHT", self.Castbar, -2, 0)
 			self.Castbar.CustomTimeText = casttime
 
 			self.Castbar.Button = CreateFrame("Frame", nil, self.Castbar)
-			self.Castbar.Button:SetHeight(ncUIdb:Scale(44))
-			self.Castbar.Button:SetWidth(ncUIdb:Scale(44))
-			ncUIdb:SetTemplate(self.Castbar.Button)
+			self.Castbar.Button:SetHeight(F:Scale(44))
+			self.Castbar.Button:SetWidth(F:Scale(44))
+			F:SetTemplate(self.Castbar.Button)
 
 			self.Castbar.Icon = self.Castbar.Button:CreateTexture(nil, "ARTWORK")
-			self.Castbar.Icon:SetPoint("TOPLEFT", self.Castbar.Button, ncUIdb:Scale(2), ncUIdb:Scale(-2))
-			self.Castbar.Icon:SetPoint("BOTTOMRIGHT", self.Castbar.Button, ncUIdb:Scale(-2), ncUIdb:Scale(2))
+			self.Castbar.Icon:Place("TOPLEFT", self.Castbar.Button, 2, -2)
+			self.Castbar.Icon:Place("BOTTOMRIGHT", self.Castbar.Button, -2, 2)
 			self.Castbar.Icon:SetTexCoord(0.08, 0.92, 0.08, .92)
 		end
 
 		if unit=="player" then
 			self.Castbar.SafeZone = self.Castbar:CreateTexture(nil, "OVERLAY")
-			self.Castbar.SafeZone:SetTexture(ncUIdb["media"].unitframe)
+			self.Castbar.SafeZone:SetTexture(C.media.unitframe)
 			self.Castbar.SafeZone:SetVertexColor(1, 0, 0, .25)
-			self.Castbar:SetPoint("BOTTOM", UIParent, "CENTER", -25, -300)
-			self.Castbar.Button:SetPoint("BOTTOMLEFT", self.Castbar, "BOTTOMRIGHT", 7, ncUIdb:Scale(-2))
+			self.Castbar:Place("BOTTOM", UIParent, "CENTER", -25, -200)
+			self.Castbar.Button:Place("BOTTOMLEFT", self.Castbar, "BOTTOMRIGHT", 7, -2)
 			playercast = self.Castbar
 		elseif(unit == "target") then
 			self.PostCastStart = casticon
 			self.PostChannelStart = casticon
-			self.Castbar:SetPoint("TOP", playercast, "BOTTOM", 0, ncUIdb:Scale(-10))
-			self.Castbar.Button:SetPoint("BOTTOMLEFT", self.Castbar, "BOTTOMRIGHT", 7, ncUIdb:Scale(-2))
+			self.Castbar:Place("TOP", playercast, "BOTTOM", 0, -10)
+			self.Castbar.Button:SetPoint("BOTTOMLEFT", self.Castbar, "BOTTOMRIGHT", 7, F:Scale(-2))
 		end
 	end
 
 	if(unit == "player" or unit == "pet") then
 		if(IsAddOnLoaded("oUF_Experience")) then
 			self.Experience = CreateFrame("StatusBar", nil, self)
-			self.Experience:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -10)
-			self.Experience:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT", 0, -10)
+			self.Experience:Place("TOPLEFT", self, "BOTTOMLEFT", 0, -10)
+			self.Experience:Place("TOPRIGHT", self, "BOTTOMRIGHT", 0, -10)
 			self.Experience:SetHeight(11)
-			self.Experience:SetStatusBarTexture(ncUIdb["media"].unitframe)
+			self.Experience:SetStatusBarTexture(C.media.unitframe)
 			self.Experience:SetStatusBarColor(0.15, 0.7, 0.1)
 			self.Experience.Tooltip = true
 
 			self.Experience.Rested = CreateFrame("StatusBar", nil, self)
 			self.Experience.Rested:SetAllPoints(self.Experience)
-			self.Experience.Rested:SetStatusBarTexture(ncUIdb["media"].unitframe)
+			self.Experience.Rested:SetStatusBarTexture(C.media.unitframe)
 			self.Experience.Rested:SetStatusBarColor(0, 0.4, 1, 0.6)
 			self.Experience.Rested:SetBackdrop(backdrop)
 			self.Experience.Rested:SetBackdropColor(0, 0, 0)
@@ -329,12 +329,12 @@ local function style(self, unit)
 		end
 
 		local power = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfontleft")
-		power:SetPoint("LEFT", self.Health, 2, 0)
+		power:Place("LEFT", self.Health, 2, 0)
 		power.frequentUpdates = 0.1
 		self:Tag(power, "[ppower][( )druidpower]")
 	else
 		local info = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfontleft")
-		info:SetPoint("LEFT", self.Health, 2, 0)
+		info:Place("LEFT", self.Health, 2, 0)
 		info:SetPoint("RIGHT", health, "LEFT")
 		self:Tag(info, "[pname]|cff0090ff[( )rare]|r")
 	end
@@ -385,8 +385,8 @@ local function style(self, unit)
 				self:SetUnit(unit)
 			end
 		end
-		self.Model:SetHeight(ncUIdb:Scale(150))
-		self.Model:SetWidth(ncUIdb:Scale(100))
+		self.Model:SetHeight(F:Scale(150))
+		self.Model:SetWidth(F:Scale(100))
 		self.Model:SetCamera(1)
 		self.Model:SetRotation(0)
 		self.Model.unit = unit
@@ -404,32 +404,32 @@ local function style(self, unit)
 	end
 
 	if unit=="player" then
-		self.Model:SetPoint("RIGHT", self, "LEFT", ncUIdb:Scale(-5), 0)
-		self.Model:SetPoint("BOTTOM", LineToABLeft, "TOP", 0, ncUIdb:Scale(1))
+		self.Model:Place("RIGHT", self, "LEFT", -5, 0)
+		self.Model:Place("BOTTOM", LineToABLeft, "TOP", 0, 1)
 	elseif unit=="target" then
-		self.Model:SetPoint("LEFT", self, "RIGHT", ncUIdb:Scale(5), 0)
-		self.Model:SetPoint("BOTTOM", LineToABRight, "TOP", 0, ncUIdb:Scale(1))
+		self.Model:Place("LEFT", self, "RIGHT", 5, 0)
+		self.Model:Place("BOTTOM", LineToABRight, "TOP", 0, 1)
 	end
 	
 	if unit~="focus" then
-		local panel = CreateFrame("Frame", nil, self)
-		ncUIdb:CreatePanel(panel, 1, 1, "TOPLEFT", self.Health, "TOPLEFT", -2, 2)
-		panel:SetPoint("BOTTOMRIGHT", self.Power, ncUIdb:Scale(2), ncUIdb:Scale(-2))
-		local panel2 = CreateFrame("Frame", nil, self.Power)
-		ncUIdb:CreatePanel(panel2, 1, 1, "TOPLEFT", self.Power, "TOPLEFT", -2, 2)
-		panel2:SetPoint("BOTTOMRIGHT", self.Power, ncUIdb:Scale(2), ncUIdb:Scale(-2))	
+		local panel = F:CreateFrame("Panel", nil, self)
+		panel:Place("TOPLEFT", self.Health, "TOPLEFT", -2, 2)
+		panel:Place("BOTTOMRIGHT", self.Power, 2, -2)
+		local panel2 = F:CreateFrame("Panel", nil, self.Power)
+		panel2:Place("TOPLEFT", self.Power, "TOPLEFT", -2, 2)
+		panel2:Place("BOTTOMRIGHT", self.Power, 2,-2)
 		panel2:SetFrameLevel(3)
 		panel2:SetFrameStrata("MEDIUM")
 		panel2:SetBackdrop{
-			edgeFile = ncUIdb["media"].solid,
-			tile = false, tileSize = 0, edgeSize = ncUIdb.mult,
+			edgeFile = C.media.solid,
+			tile = false, tileSize = 0, edgeSize = F.PP,
 		}
-		panel2:SetBackdropBorderColor(unpack(ncUIdb["general"].border))
+		panel2:SetBackdropBorderColor(unpack(C.general.border))
 	end
 
 	if(unit == "pet") then
-		self:SetAttribute("initial-height", ncUIdb:Scale(26))
-		self:SetAttribute("initial-width", ncUIdb:Scale(130))
+		self:SetAttribute("initial-height", F:Scale(26))
+		self:SetAttribute("initial-width", F:Scale(130))
 
 		--[[self.Auras = CreateFrame("Frame", nil, self)
 		self.Auras:SetPoint("TOPRIGHT", self, "TOPLEFT", -4, 0)
@@ -443,37 +443,37 @@ local function style(self, unit)
 	end
 	
 	if(unit == "player" or unit == "target") then
-		self:SetAttribute("initial-height", ncUIdb:Scale(42))
-		self:SetAttribute("initial-width", ncUIdb:Scale(173))
+		self:SetAttribute("initial-height", F:Scale(42))
+		self:SetAttribute("initial-width", F:Scale(173))
 
 		self.PostUpdatePower = updatepower
 	end
 
 	if(unit == "target") then
 		self.Buffs = CreateFrame("Frame", nil, self)
-		self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPLEFT", ncUIdb:Scale(-2), ncUIdb:Scale(5))
-		self.Buffs:SetHeight(ncUIdb:Scale(17))
-		self.Buffs:SetWidth(ncUIdb:Scale(174))
+		self.Buffs:Place("BOTTOMLEFT", self, "TOPLEFT", -2, 5)
+		self.Buffs:SetHeight(F:Scale(17))
+		self.Buffs:SetWidth(F:Scale(174))
 		self.Buffs.num = 9
-		self.Buffs.size = ncUIdb:Scale(17)
-		self.Buffs.spacing = ncUIdb:Scale(3)
+		self.Buffs.size = F:Scale(17)
+		self.Buffs.spacing = F:Scale(3)
 		self.Buffs.initialAnchor = "TOPLEFT"
 		self.Buffs["growth-y"] = "DOWN"
 	
 		self.Debuffs = CreateFrame("Frame", nil, self)
-		self.Debuffs:SetPoint("BOTTOMLEFT", self.Buffs, "TOPLEFT", 0, ncUIdb:Scale(3))
-		self.Debuffs:SetHeight(ncUIdb:Scale(17))
-		self.Debuffs:SetWidth(ncUIdb:Scale(230))
+		self.Debuffs:Place("BOTTOMLEFT", self.Buffs, "TOPLEFT", 0, 3)
+		self.Debuffs:SetHeight(F:Scale(17))
+		self.Debuffs:SetWidth(F:Scale(230))
 		self.Debuffs.num = 9
-		self.Debuffs.size = ncUIdb:Scale(17)
-		self.Debuffs.spacing = ncUIdb:Scale(3)
+		self.Debuffs.size = F:Scale(17)
+		self.Debuffs.spacing = F:Scale(3)
 		self.Debuffs.initialAnchor = "TOPLEFT"
 		self.Debuffs["growth-y"] = "DOWN"
 		self.PostCreateAuraIcon = createAura
 		self.PostUpdateAuraIcon = updatedebuff
 
 		self.CPoints = self:CreateFontString(nil, "OVERLAY", "SubZoneTextFont")
-		self.CPoints:SetPoint("RIGHT", self, "LEFT", -9, 0)
+		self.CPoints:Place("RIGHT", self, "LEFT", -9, 0)
 		self.CPoints:SetTextColor(1, 1, 1)
 		self.CPoints:SetJustifyH("RIGHT")
 		self.CPoints.unit = PlayerFrame.unit
@@ -484,22 +484,22 @@ local function style(self, unit)
 		if(select(2, UnitClass("player")) == "DEATHKNIGHT") then
 			self.Runes = CreateFrame("Frame", nil, self.Power)
 			self.Runes:SetPoint("TOPLEFT")
-			self.Runes:SetHeight(ncUIdb:Scale(4))
-			self.Runes:SetWidth(ncUIdb:Scale(174))
+			self.Runes:SetHeight(F:Scale(4))
+			self.Runes:SetWidth(F:Scale(174))
 			self.Runes:SetBackdrop(backdrop)
 			self.Runes:SetBackdropColor(0, 0, 0)
 			self.Runes.anchor = "TOPLEFT"
 			self.Runes.growth = "RIGHT"
-			self.Runes.height = ncUIdb:Scale(3)
-			self.Runes.spacing = ncUIdb.mult
-			self.Runes.width = ncUIdb:Scale(168) / 6
+			self.Runes.height = F:Scale(3)
+			self.Runes.spacing = F.PP
+			self.Runes.width = F:Scale(168) / 6
 			
-			self.Health:SetHeight(ncUIdb:Scale(30))
-			self.Power:SetHeight(ncUIdb:Scale(2))
+			self.Health:SetHeight(F:Scale(30))
+			self.Power:SetHeight(F:Scale(2))
 			
 			for index = 1, 6 do
 				self.Runes[index] = CreateFrame("StatusBar", nil, self.Runes)
-				self.Runes[index]:SetStatusBarTexture(ncUIdb["media"].unitframe)
+				self.Runes[index]:SetStatusBarTexture(C.media.unitframe)
 
 				self.Runes[index].bg = self.Runes[index]:CreateTexture(nil, "BACKGROUND")
 				self.Runes[index].bg:SetAllPoints(self.Runes[index])
@@ -507,28 +507,28 @@ local function style(self, unit)
 			end
 			
 			local panel = CreateFrame("Frame", nil, self.Power)
-			ncUIdb:CreatePanel(panel, 1, 1, "TOPLEFT", self.Power, "TOPLEFT", -2, 2)
-			panel:SetPoint("BOTTOMRIGHT", self.Runes, ncUIdb:Scale(1), ncUIdb:Scale(-1))
+			panel:Place("TOPLEFT", self.Power, "TOPLEFT", -2, 2)
+			panel:Place("BOTTOMRIGHT", self.Runes, 1, -1)
 			panel:SetFrameLevel(3)
 			panel:SetFrameStrata("MEDIUM")
 			panel:SetBackdrop{
-				edgeFile = ncUIdb["media"].solid,
-				tile = false, tileSize = 0, edgeSize = ncUIdb.mult,
+				edgeFile = C.media.solid,
+				tile = false, tileSize = 0, edgeSize = F.PP,
 			}
-			panel:SetBackdropBorderColor(unpack(ncUIdb["general"].border))
+			panel:SetBackdropBorderColor(unpack(C.general.border))
 			panel.bg = panel:CreateTexture(nil, "BACKGROUND")
-			panel.bg:SetTexture(unpack(ncUIdb["general"].backdrop))
+			panel.bg:SetTexture(unpack(C.general.backdrop))
 			panel.bg:SetPoint("TOPLEFT", panel)
-			panel.bg:SetPoint("BOTTOMRIGHT", panel, ncUIdb:Scale(-2), ncUIdb:Scale(-1))
+			panel.bg:Place("BOTTOMRIGHT", panel, -2, -1)
 		end
 
 		self.Leader = self.Health:CreateTexture(nil, "OVERLAY")
-		self.Leader:SetPoint("TOPLEFT", self, 0, 8)
+		self.Leader:Place("TOPLEFT", self, 0, 8)
 		self.Leader:SetHeight(16)
 		self.Leader:SetWidth(16)
 
 		self.Assistant = self.Health:CreateTexture(nil, "OVERLAY")
-		self.Assistant:SetPoint("TOPLEFT", self, 0, 8)
+		self.Assistant:Place("TOPLEFT", self, 0, 8)
 		self.Assistant:SetHeight(16)
 		self.Assistant:SetWidth(16)
 
@@ -546,11 +546,11 @@ end
 oUF:RegisterStyle("ncUI", style)
 oUF:SetActiveStyle("ncUI")
 
-oUF:Spawn("player", "ncUIPlayerFrame"):SetPoint("BOTTOMLEFT", ActionBarBackground, "TOPLEFT", ncUIdb:Scale(2), ncUIdb:Scale(6))
-oUF:Spawn("target", "ncUITargetFrame"):SetPoint("BOTTOMRIGHT", ActionBarBackground, "TOPRIGHT", ncUIdb:Scale(-2), ncUIdb:Scale(6))
-oUF:Spawn("targettarget", "ncUITargetTargetFrame"):SetPoint("BOTTOM", ActionBarBackground, "TOP", 0, ncUIdb:Scale(6))
-oUF:Spawn("pet", "ncUIPetFrame"):SetPoint("BOTTOMLEFT", oUF.units.player, "TOPLEFT", 0, ncUIdb:Scale(6))
+oUF:Spawn("player", "ncUIPlayerFrame"):Place("BOTTOMLEFT", ActionBarBackground, "TOPLEFT", 2, 6)
+oUF:Spawn("target", "ncUITargetFrame"):Place("BOTTOMRIGHT", ActionBarBackground, "TOPRIGHT", -2, 6)
+oUF:Spawn("targettarget", "ncUITargetTargetFrame"):Place("BOTTOM", ActionBarBackground, "TOP", 0, 6)
+oUF:Spawn("pet", "ncUIPetFrame"):Place("BOTTOMLEFT", oUF.units.player, "TOPLEFT", 0, 6)
 
 local focus = oUF:Spawn("focus", "ncUIFocusFrame")
-focus:SetPoint("TOPLEFT", InfoRight, ncUIdb:Scale(2), ncUIdb:Scale(-2))
-focus:SetPoint("BOTTOMRIGHT", InfoRight, ncUIdb:Scale(-2), ncUIdb:Scale(2))
+focus:Place("TOPLEFT", InfoRight, 2, -2)
+focus:Place("BOTTOMRIGHT", InfoRight, -2, 2)

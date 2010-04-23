@@ -6,7 +6,7 @@ WORLDMAP_RATIO_MINI, WORLDMAP_WINDOWED_SIZE = 1, 1 -- else pixelperfectness gets
 local mapbg = F:CreateFrame("Panel", nil, WorldMapDetailFrame)
 local movebutton = F:CreateFrame("Frame", nil, WorldMapFrameCloseButton)
 movebutton:Size(25)
-movebutton:SetPoint("TOP", WorldMapFrameCloseButton, "BOTTOM", -1, 2)
+movebutton:Place("TOP", WorldMapFrameCloseButton, "BOTTOM", -1, 2)
 movebutton:SetBackdrop{bgFile=C.media.cross}
 
 local addon = F:CreateFrame("Frame")
@@ -27,8 +27,8 @@ hooksecurefunc("WorldMap_ToggleSizeDown", function()
 	local ald = CreateFrame ("Frame", nil, WorldMapButton)
 	ald:SetFrameStrata("TOOLTIP")
 	
-	mapbg:SetPoint("TOPLEFT", WorldMapDetailFrame, -2, 2)
-	mapbg:SetPoint("BOTTOMRIGHT", WorldMapDetailFrame, 2, -2)
+	mapbg:Place("TOPLEFT", WorldMapDetailFrame, -2, 2)
+	mapbg:Place("BOTTOMRIGHT", WorldMapDetailFrame, 2, -2)
 	mapbg:SetFrameStrata("MEDIUM")
 	mapbg:SetFrameLevel(20)
 
@@ -47,19 +47,19 @@ hooksecurefunc("WorldMap_ToggleSizeDown", function()
 --	F:SetToolbox(WorldMapFrameCloseButton, WorldMapQuestShowObjectives, WorldMapQuestShowObjectivesText, WorldMapFrameTitle)
 	
 	WorldMapFrameCloseButton:ClearAllPoints()
-	WorldMapFrameCloseButton:SetPoint("TOPRIGHT", WorldMapButton, "TOPRIGHT", 3, 3)
+	WorldMapFrameCloseButton:Place("TOPRIGHT", WorldMapButton, "TOPRIGHT", 3, 3)
 	WorldMapFrameCloseButton:SetFrameStrata("HIGH")
 	
 	WorldMapQuestShowObjectives:SetParent(ald)
 	WorldMapQuestShowObjectives:ClearAllPoints()
-	WorldMapQuestShowObjectives:SetPoint("BOTTOMRIGHT", WorldMapButton, "BOTTOMRIGHT", 0, -1)
+	WorldMapQuestShowObjectives:Place("BOTTOMRIGHT", WorldMapButton, "BOTTOMRIGHT", 0, -1)
 	
 	WorldMapQuestShowObjectivesText:SetFontObject("ncUIfont")
 	WorldMapQuestShowObjectivesText:ClearAllPoints()
-	WorldMapQuestShowObjectivesText:SetPoint("RIGHT", WorldMapQuestShowObjectives, "LEFT", -4, 1)
+	WorldMapQuestShowObjectivesText:Place("RIGHT", WorldMapQuestShowObjectives, "LEFT", -4, 1)
 	
 	WorldMapFrameTitle:ClearAllPoints()
-	WorldMapFrameTitle:SetPoint("BOTTOMLEFT", WorldMapDetailFrame, 9, 5)
+	WorldMapFrameTitle:Place("BOTTOMLEFT", WorldMapDetailFrame, 9, 5)
 	WorldMapFrameTitle:SetFontObject("ncUIfont")
 	WorldMapFrameTitle:SetParent(ald)
 
@@ -85,7 +85,7 @@ end
 local function OnMouseUp()
 	WorldMapFrame:StopMovingOrSizing()
 	WorldMapScreenAnchor:StartMoving()
-	WorldMapScreenAnchor:SetPoint("TOPLEFT", WorldMapFrame)
+	WorldMapScreenAnchor:Place("TOPLEFT", WorldMapFrame)
 	WorldMapScreenAnchor:StopMovingOrSizing()
 end
 
@@ -123,12 +123,12 @@ hooksecurefunc("LoadAddOn", function(addon)
 	if addon ~= "Blizzard_BattlefieldMinimap" then return end
 	BattlefieldMinimap:SetScale(F.PP*.99)
 	BattlefieldMinimap:ClearAllPoints()
-	BattlefieldMinimap:SetPoint("TOPRIGHT", MinimapStatsRight, "BOTTOMRIGHT", 55, -4/BattlefieldMinimap:GetEffectiveScale())
+	BattlefieldMinimap:Place("TOPRIGHT", MinimapStatsRight, "BOTTOMRIGHT", 55, -4/BattlefieldMinimap:GetEffectiveScale())
 	
 	local bg = F:CreateFrame("Panel", nil, UIParent)
 	bg:SetFrameLevel(0)
 	bg:SetFrameStrata("BACKGROUND")
-	bg:SetPoint("TOPLEFT", BattlefieldMinimap2, -2, 2)
+	bg:Place("TOPLEFT", BattlefieldMinimap2, -2, 2)
 	bg:Size(115, 149)
 	
 	bg:RegisterEvent("PLAYER_LOGIN")
@@ -145,13 +145,13 @@ hooksecurefunc("LoadAddOn", function(addon)
 				_G["BattlefieldMinimapRaid"..r].icon:SetTexture([[Interface\AddOns\ncUI\media\raid]])
 			end
 			_G["BattlefieldMinimapRaid"..r]:SetScript("OnUpdate", UpdateIconColor)
-			_G["BattlefieldMinimapRaid"..r]:Size(F:Scale(6), F:Scale(6))
+			_G["BattlefieldMinimapRaid"..r]:Size(6, 6)
 		end
 
 		for p=1, MAX_PARTY_MEMBERS do
 			_G["BattlefieldMinimapParty"..p].icon:SetTexture([[Interface\AddOns\ncUI\media\party]])
 			_G["BattlefieldMinimapParty"..p]:SetScript("OnUpdate", UpdateIconColor)
-			_G["BattlefieldMinimapParty"..p]:Size(F:Scale(6), F:Scale(6))
+			_G["BattlefieldMinimapParty"..p]:Size(6, 6)
 		end
 	end)
 	

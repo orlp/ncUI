@@ -1,46 +1,7 @@
 local F, C = select(2, ...):Fetch()
 
--- don't edit below this line
-local p = UnitName("player")
-local db = ncUIdb["general"]
+ncUIfont:SetFont(ncUIdb["media"].pixelfont, F:Scale(8), "THINOUTLINE")
 
-local mult = 768/string.match(GetCVar("gxResolution"), "%d+x(%d+)")/db.uiscale -- the holy grail
-local function scale(x)
-    return mult*math.floor(x+.5)
-end
-
-function ncUIdb:Scale(x) return scale(x) end
-ncUIdb.mult = mult
-
--- the font objects must be correctly scaled because it's an 8 pixel font, no more, no less
-ncUIfont:SetFont(ncUIdb["media"].pixelfont, ncUIdb:Scale(8), "THINOUTLINE")
-
-function ncUIdb:CreatePanel(f, w, h, a1, p, a2, x, y)
-	f:SetFrameLevel(1)
-	f:SetHeight(scale(h))
-	f:SetWidth(scale(w))
-	f:SetFrameStrata("BACKGROUND")
-	f:SetPoint(a1, p, a2, scale(x), scale(y))
-	f:SetBackdrop({
-	  bgFile = ncUIdb["media"].solid, 
-	  edgeFile = ncUIdb["media"].solid, 
-	  tile = false, tileSize = 0, edgeSize = mult, 
-	  insets = { left = -mult, right = -mult, top = -mult, bottom = -mult}
-	})
-	f:SetBackdropColor(unpack(db.backdrop))
-	f:SetBackdropBorderColor(unpack(db.border))
-end
-
-function ncUIdb:SetTemplate(f)
-	f:SetBackdrop({
-	  bgFile = ncUIdb["media"].solid, 
-	  edgeFile = ncUIdb["media"].solid, 
-	  tile = false, tileSize = 0, edgeSize = mult, 
-	  insets = { left = -mult, right = -mult, top = -mult, bottom = -mult}
-	})
-	f:SetBackdropColor(unpack(db.backdrop))
-	f:SetBackdropBorderColor(unpack(db.border))
-end
 
 local function install()
 	SetMultisampleFormat(1)
