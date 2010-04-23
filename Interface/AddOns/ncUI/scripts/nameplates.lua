@@ -48,8 +48,8 @@ local function updateNameplate(frame)
 
 	frame.healthBar:ClearAllPoints()
 	frame.healthBar:SetPoint("CENTER", frame.healthBar:GetParent())
-	frame.healthBar:SetHeight(10)
-	frame.healthBar:SetWidth(120)
+	frame.healthBar:SetHeight(6)
+	frame.healthBar:SetWidth(80)
 	
 	frame.levelText:ClearAllPoints()
 	frame.levelText:SetPoint("RIGHT", frame.healthBar, "LEFT", -3, 0)
@@ -74,9 +74,9 @@ local function styleNameplate(frame)
 	frame.levelText = levelTextRegion
 	frame.nameText = nameTextRegion
 	
-	F:SetToolbox(frame.castBar)
-	F:SetToolbox(healthBar)
-	F:SetToolbox(levelTextRegion)
+--	F:SetToolbox(frame.castBar)
+--	F:SetToolbox(healthBar)
+--	F:SetToolbox(levelTextRegion)
 	
 	healthBar:SetStatusBarTexture(C.nameplates.texture)
 	healthBar.bg = healthBar:CreateTexture(nil, "BORDER")
@@ -108,14 +108,14 @@ local function styleNameplate(frame)
 	castBar.bg:SetTexture(C.nameplates.texture)
 	castBar.bg:SetVertexColor(.15, .15, .15)
 	
-	F:SetToolbox(nameTextRegion)
+--	F:SetToolbox(nameTextRegion)
 	nameTextRegion:SetParent(healthBar)
 	nameTextRegion:SetFontObject("ncUIfont")	
 	nameTextRegion:SetShadowOffset(0, 0)
 	nameTextRegion:ClearAllPoints()
 	nameTextRegion:SetPoint("BOTTOM", healthBar, "TOP", 0, 5)
 	
-	F:SetToolbox(spellIconRegion)
+--	F:SetToolbox(spellIconRegion)
 	spellIconRegion:ClearAllPoints()
 	spellIconRegion:SetPoint("TOPLEFT", healthBar, "TOPRIGHT", 1.2, 0)
 	spellIconRegion:SetTexCoord(.08, .92, .08, .92)

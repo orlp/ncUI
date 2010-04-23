@@ -9,3 +9,5 @@ function master:New(i)
 	master[i] = {}
 	return master[i]
 end
+
+ncUI = master

@@ -1,11 +1,11 @@
 local F, C = select(2, ...):Fetch()
 local slots = {
-	left1 = {"LEFT", InfoLeft, "LEFT", 15, 1},
-	left2 = {"CENTER", InfoLeft, "CENTER", 0, 1},
-	left3 = {"RIGHT", InfoLeft, "RIGHT", -15, 1},
-	right1 = {"LEFT", InfoRight, "LEFT", 15, 1},
-	right2 = {"CENTER", InfoRight, "CENTER", 0, 1},
-	right3 = {"RIGHT", InfoRight, "RIGHT", -15, 1},
+	left1 = {"LEFT", InfoLeft, "LEFT", 15, 0},
+	left2 = {"CENTER", InfoLeft, "CENTER", 0, 0},
+	left3 = {"RIGHT", InfoLeft, "RIGHT", -15, 0},
+	right1 = {"LEFT", InfoRight, "LEFT", 15, 0},
+	right2 = {"CENTER", InfoRight, "CENTER", 0, 0},
+	right3 = {"RIGHT", InfoRight, "RIGHT", -15, 0},
 }
 
 local function formatmem(t)	
@@ -145,9 +145,9 @@ for key, val in pairs(C.datatext) do
 		local content, onclick, tooltip = tab.content or function() return "" end, tab.onclick or nil, tab.tooltip or nil
 	local f = CreateFrame("Frame", _, parent)
 	local t = f:CreateFontString(nil, "OVERLAY", "ncUIfont")
-	t:SetPoint("CENTER", f)
+	t:Place("CENTER", f)
 	t:SetTextColor(unpack(C.general.border))
-	f:SetPoint(unpack(pos))
+	f:Place(unpack(pos))
 	function f:Update(self, event, ...)
 		t:SetText(string.upper(content(self, event, ...)))		
 		f:SetHeight(t:GetStringHeight())
@@ -188,10 +188,3 @@ for key, val in pairs(C.datatext) do
 	end)
 	f:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
---[[local exprep = ncUIdb:CreateText("experiencerep", {
-	anchor = "CENTER",
-	anchor2 = "CENTER",
-	parent = mail,
-	font = ncUIdb["media"].pixelfont,
-	
-})--]]

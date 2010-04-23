@@ -1,5 +1,3 @@
-local fontlol = ncUIdb["media"].pixelfont
- 
 local colors = setmetatable({
 	power = setmetatable({
 		['MANA'] = {0, 144/255, 1},
@@ -61,7 +59,7 @@ local function CreateStyle(self, unit)
 	--self:Tag(power, '[smartpp]')
  
 	self.Health.name = self.Health:CreateFontString(nil, "OVERLAY", "ncUIfontright")
-	self.Health.name:SetFont(fontlol, 11, "THINOUTLINE")
+	self.Health.name:SetFont(ncUIdb["media"].pixelfont, 11, "THINOUTLINE")
 	self.Health.name:SetPoint('LEFT', self, 'RIGHT', 5, 1)
 	self:Tag(self.Health.name, '[name( )][leader( )]')
  

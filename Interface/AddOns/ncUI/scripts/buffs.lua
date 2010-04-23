@@ -1,24 +1,23 @@
 local F, C = select(2, ...):Fetch()
-
 local mainhand, _, _, offhand = GetWeaponEnchantInfo()
 
 TemporaryEnchantFrame:ClearAllPoints()
-TemporaryEnchantFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, -20)
+TemporaryEnchantFrame:Place("TOPRIGHT", UIParent, 0, -20)
 TempEnchant1:ClearAllPoints()
 TempEnchant2:ClearAllPoints()
-TempEnchant1:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", F:Scale(-12), 0)
-TempEnchant2:SetPoint("RIGHT", TempEnchant1, "LEFT", F:Scale(-9), 0)
+TempEnchant1:Place("TOPRIGHT", Minimap, "TOPLEFT", -12, 0)
+TempEnchant2:Place("RIGHT", TempEnchant1, "LEFT", -9, 0)
 for i = 1, 2 do
 	local f = F:CreateFrame("Panel", nil, _G["TempEnchant"..i])
-	f:SetSize(24)
-	f:SetPoint("CENTER")	
+	f:Size(24)
+	f:Place("CENTER")	
 	_G["TempEnchant"..i.."Border"]:Hide()
 	_G["TempEnchant"..i.."Icon"]:SetTexCoord(.08, .92, .08, .92)
-	_G["TempEnchant"..i.."Icon"]:SetPoint("TOPLEFT", _G["TempEnchant"..i], F:Scale(2), F:Scale(-2))
-	_G["TempEnchant"..i.."Icon"]:SetPoint("BOTTOMRIGHT", _G["TempEnchant"..i], F:Scale(-2), F:Scale(2))
-	_G["TempEnchant"..i]:SetSize(F:Scale(24), F:Scale(24))
+	_G["TempEnchant"..i.."Icon"]:Place("TOPLEFT", _G["TempEnchant"..i], 2, -2)
+	_G["TempEnchant"..i.."Icon"]:Place("BOTTOMRIGHT", _G["TempEnchant"..i], -2, 2)
+	_G["TempEnchant"..i]:Size(24)
 	_G["TempEnchant"..i.."Duration"]:ClearAllPoints()
-	_G["TempEnchant"..i.."Duration"]:SetPoint("BOTTOM", F:Scale(1), F:Scale(-10))
+	_G["TempEnchant"..i.."Duration"]:Place("BOTTOM", 1, -10)
 	_G["TempEnchant"..i.."Duration"]:SetFontObject("ncUIfont")
 end
 
@@ -29,26 +28,26 @@ local function StyleBuffs(buttonName, index, debuff)
 	local duration	= _G[buttonName..index.."Duration"]
 	local count 	= _G[buttonName..index.."Count"]
 	
-	F:SetToolbox(icon)
+--	F:SetToolbox(icon)
 	
 	if icon and not _G[buttonName..index.."Panel"] then
 		icon:SetTexCoord(.08, .92, .08, .92)
-		icon:SetPoint("TOPLEFT", buff, 2, -2)
-		icon:SetPoint("BOTTOMRIGHT", buff, -2, 2)
+		icon:Place("TOPLEFT", buff, 2, -2)
+		icon:Place("BOTTOMRIGHT", buff, -2, 2)
 		
-		buff:SetSize(F:Scale(24), F:Scale(24))
+		buff:Size(24)
 		
 		duration:ClearAllPoints()
-		duration:SetPoint("BOTTOM", F:Scale(1), F:Scale(-10))
+		duration:Place("BOTTOM", 1, -10)
 		duration:SetFontObject("ncUIfont")
 		
 		count:ClearAllPoints()
-		count:SetPoint("BOTTOM", F:Scale(1), F:Scale(4))
+		count:Place("BOTTOM", 1, 4)
 		count:SetFontObject("ncUIfont")
 		
 		local panel = F:CreateFrame("Panel", buttonName..index.."Panel", buff)
-		panel:SetSize(24)
-		panel:SetPoint("CENTER")
+		panel:Size(24)
+		panel:Place("CENTER", buff)
 
 		if debuff then
 			_G[buttonName..index.."Panel"]:SetBackdropBorderColor(134/255, 12/255, 12/255)
@@ -64,17 +63,17 @@ function UpdateBuffAnchors()
 		buff:ClearAllPoints()
 		StyleBuffs(buttonName, index, false)
 		if index == 17 then
-			buff:SetPoint("RIGHT", Minimap, "LEFT", F:Scale(-8), 0)
+			buff:Place("RIGHT", Minimap, "LEFT", -8, 0)
 		elseif index == 1 then
 			if (mainhand and not offhand) or (offhand and not mainhand) then
-				buff:SetPoint("RIGHT", TempEnchant1, "LEFT", F:Scale(-4), 0)
+				buff:Place("RIGHT", TempEnchant1, "LEFT", -4, 0)
 			elseif (mainhand and offhand) then
-				buff:SetPoint("RIGHT", TempEnchant2, "LEFT", F:Scale(-4), 0)
+				buff:Place("RIGHT", TempEnchant2, "LEFT", -4, 0)
 			else
-				buff:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", F:Scale(-8), F:Scale(2)) -- diff 35
+				buff:Place("TOPRIGHT", Minimap, "TOPLEFT", -8, 2) -- diff 35
 			end
 		else
-			buff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", F:Scale(-4), 0)
+			buff:Place("RIGHT", _G[buttonName..(index-1)], "LEFT", -4, 0)
 		end
 	end
 end
@@ -84,9 +83,9 @@ function UpdateDebuffAnchors(buttonName, index)
 	StyleBuffs(buttonName, index, true)
 	debuff:ClearAllPoints()
 	if index == 1 then
-		debuff:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", F:Scale(-8), F:Scale(-2))
+		debuff:Place("BOTTOMRIGHT", Minimap, "BOTTOMLEFT", -8, -2)
 	else
-		debuff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", F:Scale(-4), 0)
+		debuff:Place("RIGHT", _G[buttonName..(index-1)], "LEFT", -4, 0)
 	end
 end
 

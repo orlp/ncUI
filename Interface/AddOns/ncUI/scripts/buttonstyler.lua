@@ -23,7 +23,7 @@ local function style(self)
 	Button:SetNormalTexture("")
 
 	Count:ClearAllPoints()
-	Count:SetPoint("BOTTOMRIGHT", 0, 2)
+	Count:Place("BOTTOMRIGHT", Button, 0, 2)
 	Count:SetFontObject("ncUIfont")
 	
 	HotKey:SetText("")
@@ -37,23 +37,22 @@ local function style(self)
 	Border:Hide()
 	
 	if not _G[name.."Panel"] then
-		F:SetToolbox(self)
-		F:SetToolbox(Icon)
-		self:SetSize(29)
+--		F:SetToolbox(self)
+--		F:SetToolbox(Icon)
+		self:Size(29)
 		
 		local panel = F:CreateFrame("Panel", name.."Panel", self)
-		panel:SetSize(29)
-		panel:SetPoint("CENTER")
-		panel:SetBackdropColor(0, 0, 0, 0)
+		panel:Size(29)
+		panel:Place("CENTER", self)
 
 		Icon:SetTexCoord(.08, .92, .08, .92)
-		Icon:SetPoint("TOPLEFT", Button, 2, -2)
-		Icon:SetPoint("BOTTOMRIGHT", Button, -2, 2)
+		Icon:Place("TOPLEFT", Button, 2, -2)
+		Icon:Place("BOTTOMRIGHT", Button, -2, 2)
 	end
 	
 	normal:ClearAllPoints()
-	normal:SetPoint("TOPLEFT")
-	normal:SetPoint("BOTTOMRIGHT")
+	normal:Place("TOPLEFT", self)
+	normal:Place("BOTTOMRIGHT", self)
 end
 
 local function stylesmallbutton(normal, button, icon, name, pet)
@@ -63,36 +62,35 @@ local function stylesmallbutton(normal, button, icon, name, pet)
 	button:SetNormalTexture("")
 	
 	if not _G[name.."Panel"] then
-		F:SetToolbox(button)
-		F:SetToolbox(icon)
-		button:SetWidth(24)
-		button:SetHeight(24)
+--		F:SetToolbox(button)
+--		F:SetToolbox(icon)
+		button:Size(24)
 		
 		local panel = F:CreateFrame("Panel", name.."Panel", button)
-		panel:SetSize(24)
-		panel:SetPoint("CENTER")
+		panel:Size(24)
+		panel:Place("CENTER", button)
 		panel:SetBackdropColor(unpack(C.general.backdrop))
 
 		icon:SetTexCoord(.08, .92, .08, .92)
 		icon:ClearAllPoints()
 		if pet then
 			local autocast = _G[name.."AutoCastable"]
-			F:SetToolbox(autocast)
-			autocast:SetSize(41, 40)
+--			F:SetToolbox(autocast)
+			autocast:Size(41, 40)
 			autocast:ClearAllPoints()
-			autocast:SetPoint("CENTER", button, 0, 0)
-			icon:SetPoint("TOPLEFT", button, 2, -2)
-			icon:SetPoint("BOTTOMRIGHT", button, -2, 2)
+			autocast:Place("CENTER", button, 0, 0)
+			icon:Place("TOPLEFT", button, 2, -2)
+			icon:Place("BOTTOMRIGHT", button, -2, 2)
 		else
-			icon:SetPoint("TOPLEFT", button, 2, -2)
-			icon:SetPoint("BOTTOMRIGHT", button, -2, 2)
+			icon:Place("TOPLEFT", button, 2, -2)
+			icon:Place("BOTTOMRIGHT", button, -2, 2)
 		end
 	end
 	
 	normal:SetVertexColor(unpack(C.general.border))
 	normal:ClearAllPoints()
-	normal:SetPoint("TOPLEFT")
-	normal:SetPoint("BOTTOMRIGHT")
+	normal:Place("TOPLEFT", button)
+	normal:Place("BOTTOMRIGHT", button)
 end
 
 local function styleshift(pet)

@@ -1,3 +1,5 @@
+local F, C = select(2, ...):Fetch()
+
 -- don't edit below this line
 local p = UnitName("player")
 local db = ncUIdb["general"]
@@ -97,4 +99,4 @@ end)
 -- BLIZZARD UI FIXES
 AchievementMicroButton_Update = function() end
 TicketStatusFrame:ClearAllPoints()
-TicketStatusFrame:SetPoint("TOPLEFT", 0,0)
+TicketStatusFrame:SetPoint("TOPLEFT", 0, 0)

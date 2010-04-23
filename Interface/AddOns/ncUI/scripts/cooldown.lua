@@ -58,7 +58,7 @@ local function create(self)
 		self.noOCC = true
 	else
 		local text = self:CreateFontString(nil, "OVERLAY")
-		text:SetPoint("CENTER", 0, 0)
+		text:Place("CENTER", self)
 		text:SetFont(C.media.font, 15 * scale, "THINOUTLINE")
 		text:SetTextColor(R, G, B)
 		

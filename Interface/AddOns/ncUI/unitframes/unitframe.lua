@@ -1,3 +1,5 @@
+local F, C, L = select(2, ...):Fetch()
+
 local max = math.max
 local floor = math.floor
 
@@ -394,6 +396,11 @@ local function style(self, unit)
 		self.Model:RegisterEvent("PLAYER_TARGET_CHANGED")
 		self.Model:RegisterEvent("PLAYER_ENTERING_WORLD")
 		self.Model:SetScript("OnEvent", update)
+		
+		local cbft = self.Model:CreateFontString(nil, "OVERLAY")
+		cbft:SetPoint("CENTER", self.Model)
+		cbft:SetFont(C.media.font, F:Scale(18), "OUTLINE")
+		self.CombatFeedbackText = cbft
 	end
 
 	if unit=="player" then

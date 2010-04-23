@@ -12,40 +12,24 @@ config.lua
 libs\libncui.lua
 
 libs\ouf\ouf.xml
-libs\libguidmap.lua
-libs\libcooldown.lua
 
 media\font.xml
 scripts\core.lua
 scripts\font.lua
 
-scripts\focus.lua
 scripts\panels.lua
 scripts\datatext.lua
-scripts\bindings.lua
 scripts\actionbar.lua
 scripts\chat.lua
 scripts\buttonstyler.lua
 scripts\minimap.lua
-scripts\debufftimer.lua
 scripts\nameplates.lua
 scripts\cooldown.lua
 scripts\core.lua
-scripts\error.lua
-scripts\extrabuttons.lua
-scripts\merchant.lua
-scripts\quest.lua
-scripts\resurrect.lua
 scripts\tooltip.lua
 scripts\worldmap.lua
 scripts\buffs.lua
-scripts\spellalerter.lua
 scripts\bags.lua
-scripts\hovername.lua
-scripts\killingblow.lua
-scripts\cdflash.lua
-scripts\marking.lua
-scripts\lockdown.lua
 
 unitframes\plugins\dropdown.lua
 
@@ -53,5 +37,5 @@ unitframes\tags.lua
 unitframes\unitframe.lua
 unitframes\raid.lua
 
-unitframes\plugins\smooth.lua
 unitframes\plugins\debuffhighlight.lua
+unitframes\plugins\combatfeedback.lua
