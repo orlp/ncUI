@@ -1,6 +1,6 @@
 local F, C = select(2, ...):Fetch()
 
-ncUIfont:SetFont(ncUIdb["media"].pixelfont, F:Scale(8), "THINOUTLINE")
+ncUIfont:SetFont(C.media.pixelfont, F:Scale(8), "THINOUTLINE")
 
 
 local function install()
