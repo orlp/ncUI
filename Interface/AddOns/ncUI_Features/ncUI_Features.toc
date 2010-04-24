@@ -10,6 +10,7 @@ libs\libguidmap.lua
 libs\libcooldown.lua
 
 scripts\focus.lua
+scripts\combat.lua
 scripts\bindings.lua
 scripts\debufftimer.lua
 scripts\error.lua

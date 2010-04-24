@@ -2,11 +2,10 @@ local F, C = select(2, ...):Fetch()
 
 ncUIfont:SetFont(C.media.pixelfont, F:Scale(8), "THINOUTLINE")
 
-
 local function install()
 	SetMultisampleFormat(1)
 	SetCVar("useUiScale", 1)
-	SetCVar("uiScale", db.uiscale)
+	SetCVar("uiScale", C.general.uiscale)
     SetCVar("chatLocked", 1)
 	SetCVar("showClock", 0)
 	SetCVar("screenshotQuality", 10)

@@ -4,7 +4,7 @@ if not C.error.enable then return end
 
 UIErrorsFrame:UnregisterEvent("UI_ERROR_MESSAGE")
 holder:RegisterEvent("UI_ERROR_MESSAGE")
-holder:SetScript("OnEvent", function(event, error)
+holder:SetScript("OnEvent", function(self, event, error)
 	if C.error.filter[error] then
 		UIErrorsFrame:AddMessage(error, 1, 0 ,0)
 	else
