@@ -1,5 +1,0 @@
-<Bindings>
-	<Binding name="CLICK ncExtrabuttonsHeader:LeftButton" header="ncUI">
-		-- As of 2.1, the code blocks cannot be empty or the keybindings interface will ignore the binding. A comment is enough, i.e. "-- dummy".
-	</Binding>
-</Bindings>

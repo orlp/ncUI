@@ -1,5 +1,0 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Font name="ncUIfont" font="Interface\AddOns\ncUI\media\slkscr.ttf" outline="NORMAL" virtual="true" />
-	<Font name="ncUIfontleft" inherits="ncUIfont" justifyH="LEFT" virtual="true" />
-	<Font name="ncUIfontright" inherits="ncUIfont" justifyH="RIGHT" virtual="true" />
-</Ui>
