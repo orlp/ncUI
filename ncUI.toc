@@ -1,0 +1,29 @@
+## Interface: 30300
+## Author: Nightcracker
+## Version: 3.0
+## Title: ncUI
+## Notes: ncUI - A complete UI replacement
+## SavedVariablesPerCharacter: ncUIinstalled
+## X-oUF: oUF
+
+scripts\reload.lua
+
+engine\init.lua
+config.lua
+engine\pp.lua
+
+scripts\core.lua
+scripts\error.lua
+scripts\pvpalert.lua
+scripts\hoverfocus.lua
+scripts\hovername.lua
+scripts\killingblow.lua
+scripts\release.lua
+scripts\quest.lua
+scripts\merchant.lua
+scripts\misc.lua
+
+scripts\buttonstyle.lua
+scripts\actionbar.lua
+scripts\minimap.lua
+scripts\buffs.lua
